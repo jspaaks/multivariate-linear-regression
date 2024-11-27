@@ -40,12 +40,13 @@ Network * ann__network_create (size_t nl, size_t * nnodes) {
 
 
 void ann__network_fwd (Network * network) {
+    size_t nl = network->nl;
     float * w = &network->weights[0];
     float * in = &network->nodes[0];
+    float * out = in + network->nnodes[0];
     for (size_t il = 0; il < nl - 1; il++) {
         size_t inr = network->nnodes[il];
         size_t onr = network->nnodes[il+1];
-        float * out = in + inr;
         for (size_t i = 0; i < onr; i++) {
             *out = 0;
             for (size_t j = 0; j < inr; j++) {
@@ -54,7 +55,9 @@ void ann__network_fwd (Network * network) {
                 in++;
             }
             out++;
-            in-=inr; // inr + 1 ?
+            if (i < onr - 1) {
+                in -= inr;
+            }
         }
     }
 }
