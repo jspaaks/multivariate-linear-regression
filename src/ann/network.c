@@ -42,6 +42,7 @@ Network * ann__network_create (size_t nl, size_t * nnodes) {
 void ann__network_fwd (Network * network) {
     size_t nl = network->nl;
     float * w = &network->weights[0];
+    float * b = &network->biases[0];
     float * in = &network->nodes[0];
     float * out = in + network->nnodes[0];
     for (size_t il = 0; il < nl - 1; il++) {
@@ -54,7 +55,9 @@ void ann__network_fwd (Network * network) {
                 w++;
                 in++;
             }
+            *out += *b;
             out++;
+            b++;
             if (i < onr - 1) {
                 in -= inr;
             }
