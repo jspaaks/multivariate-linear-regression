@@ -1,6 +1,11 @@
-[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
-
 # ann
+
+TODO
+
+1. add some data
+1. add loss function
+1. add backpropagation
+
 
 ## CMake
 
@@ -27,19 +32,6 @@ make install
 Should output something like:
 
 ```text
--- test compile definitions
-   DEBUG compile definition has been defined.
-
--- test wether math library was linked
-   sqrt(144) = 12.000000
-
--- test c2x / c23 features
-   0 1 2 3 4
-
--- test own library
-   divide(2, 3) = 0
-   multiply(2, 3) = 6
-
 ```
 
 ## Testing
@@ -53,7 +45,7 @@ sudo apt install libcriterion-dev
 Run the tests with
 
 ```shell
-./dist/bin/test_annlib -j1 --verbose
+./dist/bin/test_ann -j1 --verbose
 ```
 ## Code::Blocks
 
@@ -73,4 +65,5 @@ clang-format -i `find ./src -type f -name '*.[c|h]'`
 
 ## Acknowledgements
 
-_This project was generated using [Copier](https://pypi.org/project/copier)._
+_This project was generated using [Copier](https://pypi.org/project/copier)
+and the [Copier template for C projects](https://github.com/jspaaks/copier-template-for-c-projects)._
