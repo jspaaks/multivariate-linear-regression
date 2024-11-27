@@ -20,10 +20,10 @@ cd build/cmake
 cmake ../..
 
 # build the project
-make
+cmake --build .
 
 # install the project to <repo>/build/cmake/dist
-make install
+cmake --install .
 
 # run the program to see if it works
 ./dist/bin/runann
@@ -32,6 +32,7 @@ make install
 Should output something like:
 
 ```text
+...
 ```
 
 ## Testing
