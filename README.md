@@ -2,7 +2,7 @@
 
 TODO
 
-1. activation function
+1. ~activation function~
 1. add some data
 1. add loss function
 1. add backpropagation

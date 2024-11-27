@@ -1,4 +1,5 @@
 #include "ann/network.h"
+#include "ann/afuns.h"
 #include "stddef.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -51,11 +52,12 @@ void ann__network_fwd (Network * network) {
         for (size_t i = 0; i < onr; i++) {
             *out = 0;
             for (size_t j = 0; j < inr; j++) {
-                *out += *w * *in;
+                *out += *w * *in;  // apply weight
                 w++;
                 in++;
             }
-            *out += *b;
+            *out += *b;            // apply bias
+            *out = relu(*out);     // apply activation function
             out++;
             b++;
             if (i < onr - 1) {

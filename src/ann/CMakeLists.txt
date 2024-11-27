@@ -54,6 +54,7 @@ target_sources(
     tgt_lib_ann
     PRIVATE
         ${PROJECT_ROOT}/src/ann/network.c
+        ${PROJECT_ROOT}/src/ann/afuns.c
     PUBLIC
         FILE_SET fset_lib_ann_headers
         TYPE HEADERS
@@ -61,6 +62,7 @@ target_sources(
             ${PROJECT_ROOT}/include
         FILES
             ${PROJECT_ROOT}/include/ann/network.h
+            ${PROJECT_ROOT}/include/ann/afuns.h
 )
 
 install(TARGETS tgt_lib_ann
