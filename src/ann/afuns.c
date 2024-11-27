@@ -12,6 +12,7 @@ float leaky_relu_deriv (float x) {
     return parametric_relu_deriv(0.01f, x);
 }
 
+
 float parametric_relu (float a, float x) {
     if (x > 0.0f) {
         return x;
@@ -39,7 +40,7 @@ float relu_deriv (float x) {
 
 
 float sigmoid (float x) {
-    return 1.0f / (1.0f + exp(-x));
+    return 1.0f / (1.0f + expf(-x));
 }
 
 
