@@ -2,4 +2,6 @@
 /cachegrind.out.*
 /callgrind.out.*
 /.codeblocks
+/data/*
+
 

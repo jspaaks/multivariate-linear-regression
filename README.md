@@ -3,7 +3,10 @@
 TODO
 
 1. ~activation function~
-1. add some data
+1. add some data, maybe
+    - https://en.wikipedia.org/wiki/MNIST_database
+    - https://yann.lecun.com/exdb/mnist/ (HTTP 403)
+    - https://huggingface.co/datasets/ylecun/mnist
 1. add loss function
 1. add backpropagation
 
@@ -63,6 +66,31 @@ clang-format -Werror --dry-run main.c
 
 # format in place all *.c and *.h files under ./src
 clang-format -i `find ./src -type f -name '*.[c|h]'`
+```
+
+## Data
+
+Wayback Machine copies of Yann LeCun et al. handwritten numbers data.
+
+- https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/
+- https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+- https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+- https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+- https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+
+```console
+mkdir data
+cd data
+
+wget https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+wget https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+wget https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+wget https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+
+gzip --decompress --keep --name --verbose --best ./t10k-images-idx3-ubyte.gz
+gzip --decompress --keep --name --verbose --best ./t10k-labels-idx1-ubyte.gz
+gzip --decompress --keep --name --verbose --best ./train-images-idx3-ubyte.gz
+gzip --decompress --keep --name --verbose --best ./train-labels-idx1-ubyte.gz
 ```
 
 ## Acknowledgements
