@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_runann)
+add_library(tgt_lib_idxread SHARED)
 
-set_property(TARGET tgt_exe_runann PROPERTY OUTPUT_NAME runann)
+set_property(TARGET tgt_lib_idxread PROPERTY OUTPUT_NAME idxread)
 
 target_compile_definitions(
-    tgt_exe_runann
+    tgt_lib_idxread
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_runann
+    tgt_lib_idxread
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_runann
+    tgt_lib_idxread
     PRIVATE
         -Wall
         -Wextra
@@ -45,23 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_runann
+    tgt_lib_idxread
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
-target_link_libraries(
-    tgt_exe_runann
-    PRIVATE
-        m
-        tgt_lib_ann
-        tgt_lib_idxread
-)
-
 target_sources(
-    tgt_exe_runann
+    tgt_lib_idxread
     PRIVATE
-        ${PROJECT_ROOT}/src/runann/main.c
+        ${PROJECT_ROOT}/src/idxread/idxread.c
+    PUBLIC
+        FILE_SET fset_lib_idxread_headers
+        TYPE HEADERS
+        BASE_DIRS
+            ${PROJECT_ROOT}/include
+        FILES
+            ${PROJECT_ROOT}/include/idxread/idxread.h
 )
 
-install(TARGETS tgt_exe_runann)
+install(TARGETS tgt_lib_idxread
+    LIBRARY
+    FILE_SET fset_lib_idxread_headers
+)

@@ -2,10 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ann/network.h"
+#include "idxread/idxread.h"
+
 
 void seed_network (Network *);
+void read_data (void);
 
 int main (void) {
+
+    read_data();
 
     constexpr size_t nlayers = 3;
     size_t nnodes[nlayers] = {3, 4, 2};
@@ -26,6 +31,12 @@ int main (void) {
     ann__network_destroy(network);
 
     return 0;
+}
+
+
+void read_data(void) {
+    char * filename = "t10k-images.idx3-ubyte";
+    idxread__read_uint8 (filename);
 }
 
 
