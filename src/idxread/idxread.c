@@ -115,8 +115,8 @@ void idxread__print_meta (FILE * stream, Meta * meta) {
     fprintf(stream, "%u}\n", meta->dimension_sizes[meta->ndims - 1]);
     fprintf(stream, "  .ndims = %hhu\n", meta->ndims);
     fprintf(stream, "  .nobjs = %zu\n", meta->nobjs);
-    fprintf(stream, "  .start = %zu\n", meta->start);
-    fprintf(stream, "  .stride = %zu\n", meta->stride);
+    fprintf(stream, "  .start = %zu bytes\n", meta->start);
+    fprintf(stream, "  .stride = %zu bytes\n", meta->stride);
     fprintf(stream, "  .typ = %hhu\n", meta->typ);
     fprintf(stream, "}\n");
 }
