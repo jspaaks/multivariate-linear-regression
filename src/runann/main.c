@@ -1,42 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "ann/network.h"
 #include "idxread/idxread.h"
 
 
 void seed_network (Network *);
 void read_data (void);
+void print_usage (FILE *, char * []);
 
-int main (void) {
 
-    read_data();
+int main (int argc, char * argv[]) {
+
+    if (argc == 1) {
+        print_usage(stderr, argv);
+        exit(EXIT_FAILURE);
+    }
+    if (strncmp(argv[1], "-h", 3) == 0 || strncmp(argv[1], "--help", 7) == 0) {
+        print_usage(stdout, argv);
+        exit(EXIT_SUCCESS);
+    }
+
+    // ============================================================ //
+
+    char * path = argv[1];
+    Meta meta = {0};
+    idxread__get_meta(path, &meta);
+    uint8_t * data = idxread__get_data(path, &meta);
+    idxread__print_meta(stdout, &meta);
+
+    // ============================================================ //
 
     constexpr size_t nlayers = 3;
     size_t nnodes[nlayers] = {3, 4, 2};
-
     srand(time(nullptr));
-
     Network * network = ann__network_create(nlayers, nnodes);
     seed_network(network);
-
     fprintf(stdout, "network total number of\n");
     fprintf(stdout, "- nodes: %zu\n", network->nn);
     fprintf(stdout, "- layers: %zu\n", network->nl);
     fprintf(stdout, "- weights: %zu\n", network->nw);
     fprintf(stdout, "- biases: %zu\n", network->nb);
-
     ann__network_fwd(network);
-
     ann__network_destroy(network);
+
+    free(data);
 
     return 0;
 }
 
 
-void read_data(void) {
-    char * filename = "t10k-images.idx3-ubyte";
-    idxread__read_uint8 (filename);
+void print_usage(FILE * stream, char * argv[]) {
+    fprintf(stream, "Usage: %s FILENAME\n   Read IDX formatted data from FILENAME and ...\n", argv[0]);
 }
 
 
