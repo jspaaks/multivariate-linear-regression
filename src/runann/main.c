@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -34,7 +35,7 @@ int main (int argc, char * argv[]) {
     // ============================================================ //
 
     constexpr size_t nlayers = 3;
-    size_t nnodes[nlayers] = {3, 4, 2};
+    size_t nnodes[nlayers] = {784, 300, 100};
     srand(time(nullptr));
     Network * network = ann__network_create(nlayers, nnodes);
     seed_network(network);
@@ -55,6 +56,7 @@ int main (int argc, char * argv[]) {
 void print_image (FILE * stream, const Meta * meta, const uint8_t * data, size_t iobj) {
     size_t nr = meta->dimension_sizes[1];
     size_t nc = meta->dimension_sizes[2];
+    assert(iobj < meta->nobjs && "Index out of range");
     for (size_t ir = 0; ir < nr; ir++) {
         for (size_t ic = 0; ic < nc; ic++) {
             size_t i = iobj * nr * nc + ir * nc + ic;
