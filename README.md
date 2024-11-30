@@ -3,10 +3,7 @@
 TODO
 
 1. ~activation function~
-1. add some data, maybe
-    - https://en.wikipedia.org/wiki/MNIST_database
-    - https://yann.lecun.com/exdb/mnist/ (HTTP 403)
-    - https://huggingface.co/datasets/ylecun/mnist
+1. ~add some data~
 1. add loss function
 1. add backpropagation
 
@@ -129,6 +126,15 @@ $ xxd -d -s 16 -o -16 -l 784 -c 28 t10k-images.idx3-ubyte
 00000728: 0000 0000 0000 0000 0000 79fe cf12 0000 0000 0000 0000 0000 0000 0000
 00000756: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
 ```
+
+## Experiment
+
+https://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf
+
+- input layer: 784 (28x28)
+- hidden layer 300
+- hidden layer 100
+- output layer 10
 
 ## Acknowledgements
 
