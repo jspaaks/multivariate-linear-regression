@@ -9,7 +9,7 @@
 void seed_network (Network *);
 void read_data (void);
 void print_usage (FILE *, char * []);
-
+void print_image (FILE *, const Meta *, const uint8_t *, size_t);
 
 int main (int argc, char * argv[]) {
 
@@ -29,6 +29,7 @@ int main (int argc, char * argv[]) {
     idxread__get_meta(path, &meta);
     uint8_t * data = idxread__get_data(path, &meta);
     idxread__print_meta(stdout, &meta);
+    print_image(stdout, &meta, &data[0], 0);
 
     // ============================================================ //
 
@@ -48,6 +49,23 @@ int main (int argc, char * argv[]) {
     free(data);
 
     return 0;
+}
+
+
+void print_image (FILE * stream, const Meta * meta, const uint8_t * data, size_t iobj) {
+    size_t nr = meta->dimension_sizes[1];
+    size_t nc = meta->dimension_sizes[2];
+    for (size_t ir = 0; ir < nr; ir++) {
+        for (size_t ic = 0; ic < nc; ic++) {
+            size_t i = iobj * nr * nc + ir * nc + ic;
+            char ch = data[i] == 0 ? ' ' : '.';
+            if (ic == nc - 1) {
+                fprintf(stream, " %c\n", ch);
+            } else {
+                fprintf(stream, " %c", ch);
+            }
+        }
+    }
 }
 
 
