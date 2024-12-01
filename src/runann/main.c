@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,6 +12,12 @@ void seed_network (Network *);
 void read_data (void);
 void print_usage (FILE *, char * []);
 void print_image (FILE *, const Meta *, const uint8_t *, size_t);
+float * scale_then_translate(Meta *, uint8_t *);
+
+
+static uint8_t scale = 1;
+static uint8_t translation = 0;
+
 
 int main (int argc, char * argv[]) {
 
@@ -28,9 +35,10 @@ int main (int argc, char * argv[]) {
     char * path = argv[1];
     Meta meta = {0};
     idxread__get_meta(path, &meta);
-    uint8_t * data = idxread__get_data(path, &meta);
+    uint8_t * raw = idxread__get_data(path, &meta);
     idxread__print_meta(stdout, &meta);
-    print_image(stdout, &meta, &data[0], 0);
+    print_image(stdout, &meta, &raw[0], 0);
+    float * data = scale_then_translate(&meta, &raw[0]);
 
     // ============================================================ //
 
@@ -47,6 +55,7 @@ int main (int argc, char * argv[]) {
     ann__network_fwd(network);
     ann__network_destroy(network);
 
+    free(raw);
     free(data);
 
     return 0;
@@ -92,4 +101,30 @@ void seed_network (Network * network) {
         int z = rand() % 100;
         network->weights[i] = (float) z / 100;
     }
+}
+
+float * scale_then_translate(Meta * meta, uint8_t * raw) {
+    uint8_t lower = UINT8_MAX;
+    uint8_t upper = 0;
+    for (size_t i = 0; i < meta->n; i++) {
+        if (raw[i] < lower) {
+            lower = raw[i];
+        }
+        if (raw[i] > upper) {
+            upper = raw[i];
+        }
+    }
+    uint8_t range = upper - lower;
+
+    float * data = malloc(meta->n * sizeof(float));
+    for (size_t i = 0; i < meta->n; i++) {
+        float x = raw[i] - lower;
+        data[i] = x / range;
+    }
+
+    // set static variables to facilitate unscaling and
+    // untranslating
+    translation = lower;
+    scale = range;
+    return data;
 }
