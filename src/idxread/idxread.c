@@ -7,6 +7,7 @@
 
 
 void fill_meta_dimension_sizes (FILE *, Meta *);
+void fill_meta_n (Meta *);
 void fill_meta_ndims (FILE *, Meta *);
 void fill_meta_nobjs (Meta *);
 void fill_meta_start(Meta *);
@@ -27,6 +28,11 @@ void fill_meta_dimension_sizes (FILE * fp, Meta * meta) {
         }
         meta->dimension_sizes[idim] = ell;
     }
+}
+
+
+void fill_meta_n (Meta * meta) {
+    meta->n = meta->nobjs * meta->stride;
 }
 
 
@@ -103,6 +109,7 @@ void idxread__get_meta (const char * path, Meta * meta) {
     fill_meta_start(meta);
     fill_meta_nobjs(meta);
     fill_meta_stride(meta);
+    fill_meta_n(meta);
 }
 
 
@@ -113,10 +120,11 @@ void idxread__print_meta (FILE * stream, Meta * meta) {
         fprintf(stream, "%u,", meta->dimension_sizes[i]);
     }
     fprintf(stream, "%u}\n", meta->dimension_sizes[meta->ndims - 1]);
-    fprintf(stream, "  .ndims = %hhu\n", meta->ndims);
-    fprintf(stream, "  .nobjs = %zu\n", meta->nobjs);
-    fprintf(stream, "  .start = %zu bytes\n", meta->start);
-    fprintf(stream, "  .stride = %zu bytes\n", meta->stride);
-    fprintf(stream, "  .typ = %hhu\n", meta->typ);
+    fprintf(stream, "  .n               = %zu\n", meta->n);
+    fprintf(stream, "  .ndims           = %hhu\n", meta->ndims);
+    fprintf(stream, "  .nobjs           = %zu\n", meta->nobjs);
+    fprintf(stream, "  .start           = %zu bytes\n", meta->start);
+    fprintf(stream, "  .stride          = %zu bytes\n", meta->stride);
+    fprintf(stream, "  .typ             = %hhu\n", meta->typ);
     fprintf(stream, "}\n");
 }

@@ -22,6 +22,7 @@ struct meta {
     size_t nobjs;
     size_t start;
     size_t stride;
+    size_t n;
     IdxDataType typ;
 };
 
