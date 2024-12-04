@@ -99,7 +99,7 @@ void ann__network_print(FILE * stream, Network * network) {
 void ann__network_populate_biases (Network * network) {
     size_t nb = network->nb;
     for (size_t i = 0; i < nb; i++) {
-        int z = rand() % 100;
+        int z = rand() % 200 - 100;
         network->biases[i] = (float) z / 100;
     }
 }
@@ -117,7 +117,7 @@ void ann__network_populate_input (Network * network, Meta * meta, float * data, 
 void ann__network_populate_weights (Network * network) {
     size_t nw = network->nw;
     for (size_t i = 0; i < nw; i++) {
-        int z = rand() % 100;
+        int z = rand() % 200 - 100;
         network->weights[i] = (float) z / 100;
     }
 }
