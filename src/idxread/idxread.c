@@ -83,7 +83,7 @@ uint8_t * idxread__get_data (const char * path, Meta * meta) {
     } else {
         fprintf(stderr, "Not implemented\n");
     }
-    uint8_t * p = malloc(meta->nobjs * meta->stride * nbytes_per_elem);
+    uint8_t * p = calloc(meta->nobjs, meta->stride * nbytes_per_elem);
     if (p == nullptr) {
         fprintf(stderr, "Error allocating memory, aborting.\n");
         exit(EXIT_FAILURE);

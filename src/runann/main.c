@@ -42,17 +42,23 @@ int main (int argc, char * argv[]) {
 
     // ============================================================ //
 
-    constexpr size_t nlayers = 3;
-    size_t nnodes[nlayers] = {784, 300, 100};
+    constexpr size_t nlayers = 4;
+    size_t nnodes[nlayers] = {784, 300, 100, 10};
     srand(time(nullptr));
     Network * network = ann__network_create(nlayers, nnodes);
-    seed_network(network);
-    fprintf(stdout, "network total number of\n");
-    fprintf(stdout, "- nodes: %zu\n", network->nn);
-    fprintf(stdout, "- layers: %zu\n", network->nl);
-    fprintf(stdout, "- weights: %zu\n", network->nw);
-    fprintf(stdout, "- biases: %zu\n", network->nb);
-    ann__network_fwd(network);
+    ann__network_print(stdout, network);
+
+    size_t niter = 10;
+    for (size_t iiter = 0; iiter < niter; iiter++) {
+        ann__network_populate_weights(network);
+        ann__network_populate_biases(network);
+        for (size_t iobj = 0; iobj < meta.nobjs; iobj++) {
+            ann__network_populate_input(network, &meta, &data[0], iobj);
+            ann__network_fwd(network);
+//            ann__calc_loss();
+        }
+    }
+
     ann__network_destroy(network);
 
     free(raw);
@@ -85,24 +91,6 @@ void print_usage(FILE * stream, char * argv[]) {
 }
 
 
-void seed_network (Network * network) {
-    size_t nb = network->nb;
-    for (size_t i = 0; i < nb; i++) {
-        int z = rand() % 100;
-        network->biases[i] = (float) z / 100;
-    }
-    size_t nn = network->nn;
-    for (size_t i = 0; i < nn; i++) {
-        int z = rand() % 100;
-        network->nodes[i] = (float) z / 100;
-    }
-    size_t nw = network->nw;
-    for (size_t i = 0; i < nw; i++) {
-        int z = rand() % 100;
-        network->weights[i] = (float) z / 100;
-    }
-}
-
 float * scale_then_translate(Meta * meta, uint8_t * raw) {
     uint8_t lower = UINT8_MAX;
     uint8_t upper = 0;
@@ -116,7 +104,7 @@ float * scale_then_translate(Meta * meta, uint8_t * raw) {
     }
     uint8_t range = upper - lower;
 
-    float * data = malloc(meta->n * sizeof(float));
+    float * data = calloc(meta->n, sizeof(float));
     for (size_t i = 0; i < meta->n; i++) {
         float x = raw[i] - lower;
         data[i] = x / range;

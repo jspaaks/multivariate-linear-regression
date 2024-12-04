@@ -6,12 +6,14 @@
 
 
 size_t calc_nb (size_t, size_t *);
+size_t calc_ni (size_t, size_t *);
 size_t calc_nn (size_t, size_t *);
+size_t calc_no (size_t, size_t *);
 size_t calc_nw (size_t, size_t *);
 
 
 Network * ann__network_create (size_t nl, size_t * nnodes) {
-    Network * network = malloc(1 * sizeof (Network));
+    Network * network = calloc(1, sizeof (Network));
     if (network == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network'. Aborting.\n");
         exit(EXIT_FAILURE);
@@ -19,19 +21,21 @@ Network * ann__network_create (size_t nl, size_t * nnodes) {
     network->nnodes = nnodes;
     network->nl = nl;
     network->nn = calc_nn(nl, nnodes);
+    network->ni = calc_ni(nl, nnodes);
+    network->no = calc_no(nl, nnodes);
     network->nw = calc_nw(nl, nnodes);
     network->nb = calc_nb(nl, nnodes);
-    network->nodes = malloc(network->nn * sizeof(float));
+    network->nodes = calloc(network->nn, sizeof(float));
     if (network->nodes == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'nodes'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
-    network->biases = malloc(network->nb * sizeof(float));
+    network->biases = calloc(network->nb, sizeof(float));
     if (network->biases == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'biases'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
-    network->weights = malloc(network->nw * sizeof(float));
+    network->weights = calloc(network->nw, sizeof(float));
     if (network->weights == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'weights'. Aborting.\n");
         exit(EXIT_FAILURE);
@@ -80,12 +84,56 @@ void ann__network_destroy (Network * network) {
 }
 
 
+void ann__network_print(FILE * stream, Network * network) {
+    fprintf(stream, "network layout\n");
+    fprintf(stream, "- nodes: %zu\n", network->nn);
+    fprintf(stream, "- layers: %zu\n", network->nl);
+    fprintf(stream, "- input nodes: %zu\n", network->ni);
+    fprintf(stream, "- hidden nodes: %zu\n", network->nn - network->ni - network->no);
+    fprintf(stream, "- output nodes: %zu\n", network->no);
+    fprintf(stream, "- weights: %zu\n", network->nw);
+    fprintf(stream, "- biases: %zu\n", network->nb);
+}
+
+
+void ann__network_populate_biases (Network * network) {
+    size_t nb = network->nb;
+    for (size_t i = 0; i < nb; i++) {
+        int z = rand() % 100;
+        network->biases[i] = (float) z / 100;
+    }
+}
+
+
+void ann__network_populate_input (Network * network, Meta * meta, float * data, size_t iobj) {
+    size_t ni = network->ni;
+    for (size_t i = 0; i < ni; i++) {
+        size_t j = iobj * meta->stride + i;
+        network->nodes[i] = data[j];
+    }
+}
+
+
+void ann__network_populate_weights (Network * network) {
+    size_t nw = network->nw;
+    for (size_t i = 0; i < nw; i++) {
+        int z = rand() % 100;
+        network->weights[i] = (float) z / 100;
+    }
+}
+
+
 size_t calc_nb (size_t nl, size_t * nnodes) {
     size_t n = 0;
     for (size_t i = 1; i < nl; i++) {
         n += nnodes[i];
     }
     return n;
+}
+
+
+size_t calc_ni (size_t, size_t * nnodes) {
+    return nnodes[0];
 }
 
 
@@ -96,6 +144,12 @@ size_t calc_nn (size_t nl, size_t * nnodes) {
     }
     return n;
 }
+
+
+size_t calc_no (size_t nl, size_t * nnodes) {
+    return nnodes[nl - 1];
+}
+
 
 size_t calc_nw (size_t nl, size_t * nnodes) {
     size_t n = 0;

@@ -59,16 +59,16 @@ target_link_libraries(
 target_sources(
     tgt_lib_ann
     PRIVATE
-        ${PROJECT_ROOT}/src/ann/network.c
         ${PROJECT_ROOT}/src/ann/afuns.c
+        ${PROJECT_ROOT}/src/ann/network.c
     PUBLIC
         FILE_SET fset_lib_ann_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/ann/network.h
             ${PROJECT_ROOT}/include/ann/afuns.h
+            ${PROJECT_ROOT}/include/ann/network.h
 )
 
 install(TARGETS tgt_lib_ann
