@@ -1,6 +1,6 @@
 #ifndef ANN__NETWORK_H
 #define ANN__NETWORK_H
-#include "idxread/idxread.h"
+#include "idx/idx.h"
 #include <stddef.h>
 #include <stdio.h>
 
@@ -19,11 +19,12 @@ typedef struct network {
 } Network;
 
 void ann__network_backprop (Network * network, const float learning_rate);
+void ann__network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses);
 Network * ann__network_create (const size_t nl, size_t * nnodes);
-void ann__network_destroy (Network * network);
+void ann__network_destroy (Network ** network);
 void ann__network_fwdpass (Network * network);
 void ann__network_populate_biases (Network * network);
-void ann__network_populate_input (Network * network, const Meta * meta, const float * data, const size_t iobj);
+void ann__network_populate_input (Network * network, const Data * images, const size_t iobj);
 void ann__network_populate_weights (Network * network);
 void ann__network_print(FILE * stream, Network * network);
 

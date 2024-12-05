@@ -16,6 +16,10 @@ void ann__network_backprop (Network * network, const float learning_rate) {
 }
 
 
+void ann__network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses) {
+}
+
+
 Network * ann__network_create (const size_t nl, size_t * nnodes) {
     Network * network = calloc(1, sizeof (Network));
     if (network == nullptr) {
@@ -48,6 +52,18 @@ Network * ann__network_create (const size_t nl, size_t * nnodes) {
 }
 
 
+void ann__network_destroy (Network ** network) {
+    free((*network)->nodes);
+    (*network)->nodes = nullptr;
+    free((*network)->biases);
+    (*network)->biases = nullptr;
+    free((*network)->weights);
+    (*network)->weights = nullptr;
+    free(*network);
+    *network = nullptr;
+}
+
+
 void ann__network_fwdpass (Network * network) {
     size_t nl = network->nl;
     float * w = &network->weights[0];
@@ -76,18 +92,6 @@ void ann__network_fwdpass (Network * network) {
 }
 
 
-void ann__network_destroy (Network * network) {
-    free(network->nodes);
-    network->nodes = nullptr;
-    free(network->biases);
-    network->biases = nullptr;
-    free(network->weights);
-    network->weights = nullptr;
-    free(network);
-    network = nullptr;
-}
-
-
 void ann__network_print(FILE * stream, Network * network) {
     fprintf(stream, "network layout\n");
     fprintf(stream, "- nodes: %zu\n", network->nn);
@@ -109,11 +113,11 @@ void ann__network_populate_biases (Network * network) {
 }
 
 
-void ann__network_populate_input (Network * network, const Meta * meta, const float * data, const size_t iobj) {
+void ann__network_populate_input (Network * network, const Data * images, const size_t iobj) {
     size_t ni = network->ni;
     for (size_t i = 0; i < ni; i++) {
-        size_t j = iobj * meta->stride + i;
-        network->nodes[i] = data[j];
+        size_t j = iobj * ni + i;
+        network->nodes[i] = images->vals[j];
     }
 }
 

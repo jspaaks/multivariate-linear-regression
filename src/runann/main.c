@@ -5,17 +5,12 @@
 #include <time.h>
 #include <string.h>
 #include "ann/network.h"
-#include "idxread/idxread.h"
+#include "idx/idx.h"
 
 
 void seed_network (Network *);
 void print_usage (FILE *, char * []);
-void print_image (FILE *, const Meta *, const uint8_t *, size_t);
-float * scale_then_translate(Meta *, uint8_t *);
-
-
-static uint8_t scale = 1;
-static uint8_t translation = 0;
+void print_image (FILE *, const Data *, size_t);
 
 
 int main (int argc, char * argv[]) {
@@ -31,13 +26,13 @@ int main (int argc, char * argv[]) {
 
     // ============================================================ //
 
-    char * path = argv[1];
-    Meta meta = {0};
-    idxread__get_meta(path, &meta);
-    uint8_t * raw = idxread__get_data(path, &meta);
-    idxread__print_meta(stdout, &meta);
-    print_image(stdout, &meta, &raw[0], 0);
-    float * data = scale_then_translate(&meta, &raw[0]);
+    const char * images_path = argv[1];
+    const char * labels_path = argv[2];
+
+    Data * images = (Data *) idx__read(images_path);
+    Data * labels = (Data *) idx__read(labels_path);
+    idx__print_meta(stdout, images);
+    idx__print_meta(stdout, labels);
 
     // ============================================================ //
 
@@ -46,37 +41,42 @@ int main (int argc, char * argv[]) {
     srand(time(nullptr));
     Network * network = ann__network_create(nlayers, nnodes);
     ann__network_print(stdout, network);
+    float * losses = calloc(network->no, sizeof(float));
 
-    const size_t niter = 10;
+    const size_t nstarts = 1;
+    const size_t niters = 1;
     const float learning_rate = 0.01;
-    for (size_t iiter = 0; iiter < niter; iiter++) {
-        ann__network_populate_weights(network);
-        ann__network_populate_biases(network);
-        for (size_t iobj = 0; iobj < meta.nobjs; iobj++) {
-            ann__network_populate_input(network, &meta, &data[0], iobj);
-            ann__network_fwdpass(network);
-            // ann__calc_loss();
+    for (size_t istart = 0; istart < nstarts; istart++) {
+        for (size_t iiter = 0; iiter < niters; iiter++) {
+            ann__network_populate_weights(network);
+            ann__network_populate_biases(network);
+            for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
+                ann__network_populate_input(network, images, iobj);
+                ann__network_fwdpass(network);
+                ann__network_calc_loss(network, labels, iobj, losses);
+            }
+            ann__network_backprop(network, learning_rate);
         }
-        ann__network_backprop(network, learning_rate);
     }
 
-    ann__network_destroy(network);
-
-    free(raw);
-    free(data);
+    ann__network_destroy(&network);
+    idx__destroy_data(&images);
+    idx__destroy_data(&labels);
+    free(losses);
+    losses = nullptr;
 
     return 0;
 }
 
 
-void print_image (FILE * stream, const Meta * meta, const uint8_t * data, size_t iobj) {
-    size_t nr = meta->dimension_sizes[1];
-    size_t nc = meta->dimension_sizes[2];
-    assert(iobj < meta->nobjs && "Index out of range");
+void print_image (FILE * stream, const Data * images, size_t iobj) {
+    size_t nr = images->dimension_sizes[1];
+    size_t nc = images->dimension_sizes[2];
+    assert(iobj < images->nobjs && "Index out of range");
     for (size_t ir = 0; ir < nr; ir++) {
         for (size_t ic = 0; ic < nc; ic++) {
             size_t i = iobj * nr * nc + ir * nc + ic;
-            char ch = data[i] == 0 ? ' ' : '.';
+            char ch = images->vals[i] == 0 ? ' ' : '.';
             if (ic == nc - 1) {
                 fprintf(stream, " %c\n", ch);
             } else {
@@ -89,31 +89,4 @@ void print_image (FILE * stream, const Meta * meta, const uint8_t * data, size_t
 
 void print_usage(FILE * stream, char * argv[]) {
     fprintf(stream, "Usage: %s FILENAME\n   Read IDX formatted data from FILENAME and ...\n", argv[0]);
-}
-
-
-float * scale_then_translate(Meta * meta, uint8_t * raw) {
-    uint8_t lower = UINT8_MAX;
-    uint8_t upper = 0;
-    for (size_t i = 0; i < meta->n; i++) {
-        if (raw[i] < lower) {
-            lower = raw[i];
-        }
-        if (raw[i] > upper) {
-            upper = raw[i];
-        }
-    }
-    uint8_t range = upper - lower;
-
-    float * data = calloc(meta->n, sizeof(float));
-    for (size_t i = 0; i < meta->n; i++) {
-        float x = raw[i] - lower;
-        data[i] = x / range;
-    }
-
-    // set static variables to facilitate unscaling and
-    // untranslating
-    translation = lower;
-    scale = range;
-    return data;
 }

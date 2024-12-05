@@ -55,7 +55,7 @@ target_link_libraries(
     PRIVATE
         m
         tgt_lib_ann
-        tgt_lib_idxread
+        tgt_lib_idx
 )
 
 target_sources(

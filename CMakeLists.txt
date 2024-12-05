@@ -13,6 +13,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 add_subdirectory(${PROJECT_ROOT}/src/ann)
-add_subdirectory(${PROJECT_ROOT}/src/idxread)
+add_subdirectory(${PROJECT_ROOT}/src/idx)
 add_subdirectory(${PROJECT_ROOT}/src/runann)
 add_subdirectory(${PROJECT_ROOT}/test/ann)
