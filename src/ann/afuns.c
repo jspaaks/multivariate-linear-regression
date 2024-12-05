@@ -3,17 +3,17 @@
 
 // various activation functions
 
-float leaky_relu (float x) {
-    return parametric_relu(0.01f, x);
+float ann__afuns_leaky_relu (float x) {
+    return ann__afuns_parametric_relu(0.01f, x);
 }
 
 
-float leaky_relu_deriv (float x) {
-    return parametric_relu_deriv(0.01f, x);
+float ann__afuns_leaky_relu_deriv (float x) {
+    return ann__afuns_parametric_relu_deriv(0.01f, x);
 }
 
 
-float parametric_relu (float a, float x) {
+float ann__afuns_parametric_relu (float a, float x) {
     if (x > 0.0f) {
         return x;
     }
@@ -21,7 +21,7 @@ float parametric_relu (float a, float x) {
 }
 
 
-float parametric_relu_deriv (float a, float x) {
+float ann__afuns_parametric_relu_deriv (float a, float x) {
     if (x > 0.0f) {
         return 1.0f;
     }
@@ -29,22 +29,22 @@ float parametric_relu_deriv (float a, float x) {
 }
 
 
-float relu (float x) {
-    return parametric_relu(0.0f, x);
+float ann__afuns_relu (float x) {
+    return ann__afuns_parametric_relu(0.0f, x);
 }
 
 
-float relu_deriv (float x) {
-    return parametric_relu_deriv(0.0f, x);
+float ann__afuns_relu_deriv (float x) {
+    return ann__afuns_parametric_relu_deriv(0.0f, x);
 }
 
 
-float sigmoid (float x) {
+float ann__afuns_sigmoid (float x) {
     return 1.0f / (1.0f + expf(-x));
 }
 
 
-float sigmoid_deriv (float x) {
-    float z = sigmoid (x);
+float ann__afuns_sigmoid_deriv (float x) {
+    float z = ann__afuns_sigmoid (x);
     return z * (1 - z);
 }

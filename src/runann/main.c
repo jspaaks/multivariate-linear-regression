@@ -9,7 +9,6 @@
 
 
 void seed_network (Network *);
-void read_data (void);
 void print_usage (FILE *, char * []);
 void print_image (FILE *, const Meta *, const uint8_t *, size_t);
 float * scale_then_translate(Meta *, uint8_t *);
@@ -48,15 +47,17 @@ int main (int argc, char * argv[]) {
     Network * network = ann__network_create(nlayers, nnodes);
     ann__network_print(stdout, network);
 
-    size_t niter = 10;
+    const size_t niter = 10;
+    const float learning_rate = 0.01;
     for (size_t iiter = 0; iiter < niter; iiter++) {
         ann__network_populate_weights(network);
         ann__network_populate_biases(network);
         for (size_t iobj = 0; iobj < meta.nobjs; iobj++) {
             ann__network_populate_input(network, &meta, &data[0], iobj);
-            ann__network_fwd(network);
-//            ann__calc_loss();
+            ann__network_fwdpass(network);
+            // ann__calc_loss();
         }
+        ann__network_backprop(network, learning_rate);
     }
 
     ann__network_destroy(network);

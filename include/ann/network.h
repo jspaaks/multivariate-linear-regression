@@ -18,12 +18,13 @@ typedef struct network {
     size_t nw;        // network total number of weight values
 } Network;
 
-Network * ann__network_create (size_t, size_t []);
-void ann__network_destroy (Network *);
-void ann__network_fwd (Network *);
-void ann__network_populate_biases (Network *);
-void ann__network_populate_input (Network *, Meta *, float *, size_t);
-void ann__network_populate_weights (Network *);
-void ann__network_print(FILE *, Network *);
+void ann__network_backprop (Network * network, const float learning_rate);
+Network * ann__network_create (const size_t nl, size_t * nnodes);
+void ann__network_destroy (Network * network);
+void ann__network_fwdpass (Network * network);
+void ann__network_populate_biases (Network * network);
+void ann__network_populate_input (Network * network, const Meta * meta, const float * data, const size_t iobj);
+void ann__network_populate_weights (Network * network);
+void ann__network_print(FILE * stream, Network * network);
 
 #endif

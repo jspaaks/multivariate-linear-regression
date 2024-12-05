@@ -5,14 +5,18 @@
 #include "stdio.h"
 
 
-size_t calc_nb (size_t, size_t *);
-size_t calc_ni (size_t, size_t *);
-size_t calc_nn (size_t, size_t *);
-size_t calc_no (size_t, size_t *);
-size_t calc_nw (size_t, size_t *);
+size_t calc_nb (const size_t nl, const size_t * nnodes);
+size_t calc_ni (const size_t nl, const size_t * nnodes);
+size_t calc_nn (const size_t nl, const size_t * nnodes);
+size_t calc_no (const size_t nl, const size_t * nnodes);
+size_t calc_nw (const size_t nl, const size_t * nnodes);
 
 
-Network * ann__network_create (size_t nl, size_t * nnodes) {
+void ann__network_backprop (Network * network, const float learning_rate) {
+}
+
+
+Network * ann__network_create (const size_t nl, size_t * nnodes) {
     Network * network = calloc(1, sizeof (Network));
     if (network == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network'. Aborting.\n");
@@ -44,7 +48,7 @@ Network * ann__network_create (size_t nl, size_t * nnodes) {
 }
 
 
-void ann__network_fwd (Network * network) {
+void ann__network_fwdpass (Network * network) {
     size_t nl = network->nl;
     float * w = &network->weights[0];
     float * b = &network->biases[0];
@@ -56,12 +60,12 @@ void ann__network_fwd (Network * network) {
         for (size_t i = 0; i < onr; i++) {
             *out = 0;
             for (size_t j = 0; j < inr; j++) {
-                *out += *w * *in;  // apply weight
+                *out += *w * *in;          // apply weight
                 w++;
                 in++;
             }
-            *out += *b;            // apply bias
-            *out = relu(*out);     // apply activation function
+            *out += *b;                    // apply bias
+            *out = ann__afuns_relu(*out);  // apply activation function
             out++;
             b++;
             if (i < onr - 1) {
@@ -105,7 +109,7 @@ void ann__network_populate_biases (Network * network) {
 }
 
 
-void ann__network_populate_input (Network * network, Meta * meta, float * data, size_t iobj) {
+void ann__network_populate_input (Network * network, const Meta * meta, const float * data, const size_t iobj) {
     size_t ni = network->ni;
     for (size_t i = 0; i < ni; i++) {
         size_t j = iobj * meta->stride + i;
@@ -123,7 +127,7 @@ void ann__network_populate_weights (Network * network) {
 }
 
 
-size_t calc_nb (size_t nl, size_t * nnodes) {
+size_t calc_nb (const size_t nl, const size_t * nnodes) {
     size_t n = 0;
     for (size_t i = 1; i < nl; i++) {
         n += nnodes[i];
@@ -132,12 +136,12 @@ size_t calc_nb (size_t nl, size_t * nnodes) {
 }
 
 
-size_t calc_ni (size_t, size_t * nnodes) {
+size_t calc_ni (const size_t, const size_t * nnodes) {
     return nnodes[0];
 }
 
 
-size_t calc_nn (size_t nl, size_t * nnodes) {
+size_t calc_nn (const size_t nl, const size_t * nnodes) {
     size_t n = 0;
     for (size_t i = 0; i < nl; i++) {
         n += nnodes[i];
@@ -146,12 +150,12 @@ size_t calc_nn (size_t nl, size_t * nnodes) {
 }
 
 
-size_t calc_no (size_t nl, size_t * nnodes) {
+size_t calc_no (const size_t nl, const size_t * nnodes) {
     return nnodes[nl - 1];
 }
 
 
-size_t calc_nw (size_t nl, size_t * nnodes) {
+size_t calc_nw (const size_t nl, const size_t * nnodes) {
     size_t n = 0;
     for (size_t i = 0; i < nl - 1; i++) {
         n += nnodes[i] * nnodes[i+1];
