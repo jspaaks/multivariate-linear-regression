@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_runann)
+add_library(tgt_lib_network SHARED)
 
-set_property(TARGET tgt_exe_runann PROPERTY OUTPUT_NAME runann)
+set_property(TARGET tgt_lib_network PROPERTY OUTPUT_NAME network)
 
 target_compile_definitions(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
         -Wall
         -Wextra
@@ -45,25 +45,31 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_link_libraries(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
-        m
         tgt_lib_afuns
-        tgt_lib_idx
-        tgt_lib_network
-        tgt_lib_ofuns
 )
 
 target_sources(
-    tgt_exe_runann
+    tgt_lib_network
     PRIVATE
-        ${PROJECT_ROOT}/src/runann/main.c
+        ${PROJECT_ROOT}/src/network/network.c
+    PUBLIC
+        FILE_SET fset_lib_network_headers
+        TYPE HEADERS
+        BASE_DIRS
+            ${PROJECT_ROOT}/include
+        FILES
+            ${PROJECT_ROOT}/include/network/network.h
 )
 
-install(TARGETS tgt_exe_runann)
+install(TARGETS tgt_lib_network
+    LIBRARY
+    FILE_SET fset_lib_network_headers
+)

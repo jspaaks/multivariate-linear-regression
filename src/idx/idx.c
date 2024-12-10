@@ -70,15 +70,14 @@ void fill_type (FILE * fp, Data * data) {
 }
 
 
-void idx__destroy_data(Data ** data) {
+void idx_destroy_data(Data ** data) {
     free((*data)->vals);
     free(*data);
     *data = nullptr;
 }
 
 
-
-Data * idx__read (const char * path) {
+Data * idx_read (const char * path) {
 
     errno = 0;
     Data * data = calloc(1, sizeof(Data));
@@ -120,7 +119,7 @@ Data * idx__read (const char * path) {
 
 
 
-void idx__print_meta (FILE * stream, Data * data) {
+void idx_print_meta (FILE * stream, Data * data) {
     fprintf(stream, "{\n");
     fprintf(stream, "  .dimension_sizes = {");
     for (uint8_t i = 0; i < data->ndims - 1; i++) {

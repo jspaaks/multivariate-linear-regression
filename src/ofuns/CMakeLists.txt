@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_library(tgt_lib_ann SHARED)
+add_library(tgt_lib_ofuns SHARED)
 
-set_property(TARGET tgt_lib_ann PROPERTY OUTPUT_NAME ann)
+set_property(TARGET tgt_lib_ofuns PROPERTY OUTPUT_NAME ofuns)
 
 target_compile_definitions(
-    tgt_lib_ann
+    tgt_lib_ofuns
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_lib_ann
+    tgt_lib_ofuns
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_lib_ann
+    tgt_lib_ofuns
     PRIVATE
         -Wall
         -Wextra
@@ -45,33 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_lib_ann
+    tgt_lib_ofuns
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
-target_link_libraries(
-    tgt_lib_ann
-    PRIVATE
-        m
-)
-
 target_sources(
-    tgt_lib_ann
+    tgt_lib_ofuns
     PRIVATE
-        ${PROJECT_ROOT}/src/ann/afuns.c
-        ${PROJECT_ROOT}/src/ann/network.c
+        ${PROJECT_ROOT}/src/ofuns/ofuns.c
     PUBLIC
-        FILE_SET fset_lib_ann_headers
+        FILE_SET fset_lib_ofuns_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/ann/afuns.h
-            ${PROJECT_ROOT}/include/ann/network.h
+            ${PROJECT_ROOT}/include/ofuns/ofuns.h
 )
 
-install(TARGETS tgt_lib_ann
+install(TARGETS tgt_lib_ofuns
     LIBRARY
-    FILE_SET fset_lib_ann_headers
+    FILE_SET fset_lib_ofuns_headers
 )

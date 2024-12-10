@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "ann/network.h"
+#include "network/network.h"
 #include "idx/idx.h"
 
 
@@ -29,18 +29,18 @@ int main (int argc, char * argv[]) {
     const char * images_path = argv[1];
     const char * labels_path = argv[2];
 
-    Data * images = (Data *) idx__read(images_path);
-    Data * labels = (Data *) idx__read(labels_path);
-    idx__print_meta(stdout, images);
-    idx__print_meta(stdout, labels);
+    Data * images = (Data *) idx_read(images_path);
+    Data * labels = (Data *) idx_read(labels_path);
+    idx_print_meta(stdout, images);
+    idx_print_meta(stdout, labels);
 
     // ============================================================ //
 
     constexpr size_t nlayers = 4;
     size_t nnodes[nlayers] = {784, 300, 100, 10};
     srand(time(nullptr));
-    Network * network = ann__network_create(nlayers, nnodes);
-    ann__network_print(stdout, network);
+    Network * network = network_create(nlayers, nnodes);
+    network_print(stdout, network);
     float * losses = calloc(network->no, sizeof(float));
 
     const size_t nstarts = 1;
@@ -48,20 +48,20 @@ int main (int argc, char * argv[]) {
     const float learning_rate = 0.01;
     for (size_t istart = 0; istart < nstarts; istart++) {
         for (size_t iiter = 0; iiter < niters; iiter++) {
-            ann__network_populate_weights(network);
-            ann__network_populate_biases(network);
+            network_populate_weights(network);
+            network_populate_biases(network);
             for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
-                ann__network_populate_input(network, images, iobj);
-                ann__network_fwdpass(network);
-                ann__network_calc_loss(network, labels, iobj, losses);
+                network_populate_input(network, images, iobj);
+                network_fwdpass(network);
+                network_calc_loss(network, labels, iobj, losses);
             }
-            ann__network_backprop(network, learning_rate);
+            network_backprop(network, learning_rate);
         }
     }
 
-    ann__network_destroy(&network);
-    idx__destroy_data(&images);
-    idx__destroy_data(&labels);
+    network_destroy(&network);
+    idx_destroy_data(&images);
+    idx_destroy_data(&labels);
     free(losses);
     losses = nullptr;
 

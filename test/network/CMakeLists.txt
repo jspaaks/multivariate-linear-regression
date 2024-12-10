@@ -7,24 +7,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_test_ann)
+add_executable(tgt_exe_test_network)
 
-set_property(TARGET tgt_exe_test_ann PROPERTY OUTPUT_NAME test_ann)
+set_property(TARGET tgt_exe_test_network PROPERTY OUTPUT_NAME test_network)
 
 target_compile_definitions(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
         -Wall
         -Wextra
@@ -35,22 +35,22 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_link_libraries(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
         criterion
-        tgt_lib_ann
+        tgt_lib_network
 )
 
 target_sources(
-    tgt_exe_test_ann
+    tgt_exe_test_network
     PRIVATE
-        ${PROJECT_ROOT}/test/ann/test_network.c
+        ${PROJECT_ROOT}/test/network/test_network.c
 )
 
-install(TARGETS tgt_exe_test_ann)
+install(TARGETS tgt_exe_test_network)

@@ -1,8 +1,9 @@
-#include "ann/network.h"
-#include "ann/afuns.h"
-#include "stddef.h"
-#include "stdlib.h"
-#include "stdio.h"
+#include "network/network.h"
+#include "afuns/afuns.h"
+#include "ofuns/ofuns.h"
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 size_t calc_nb (const size_t nl, const size_t * nnodes);
@@ -12,15 +13,19 @@ size_t calc_no (const size_t nl, const size_t * nnodes);
 size_t calc_nw (const size_t nl, const size_t * nnodes);
 
 
-void ann__network_backprop (Network * network, const float learning_rate) {
+void network_backprop (Network * network, const float learning_rate) {
 }
 
 
-void ann__network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses) {
+void network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses) {
+    size_t n = network->no;
+    size_t m = (size_t) labels->vals[iobj];
+    size_t i = network->nn - network->no;
+    losses[iobj] = ofuns_svm(n, &network->nodes[i], m);
 }
 
 
-Network * ann__network_create (const size_t nl, size_t * nnodes) {
+Network * network_create (const size_t nl, size_t * nnodes) {
     Network * network = calloc(1, sizeof (Network));
     if (network == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network'. Aborting.\n");
@@ -52,7 +57,7 @@ Network * ann__network_create (const size_t nl, size_t * nnodes) {
 }
 
 
-void ann__network_destroy (Network ** network) {
+void network_destroy (Network ** network) {
     free((*network)->nodes);
     (*network)->nodes = nullptr;
     free((*network)->biases);
@@ -64,7 +69,7 @@ void ann__network_destroy (Network ** network) {
 }
 
 
-void ann__network_fwdpass (Network * network) {
+void network_fwdpass (Network * network) {
     size_t nl = network->nl;
     float * w = &network->weights[0];
     float * b = &network->biases[0];
@@ -76,12 +81,12 @@ void ann__network_fwdpass (Network * network) {
         for (size_t i = 0; i < onr; i++) {
             *out = 0;
             for (size_t j = 0; j < inr; j++) {
-                *out += *w * *in;          // apply weight
+                *out += *w * *in;     // apply weight
                 w++;
                 in++;
             }
-            *out += *b;                    // apply bias
-            *out = ann__afuns_relu(*out);  // apply activation function
+            *out += *b;               // apply bias
+            *out = afuns_relu(*out);  // apply activation function
             out++;
             b++;
             if (i < onr - 1) {
@@ -92,7 +97,7 @@ void ann__network_fwdpass (Network * network) {
 }
 
 
-void ann__network_print(FILE * stream, Network * network) {
+void network_print(FILE * stream, Network * network) {
     fprintf(stream, "network layout\n");
     fprintf(stream, "- nodes: %zu\n", network->nn);
     fprintf(stream, "- layers: %zu\n", network->nl);
@@ -104,7 +109,7 @@ void ann__network_print(FILE * stream, Network * network) {
 }
 
 
-void ann__network_populate_biases (Network * network) {
+void network_populate_biases (Network * network) {
     size_t nb = network->nb;
     for (size_t i = 0; i < nb; i++) {
         int z = rand() % 200 - 100;
@@ -113,7 +118,7 @@ void ann__network_populate_biases (Network * network) {
 }
 
 
-void ann__network_populate_input (Network * network, const Data * images, const size_t iobj) {
+void network_populate_input (Network * network, const Data * images, const size_t iobj) {
     size_t ni = network->ni;
     for (size_t i = 0; i < ni; i++) {
         size_t j = iobj * ni + i;
@@ -122,7 +127,7 @@ void ann__network_populate_input (Network * network, const Data * images, const 
 }
 
 
-void ann__network_populate_weights (Network * network) {
+void network_populate_weights (Network * network) {
     size_t nw = network->nw;
     for (size_t i = 0; i < nw; i++) {
         int z = rand() % 200 - 100;

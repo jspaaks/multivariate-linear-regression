@@ -1,5 +1,5 @@
-#ifndef IDXREAD_H
-#define IDXREAD_H
+#ifndef IDX_H
+#define IDX_H
 #include <stdio.h>
 #include <stdint.h>
 
@@ -19,9 +19,9 @@ struct data {
     uint8_t * vals;
 };
 
-void idx__destroy_data(Data ** data);
-Data * idx__read (const char * path);
-void idx__print_meta (FILE * fp, Data * data);
+void idx_destroy_data(Data ** data);
+Data * idx_read (const char * path);
+void idx_print_meta (FILE * fp, Data * data);
 
 
 #endif

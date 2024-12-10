@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_runann)
+add_library(tgt_lib_afuns SHARED)
 
-set_property(TARGET tgt_exe_runann PROPERTY OUTPUT_NAME runann)
+set_property(TARGET tgt_lib_afuns PROPERTY OUTPUT_NAME afuns)
 
 target_compile_definitions(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
         -Wall
         -Wextra
@@ -45,25 +45,31 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_link_libraries(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
         m
-        tgt_lib_afuns
-        tgt_lib_idx
-        tgt_lib_network
-        tgt_lib_ofuns
 )
 
 target_sources(
-    tgt_exe_runann
+    tgt_lib_afuns
     PRIVATE
-        ${PROJECT_ROOT}/src/runann/main.c
+        ${PROJECT_ROOT}/src/afuns/afuns.c
+    PUBLIC
+        FILE_SET fset_lib_afuns_headers
+        TYPE HEADERS
+        BASE_DIRS
+            ${PROJECT_ROOT}/include
+        FILES
+            ${PROJECT_ROOT}/include/afuns/afuns.h
 )
 
-install(TARGETS tgt_exe_runann)
+install(TARGETS tgt_lib_afuns
+    LIBRARY
+    FILE_SET fset_lib_afuns_headers
+)
