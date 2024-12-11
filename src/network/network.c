@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 size_t calc_nb (const size_t nl, const size_t * nnodes);
@@ -17,7 +18,7 @@ void network_backprop (Network * network, const float learning_rate, const float
 }
 
 
-void network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses) {
+void network_calc_losses (const Network * network, const Data * labels, size_t iobj, float * losses) {
     size_t n = network->no;
     size_t m = (size_t) labels->vals[iobj];
     size_t i = network->nn - network->no;
@@ -31,33 +32,46 @@ Network * network_create (const size_t nl, size_t * nnodes) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
-    network->nnodes = nnodes;
+
+    network->nnodes = calloc(nl, sizeof(size_t));
+    if (network->nnodes == nullptr) {
+        fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'nnodes'. Aborting.\n");
+        exit(EXIT_FAILURE);
+    }
+    memcpy(network->nnodes, nnodes, nl * sizeof(size_t));
+
     network->nl = nl;
     network->nn = calc_nn(nl, nnodes);
     network->ni = calc_ni(nl, nnodes);
     network->no = calc_no(nl, nnodes);
     network->nw = calc_nw(nl, nnodes);
     network->nb = calc_nb(nl, nnodes);
+
     network->nodes = calloc(network->nn, sizeof(float));
     if (network->nodes == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'nodes'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
+
     network->biases = calloc(network->nb, sizeof(float));
     if (network->biases == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'biases'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
+
     network->weights = calloc(network->nw, sizeof(float));
     if (network->weights == nullptr) {
         fprintf(stderr, "Something went wrong allocating memory for 'Network' member 'weights'. Aborting.\n");
         exit(EXIT_FAILURE);
     }
+
     return network;
 }
 
 
 void network_destroy (Network ** network) {
+    free((*network)->nnodes);
+    (*network)->nnodes = nullptr;
     free((*network)->nodes);
     (*network)->nodes = nullptr;
     free((*network)->biases);
@@ -97,7 +111,7 @@ void network_fwdpass (Network * network) {
 }
 
 
-void network_print(FILE * stream, Network * network) {
+void network_print (FILE * stream, Network * network) {
     fprintf(stream, "network layout\n");
     fprintf(stream, "- nodes: %zu\n", network->nn);
     fprintf(stream, "- layers: %zu\n", network->nl);
