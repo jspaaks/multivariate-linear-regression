@@ -54,6 +54,7 @@ target_link_libraries(
     tgt_lib_network
     PRIVATE
         tgt_lib_afuns
+        tgt_lib_lfuns
 )
 
 target_sources(

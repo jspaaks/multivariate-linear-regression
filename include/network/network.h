@@ -18,7 +18,7 @@ typedef struct network {
     size_t nw;        // network total number of weight values
 } Network;
 
-void network_backprop (Network * network, const float learning_rate);
+void network_backprop (Network * network, const float learning_rate, const float * losses);
 void network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses);
 Network * network_create (const size_t nl, size_t * nnodes);
 void network_destroy (Network ** network);

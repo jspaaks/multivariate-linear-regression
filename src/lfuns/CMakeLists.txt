@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_library(tgt_lib_ofuns SHARED)
+add_library(tgt_lib_lfuns SHARED)
 
-set_property(TARGET tgt_lib_ofuns PROPERTY OUTPUT_NAME ofuns)
+set_property(TARGET tgt_lib_lfuns PROPERTY OUTPUT_NAME lfuns)
 
 target_compile_definitions(
-    tgt_lib_ofuns
+    tgt_lib_lfuns
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_lib_ofuns
+    tgt_lib_lfuns
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_lib_ofuns
+    tgt_lib_lfuns
     PRIVATE
         -Wall
         -Wextra
@@ -45,25 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_lib_ofuns
+    tgt_lib_lfuns
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_sources(
-    tgt_lib_ofuns
+    tgt_lib_lfuns
     PRIVATE
-        ${PROJECT_ROOT}/src/ofuns/ofuns.c
+        ${PROJECT_ROOT}/src/lfuns/lfuns.c
     PUBLIC
-        FILE_SET fset_lib_ofuns_headers
+        FILE_SET fset_lib_lfuns_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/ofuns/ofuns.h
+            ${PROJECT_ROOT}/include/lfuns/lfuns.h
 )
 
-install(TARGETS tgt_lib_ofuns
+install(TARGETS tgt_lib_lfuns
     LIBRARY
-    FILE_SET fset_lib_ofuns_headers
+    FILE_SET fset_lib_lfuns_headers
 )

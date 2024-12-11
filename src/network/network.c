@@ -1,6 +1,6 @@
 #include "network/network.h"
 #include "afuns/afuns.h"
-#include "ofuns/ofuns.h"
+#include "lfuns/lfuns.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@ size_t calc_no (const size_t nl, const size_t * nnodes);
 size_t calc_nw (const size_t nl, const size_t * nnodes);
 
 
-void network_backprop (Network * network, const float learning_rate) {
+void network_backprop (Network * network, const float learning_rate, const float * losses) {
 }
 
 
@@ -21,7 +21,7 @@ void network_calc_loss(const Network * network, const Data * labels, size_t iobj
     size_t n = network->no;
     size_t m = (size_t) labels->vals[iobj];
     size_t i = network->nn - network->no;
-    losses[iobj] = ofuns_svm(n, &network->nodes[i], m);
+    losses[iobj] = lfuns_svm(n, &network->nodes[i], m);
 }
 
 

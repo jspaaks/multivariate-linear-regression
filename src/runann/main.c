@@ -55,7 +55,7 @@ int main (int argc, char * argv[]) {
                 network_fwdpass(network);
                 network_calc_loss(network, labels, iobj, losses);
             }
-            network_backprop(network, learning_rate);
+            network_backprop(network, learning_rate, losses);
         }
     }
 
