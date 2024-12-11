@@ -3,10 +3,10 @@
 TODO
 
 1. add backpropagation
-1. add iteration / n-dimensional vector bump
+1. add gradient check https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3503s as a unit test
+1. add minibatching https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3776s
 1. add multistart
-1. add regularization functions library
-
+1. consider making the test binaries startable from ctest: https://cmake.org/cmake/help/v3.28/command/add_test.html
 
 ## CMake
 
