@@ -1,7 +1,10 @@
 #include "afuns/afuns.h"
 #include "math.h"
 
-// various activation functions
+/*
+ *  various activation functions
+ */
+
 
 float afuns_leaky_relu (float x) {
     return afuns_parametric_relu(0.01f, x);

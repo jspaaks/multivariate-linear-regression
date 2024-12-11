@@ -19,13 +19,13 @@ typedef struct network {
 } Network;
 
 void network_backprop (Network * network, const float learning_rate, const float * losses);
-void network_calc_loss(const Network * network, const Data * labels, size_t iobj, float * losses);
+void network_calc_losses (const Network * network, const Data * labels, size_t iobj, float * losses);
 Network * network_create (const size_t nl, size_t * nnodes);
 void network_destroy (Network ** network);
 void network_fwdpass (Network * network);
 void network_populate_biases (Network * network);
 void network_populate_input (Network * network, const Data * images, const size_t iobj);
 void network_populate_weights (Network * network);
-void network_print(FILE * stream, Network * network);
+void network_print (FILE * stream, Network * network);
 
 #endif

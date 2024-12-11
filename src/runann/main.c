@@ -53,7 +53,7 @@ int main (int argc, char * argv[]) {
             for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
                 network_populate_input(network, images, iobj);
                 network_fwdpass(network);
-                network_calc_loss(network, labels, iobj, losses);
+                network_calc_losses(network, labels, iobj, losses);
             }
             network_backprop(network, learning_rate, losses);
         }
