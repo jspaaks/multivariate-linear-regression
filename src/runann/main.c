@@ -88,5 +88,9 @@ void print_image (FILE * stream, const Data * images, size_t iobj) {
 
 
 void print_usage(FILE * stream, char * argv[]) {
-    fprintf(stream, "Usage: %s FILENAME\n   Read IDX formatted data from FILENAME and ...\n", argv[0]);
+    fprintf(stream,
+            "Usage: %s IMAGES_PATH LABELS_PATH\n"
+            "   Read IDX formatted images from IMAGES_PATH and read the\n"
+            "   corresponding IDX formatted labels from LABELS_PATH.\n"
+            "   Subsequently use these data to train a neural network.\n", argv[0]);
 }
