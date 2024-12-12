@@ -18,7 +18,7 @@ void network_backprop (Network * network, const float learning_rate, const float
 }
 
 
-void network_calc_losses (const Network * network, const Data * labels, size_t iobj, float * losses) {
+void network_calc_losses (const Network * network, const Data * labels, const size_t iobj, float * losses) {
     size_t n = network->no;
     size_t m = (size_t) labels->vals[iobj];
     size_t i = network->nn - network->no;

@@ -19,7 +19,7 @@ typedef struct network {
 } Network;
 
 void network_backprop (Network * network, const float learning_rate, const float * losses);
-void network_calc_losses (const Network * network, const Data * labels, size_t iobj, float * losses);
+void network_calc_losses (const Network * network, const Data * labels, const size_t iobj, float * losses);
 Network * network_create (const size_t nl, size_t * nnodes);
 void network_destroy (Network ** network);
 void network_fwdpass (Network * network);
