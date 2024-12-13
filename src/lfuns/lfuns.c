@@ -16,6 +16,9 @@ float lfuns_softmax(const size_t n, const float * values, const size_t m) {
         tmp[i] = x;
         summed += x;
     }
+    // Examples from https://www.youtube.com/watch?v=h7iBpEHGVNc&t=2698s use
+    // log10, not ln. Not sure it matters since both are monotonic, but I
+    // expected `ln`.
     float rv = -1 * log10f(tmp[m] / summed);
     free(tmp);
     return rv;

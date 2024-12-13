@@ -136,6 +136,12 @@ https://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf
 - hidden layer 100
 - output layer 10
 
+## Notes
+
+1. softmax implementations use `log10`, not `ln`, following examples from
+   https://www.youtube.com/watch?v=h7iBpEHGVNc&t=2698s. Not sure it matters
+   since both are monotonic. PyTorch seems to be using `ln` however.
+
 ## Acknowledgements
 
 _This project was generated using [Copier](https://pypi.org/project/copier)
