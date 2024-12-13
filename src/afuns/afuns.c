@@ -32,6 +32,16 @@ float afuns_parametric_relu_deriv (float a, float x) {
 }
 
 
+float afuns_passthrough (float x) {
+    return x;
+}
+
+
+float afuns_passthrough_deriv (void) {
+    return 1.0f;
+}
+
+
 float afuns_relu (float x) {
     return afuns_parametric_relu(0.0f, x);
 }
