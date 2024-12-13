@@ -1,6 +1,7 @@
-#include "network/network.h"
 #include "afuns/afuns.h"
+#include "idx/idx.h"
 #include "lfuns/lfuns.h"
+#include "network/network.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,7 +15,11 @@ size_t calc_no (const size_t nl, const size_t * nnodes);
 size_t calc_nw (const size_t nl, const size_t * nnodes);
 
 
-void network_backprop (Network * network, const float learning_rate, const float * losses) {
+void network_backprop (Network * network, const Data * labels, const float learning_rate, const float * losses) {
+    float avg_loss = 0.0;
+    for (size_t i = 0; i < labels->nobjs; i++) {
+        avg_loss += losses[i] / labels->nobjs;
+    }
 }
 
 
