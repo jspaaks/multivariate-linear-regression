@@ -41,7 +41,7 @@ int main (int argc, char * argv[]) {
     srand(time(nullptr));
     Network * network = network_create(nlayers, nnodes);
     network_print(stdout, network);
-    float * losses = calloc(network->no, sizeof(float));
+    float * losses = calloc(labels->nobjs, sizeof(float));
 
     const size_t nstarts = 1;
     const size_t niters = 1;
@@ -55,7 +55,7 @@ int main (int argc, char * argv[]) {
                 network_fwdpass(network);
                 network_calc_losses(network, labels, iobj, losses);
             }
-            network_backprop(network, learning_rate, losses);
+            network_backprop(network, labels, learning_rate, losses);
         }
     }
 
