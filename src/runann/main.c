@@ -6,11 +6,9 @@
 #include <string.h>
 #include "layers/layers.h"
 #include "lfuns/lfuns.h"
-#include "network/network.h"
 #include "idx/idx.h"
 
 
-void seed_network (Network *);
 void print_usage (FILE *, char * []);
 void print_image (FILE *, const Data *, size_t);
 
@@ -23,9 +21,13 @@ int main (int argc, char * argv[]) {
         print_usage(stderr, argv);
         exit(EXIT_FAILURE);
     }
-    if (strncmp(argv[1], "-h", 3) == 0 || strncmp(argv[1], "--help", 7) == 0) {
-        print_usage(stdout, argv);
-        exit(EXIT_SUCCESS);
+    {
+        bool a = strncmp(argv[1], "-h", 3) == 0;
+        bool b = strncmp(argv[1], "--help", 7) == 0;
+        if (a || b) {
+            print_usage(stdout, argv);
+            exit(EXIT_SUCCESS);
+        }
     }
 
     // ============================= READ DATA ============================ //
