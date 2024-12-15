@@ -16,7 +16,7 @@ struct data {
     size_t stride;
     size_t n;
     uint8_t typ;
-    uint8_t * vals;
+    float * vals;
 };
 
 void idx_destroy_data(Data ** data);

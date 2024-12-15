@@ -104,15 +104,17 @@ Data * idx_read (const char * path) {
 
     assert(data->typ == IDX_DATA_TYPE_UINT8 && "Only uint8_t are supported.");
 
-    const uint8_t nbytes_per_elem = 1;
-
-    data->vals = calloc(data->nobjs, data->stride * nbytes_per_elem);
+    data->vals = calloc(data->nobjs * data->stride, sizeof(float));
     if (data->vals == nullptr) {
         fprintf(stderr, "Error allocating memory for values, aborting.\n");
         exit(EXIT_FAILURE);
     }
     fseek(fp, data->start, SEEK_SET);
-    fread(data->vals, nbytes_per_elem, data->nobjs * data->stride, fp);
+    for (size_t i = 0; i < data->nobjs * data->stride; i++) {
+        uint8_t byte;
+        fread(&byte, 1, 1, fp);
+        data->vals[i] = (float) byte;
+    }
     fclose(fp);
     return data;
 }

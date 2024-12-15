@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_library(tgt_lib_network SHARED)
+add_library(tgt_lib_layers SHARED)
 
-set_property(TARGET tgt_lib_network PROPERTY OUTPUT_NAME network)
+set_property(TARGET tgt_lib_layers PROPERTY OUTPUT_NAME layers)
 
 target_compile_definitions(
-    tgt_lib_network
+    tgt_lib_layers
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_lib_network
+    tgt_lib_layers
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_lib_network
+    tgt_lib_layers
     PRIVATE
         -Wall
         -Wextra
@@ -45,32 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_lib_network
+    tgt_lib_layers
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
-target_link_libraries(
-    tgt_lib_network
-    PRIVATE
-        tgt_lib_afuns
-        tgt_lib_lfuns
-)
-
 target_sources(
-    tgt_lib_network
+    tgt_lib_layers
     PRIVATE
-        ${PROJECT_ROOT}/src/network/network.c
+        ${PROJECT_ROOT}/src/layers/layers.c
     PUBLIC
-        FILE_SET fset_lib_network_headers
+        FILE_SET fset_lib_layers_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/network/network.h
+            ${PROJECT_ROOT}/include/layers/layers.h
 )
 
-install(TARGETS tgt_lib_network
+install(TARGETS tgt_lib_layers
     LIBRARY
-    FILE_SET fset_lib_network_headers
+    FILE_SET fset_lib_layers_headers
 )

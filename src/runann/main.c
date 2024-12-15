@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include "layers/layers.h"
+#include "lfuns/lfuns.h"
 #include "network/network.h"
 #include "idx/idx.h"
 
@@ -15,6 +17,8 @@ void print_image (FILE *, const Data *, size_t);
 
 int main (int argc, char * argv[]) {
 
+    // ========================= PARSE ARGUMENTS ========================== //
+
     if (argc == 1) {
         print_usage(stderr, argv);
         exit(EXIT_FAILURE);
@@ -24,48 +28,57 @@ int main (int argc, char * argv[]) {
         exit(EXIT_SUCCESS);
     }
 
-    // ============================================================ //
+    // ============================= READ DATA ============================ //
 
     const char * images_path = argv[1];
     const char * labels_path = argv[2];
-
     Data * images = (Data *) idx_read(images_path);
     Data * labels = (Data *) idx_read(labels_path);
     idx_print_meta(stdout, images);
     idx_print_meta(stdout, labels);
 
-    // ============================================================ //
+    // =================== INITIALIZE RANDOMIZATION ======================= //
 
-    constexpr size_t nlayers = 4;
-    size_t nnodes[nlayers] = {784, 300, 100, 10};
     srand(time(nullptr));
-    Network * network = network_create(nlayers, nnodes);
-    network_print(stdout, network);
-    float * losses = calloc(labels->nobjs, sizeof(float));
 
-    const size_t nstarts = 1;
-    const size_t niters = 1;
-    const float learning_rate = 0.01;
-    for (size_t istart = 0; istart < nstarts; istart++) {
-        for (size_t iiter = 0; iiter < niters; iiter++) {
-            network_populate_weights(network);
-            network_populate_biases(network);
-            for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
-                network_populate_input(network, images, iobj);
-                network_fwdpass(network);
-                network_calc_losses(network, labels, iobj, losses);
-            }
-            network_backprop(network, labels, learning_rate, losses);
-        }
+    // ======================= INITIALIZE ARRAYS ========================== //
+
+    constexpr size_t n0 = 784;  // input
+    constexpr size_t n1 = 300;  // hidden 1
+    constexpr size_t n2 = 100;  // hidden 2
+    constexpr size_t n3 = 10;   // output
+
+    DotProductLayer * dpl1 = layers_create_dot_product_layer(n0, n1);
+    float hidden1[n1] = {0};
+    DotProductLayer * dpl2 = layers_create_dot_product_layer(n1, n2);
+    float hidden2[n2] = {0};
+    DotProductLayer * dpl3 = layers_create_dot_product_layer(n2, n3);
+    float output[n3] = {0};
+    float loss = 0.0f;
+
+    // ========================== FORWARD PASS ============================ //
+
+    for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
+        size_t i = iobj * images->stride;
+        dpl1->fwd(dpl1, &images->vals[i], &hidden1[0]);
+        dpl2->fwd(dpl2, &hidden1[0], &hidden2[0]);
+        dpl3->fwd(dpl3, &hidden2[0], &output[0]);
+        loss += lfuns_svm(n3, &output[0], labels->vals[iobj]) / labels->nobjs;
     }
 
-    network_destroy(&network);
+    // ========================= BACKWARD PASS ============================ //
+
+    // TODO
+
+    // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
+
+    layers_destroy_dot_product_layer(&dpl1);
+    layers_destroy_dot_product_layer(&dpl2);
+    layers_destroy_dot_product_layer(&dpl3);
     idx_destroy_data(&images);
     idx_destroy_data(&labels);
-    free(losses);
-    losses = nullptr;
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
