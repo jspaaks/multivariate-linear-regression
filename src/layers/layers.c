@@ -16,7 +16,7 @@ DotProductLayer * layers_create_dot_product_layer(size_t ni, size_t no) {
     }
     for (size_t i = 0; i < ni * no; i++) {
         int z = rand() % 200 - 100;
-        w[i] = (float) z / 1000;
+        w[i] = (float) z / 1000000;
     }
     float * g = calloc(ni * no, sizeof(float));
     if (g == nullptr) {
