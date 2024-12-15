@@ -58,7 +58,6 @@ target_link_libraries(
         tgt_lib_idx
         tgt_lib_layers
         tgt_lib_lfuns
-        tgt_lib_network
 )
 
 target_sources(
