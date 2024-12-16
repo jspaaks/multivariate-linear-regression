@@ -4,13 +4,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "layers/layers.h"
+#include "data/data.h"
 #include "lfuns/lfuns.h"
-#include "idx/idx.h"
-
+#include "ops/ops.h"
 
 void print_usage (FILE *, char * []);
-void print_image (FILE *, const Data *, size_t);
 
 
 int main (int argc, char * argv[]) {
@@ -34,10 +32,8 @@ int main (int argc, char * argv[]) {
 
     const char * images_path = argv[1];
     const char * labels_path = argv[2];
-    Data * images = (Data *) idx_read(images_path);
-    Data * labels = (Data *) idx_read(labels_path);
-    idx_print_meta(stdout, images);
-    idx_print_meta(stdout, labels);
+    Matrix * images = data_read_images(images_path);
+    Matrix * labels = data_read_labels(labels_path);
 
     // =================== INITIALIZE RANDOMIZATION ======================= //
 
@@ -45,60 +41,38 @@ int main (int argc, char * argv[]) {
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
-    constexpr size_t n0 = 784;  // input
-    constexpr size_t n1 = 300;  // hidden 1
-    constexpr size_t n2 = 100;  // hidden 2
-    constexpr size_t n3 = 10;   // output
+    Matrix * w1 = data_create(300, images->nr);
+    Matrix * hidden1 = data_create(w1->nr, images->nc);
+    Matrix * w2 = data_create(100, hidden1->nc);
+    Matrix * hidden2 = data_create(w2->nr, hidden1->nc);
+    Matrix * w3 = data_create(10, hidden2->nc);
+    Matrix * output = data_create(w3->nr, hidden2->nc);
 
-    DotProductLayer * dpl1 = layers_create_dot_product_layer(n0, n1);
-    float hidden1[n1] = {0};
-    DotProductLayer * dpl2 = layers_create_dot_product_layer(n1, n2);
-    float hidden2[n2] = {0};
-    DotProductLayer * dpl3 = layers_create_dot_product_layer(n2, n3);
-    float output[n3] = {0};
     float loss = 0.0f;
 
-    // ========================== FORWARD PASS ============================ //
+    //// ========================== FORWARD PASS ============================ //
 
-    for (size_t iobj = 0; iobj < images->nobjs; iobj++) {
-        size_t i = iobj * images->stride;
-        dpl1->fwd(dpl1, &images->vals[i], &hidden1[0]);
-        dpl2->fwd(dpl2, &hidden1[0], &hidden2[0]);
-        dpl3->fwd(dpl3, &hidden2[0], &output[0]);
-        loss += lfuns_svm(n3, &output[0], labels->vals[iobj]) / labels->nobjs;
-    }
+    ops_dot_product(w1, images, hidden1);
+    ops_dot_product(w2, hidden1, hidden2);
+    ops_dot_product(w3, hidden2, output);
+    ops_svm(output, labels, &loss);
 
-    // ========================= BACKWARD PASS ============================ //
+    //// ========================= BACKWARD PASS ============================ //
 
-    // TODO
+    //// TODO
 
-    // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
+    //// =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
-    layers_destroy_dot_product_layer(&dpl1);
-    layers_destroy_dot_product_layer(&dpl2);
-    layers_destroy_dot_product_layer(&dpl3);
-    idx_destroy_data(&images);
-    idx_destroy_data(&labels);
+    data_destroy(&output);
+    data_destroy(&w3);
+    data_destroy(&hidden2);
+    data_destroy(&w2);
+    data_destroy(&hidden1);
+    data_destroy(&w1);
+    data_destroy(&labels);
+    data_destroy(&images);
 
     return EXIT_SUCCESS;
-}
-
-
-void print_image (FILE * stream, const Data * images, size_t iobj) {
-    size_t nr = images->dimension_sizes[1];
-    size_t nc = images->dimension_sizes[2];
-    assert(iobj < images->nobjs && "Index out of range");
-    for (size_t ir = 0; ir < nr; ir++) {
-        for (size_t ic = 0; ic < nc; ic++) {
-            size_t i = iobj * nr * nc + ir * nc + ic;
-            char ch = images->vals[i] == 0 ? ' ' : '.';
-            if (ic == nc - 1) {
-                fprintf(stream, " %c\n", ch);
-            } else {
-                fprintf(stream, " %c", ch);
-            }
-        }
-    }
 }
 
 

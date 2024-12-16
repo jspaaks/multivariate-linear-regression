@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_library(tgt_lib_layers SHARED)
+add_library(tgt_lib_ops SHARED)
 
-set_property(TARGET tgt_lib_layers PROPERTY OUTPUT_NAME layers)
+set_property(TARGET tgt_lib_ops PROPERTY OUTPUT_NAME ops)
 
 target_compile_definitions(
-    tgt_lib_layers
+    tgt_lib_ops
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_lib_layers
+    tgt_lib_ops
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_lib_layers
+    tgt_lib_ops
     PRIVATE
         -Wall
         -Wextra
@@ -45,25 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_lib_layers
+    tgt_lib_ops
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_sources(
-    tgt_lib_layers
+    tgt_lib_ops
     PRIVATE
-        ${PROJECT_ROOT}/src/layers/layers.c
+        ${PROJECT_ROOT}/src/ops/ops.c
     PUBLIC
-        FILE_SET fset_lib_layers_headers
+        FILE_SET fset_lib_ops_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/layers/layers.h
+            ${PROJECT_ROOT}/include/ops/ops.h
 )
 
-install(TARGETS tgt_lib_layers
+install(TARGETS tgt_lib_ops
     LIBRARY
-    FILE_SET fset_lib_layers_headers
+    FILE_SET fset_lib_ops_headers
 )

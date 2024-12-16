@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_library(tgt_lib_idx SHARED)
+add_library(tgt_lib_data SHARED)
 
-set_property(TARGET tgt_lib_idx PROPERTY OUTPUT_NAME idx)
+set_property(TARGET tgt_lib_data PROPERTY OUTPUT_NAME data)
 
 target_compile_definitions(
-    tgt_lib_idx
+    tgt_lib_data
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_lib_idx
+    tgt_lib_data
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_lib_idx
+    tgt_lib_data
     PRIVATE
         -Wall
         -Wextra
@@ -45,25 +45,25 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_lib_idx
+    tgt_lib_data
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_sources(
-    tgt_lib_idx
+    tgt_lib_data
     PRIVATE
-        ${PROJECT_ROOT}/src/idx/idx.c
+        ${PROJECT_ROOT}/src/data/data.c
     PUBLIC
-        FILE_SET fset_lib_idx_headers
+        FILE_SET fset_lib_data_headers
         TYPE HEADERS
         BASE_DIRS
             ${PROJECT_ROOT}/include
         FILES
-            ${PROJECT_ROOT}/include/idx/idx.h
+            ${PROJECT_ROOT}/include/data/data.h
 )
 
-install(TARGETS tgt_lib_idx
+install(TARGETS tgt_lib_data
     LIBRARY
-    FILE_SET fset_lib_idx_headers
+    FILE_SET fset_lib_data_headers
 )
