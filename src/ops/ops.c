@@ -20,7 +20,7 @@ void ops_dot_product (Matrix * left, Matrix * right, Matrix * result) {
             size_t iresult = ir * nc + ic;
             result->vals[iresult] = 0.0f;
             for (size_t i = 0; i < n; i++) {
-                assert(0 && "some indexing error here");
+                assert(0 && "valgrind suggests possibly some indexing error here");
                 size_t ileft = ir * left->nc + i;
                 size_t iright = ic + i * right->nc;
                 result->vals[iresult] += left->vals[ileft] * right->vals[iright];
