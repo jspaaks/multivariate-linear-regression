@@ -50,6 +50,12 @@ target_include_directories(
         ${PROJECT_ROOT}/include
 )
 
+target_link_libraries(
+    tgt_lib_ops
+    PRIVATE
+        m
+)
+
 target_sources(
     tgt_lib_ops
     PRIVATE

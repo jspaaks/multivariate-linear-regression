@@ -44,6 +44,7 @@ target_link_libraries(
     tgt_exe_test_ops
     PRIVATE
         criterion
+        tgt_lib_afuns
         tgt_lib_data
         tgt_lib_ops
 )

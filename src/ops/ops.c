@@ -1,6 +1,8 @@
+#include "afuns/afuns.h"
 #include "data/data.h"
 #include "ops/ops.h"
 #include <assert.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +30,31 @@ void ops_dot_product (Matrix * left, Matrix * right, Matrix * result) {
             }
         }
     }
+}
+
+
+void ops_map_af (ActivationFunction af, Matrix * in, Matrix * out) {
+    assert(in->nr == out->nr && "Number of rows in input should match number of rows in output");
+    assert(in->nc == out->nc && "Number of columns in input should match number of columns in output");
+    size_t n = in->nr * in->nc;
+    for (size_t i = 0; i < n; i++) {
+        out->vals[i] = af(in->vals[i]);
+    }
+}
+
+bool ops_map_eq (Matrix * a, Matrix * b, float eps) {
+    assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
+    assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
+    size_t n = a->nr * a->nc;
+    for (size_t i = 0; i < n; i++) {
+        float ai = a->vals[i];
+        float bi = b->vals[i];
+        bool cond = fabsf(ai - bi) > eps;
+        if (cond) {
+            return false;
+        }
+    }
+    return true;
 }
 
 

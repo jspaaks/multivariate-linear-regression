@@ -1,6 +1,9 @@
 #ifndef AFUNS_H
 #define AFUNS_H
 
+
+typedef float (*ActivationFunction) (float);
+
 float afuns_leaky_relu (float);
 float afuns_leaky_relu_deriv (float);
 float afuns_parametric_relu (float, float);
