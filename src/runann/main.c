@@ -43,25 +43,25 @@ int main (int argc, char * argv[]) {
 
     Matrix * w1 = data_create(300, images->nr);
     Matrix * hidden1 = data_create(w1->nr, images->nc);
-    Matrix * w2 = data_create(100, hidden1->nc);
+    Matrix * w2 = data_create(100, hidden1->nr);
     Matrix * hidden2 = data_create(w2->nr, hidden1->nc);
-    Matrix * w3 = data_create(10, hidden2->nc);
+    Matrix * w3 = data_create(10, hidden2->nr);
     Matrix * output = data_create(w3->nr, hidden2->nc);
 
     float loss = 0.0f;
 
-    //// ========================== FORWARD PASS ============================ //
+    // ========================== FORWARD PASS ============================ //
 
     ops_dot_product(w1, images, hidden1);
     ops_dot_product(w2, hidden1, hidden2);
     ops_dot_product(w3, hidden2, output);
     ops_svm(output, labels, &loss);
 
-    //// ========================= BACKWARD PASS ============================ //
+    // ========================= BACKWARD PASS ============================ //
 
-    //// TODO
+    // TODO
 
-    //// =================== DEALLOCATE DYNAMIC MEMORY ====================== //
+    // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
     data_destroy(&output);
     data_destroy(&w3);

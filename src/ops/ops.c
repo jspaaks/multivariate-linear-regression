@@ -11,16 +11,17 @@ void ops_add_bias (void) {
 
 
 void ops_dot_product (Matrix * left, Matrix * right, Matrix * result) {
-    size_t nr = left->nr;
-    size_t nc = right->nc;
+    assert(left->nc == right->nr && "Number of columns in left operand should be equal to the number of rows in the right operand.");
+    assert(result->nr == left->nr && "Number of rows in result should match the number of rows in left operand.");
+    assert(result->nc == right->nc && "Number of columns in result should match the number of columns in right operand.");
+    size_t nr = result->nr;
+    size_t nc = result->nc;
     size_t n = left->nc;
-
     for (size_t ir = 0; ir < nr; ir++) {
         for (size_t ic = 0; ic < nc; ic++) {
             size_t iresult = ir * nc + ic;
             result->vals[iresult] = 0.0f;
             for (size_t i = 0; i < n; i++) {
-                assert(0 && "valgrind suggests possibly some indexing error here");
                 size_t ileft = ir * left->nc + i;
                 size_t iright = ic + i * right->nc;
                 result->vals[iresult] += left->vals[ileft] * right->vals[iright];
