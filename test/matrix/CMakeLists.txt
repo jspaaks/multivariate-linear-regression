@@ -7,24 +7,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_test_ops)
+add_executable(tgt_exe_test_matrix)
 
-set_property(TARGET tgt_exe_test_ops PROPERTY OUTPUT_NAME test_ops)
+set_property(TARGET tgt_exe_test_matrix PROPERTY OUTPUT_NAME test_matrix)
 
 target_compile_definitions(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
         -Wall
         -Wextra
@@ -35,23 +35,23 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_link_libraries(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
         criterion
+        tgt_lib_afuns
         tgt_lib_matrix
-        tgt_lib_ops
 )
 
 target_sources(
-    tgt_exe_test_ops
+    tgt_exe_test_matrix
     PRIVATE
-        ${PROJECT_ROOT}/test/ops/test_ops.c
+        ${PROJECT_ROOT}/test/matrix/test_matrix.c
 )
 
-install(TARGETS tgt_exe_test_ops)
+install(TARGETS tgt_exe_test_matrix)

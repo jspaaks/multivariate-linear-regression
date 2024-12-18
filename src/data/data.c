@@ -1,4 +1,5 @@
 #include "data/data.h"
+#include "matrix/matrix.h"
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,39 +8,6 @@
 
 
 uint32_t get_dimension_size (FILE * fp, const size_t idim);
-
-
-Matrix * data_create (size_t nr, size_t nc) {
-    errno = 0;
-    Matrix * arr = calloc(1, sizeof(Matrix));
-    if (arr == nullptr) {
-        fprintf(stderr, "%s\nError allocating memory for Matrix instance, aborting.\n", strerror(errno));
-        errno = 0;
-        exit(EXIT_FAILURE);
-    }
-
-    errno = 0;
-    float * vals = calloc(nr * nc, sizeof(float));
-    if (vals == nullptr) {
-        fprintf(stderr, "%s\nError allocating memory for values of Matrix instance, aborting.\n", strerror(errno));
-        errno = 0;
-        exit(EXIT_FAILURE);
-    }
-
-    arr->nr = nr;
-    arr->nc = nc;
-    arr->vals = vals;
-    return arr;
-}
-
-
-
-void data_destroy(Matrix ** arr) {
-    free((*arr)->vals);
-    (*arr)->vals = nullptr;
-    free(*arr);
-    *arr = nullptr;
-}
 
 
 Matrix * data_read_images (const char * path) {
@@ -53,7 +21,7 @@ Matrix * data_read_images (const char * path) {
     size_t nc = get_dimension_size(fp, 0);
     size_t nr = get_dimension_size(fp, 1) * get_dimension_size(fp, 2);
     size_t start = 4 * 1 + 3 * 4;
-    Matrix * images = data_create (nr, nc);
+    Matrix * images = matrix_create (nr, nc);
     fseek(fp, start, SEEK_SET);
     for (size_t ic = 0; ic < nc; ic++) {
         for (size_t ir = 0; ir < nr; ir++) {
@@ -80,7 +48,7 @@ Matrix * data_read_labels (const char * path) {
     size_t nr = 1;
     size_t n = nr * nc;
     size_t start = 4 * 1 + 1 * 4;
-    Matrix * labels = data_create(nr, nc);
+    Matrix * labels = matrix_create(nr, nc);
     fseek(fp, start, SEEK_SET);
     for (size_t i = 0; i < n; i++) {
         uint8_t byte;

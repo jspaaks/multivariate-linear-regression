@@ -41,20 +41,20 @@ int main (int argc, char * argv[]) {
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
-    Matrix * w1 = data_create(300, images->nr);
-    Matrix * hidden1 = data_create(w1->nr, images->nc);
-    Matrix * w2 = data_create(100, hidden1->nr);
-    Matrix * hidden2 = data_create(w2->nr, hidden1->nc);
-    Matrix * w3 = data_create(10, hidden2->nr);
-    Matrix * output = data_create(w3->nr, hidden2->nc);
+    Matrix * w1 = matrix_create(300, images->nr);
+    Matrix * hidden1 = matrix_create(w1->nr, images->nc);
+    Matrix * w2 = matrix_create(100, hidden1->nr);
+    Matrix * hidden2 = matrix_create(w2->nr, hidden1->nc);
+    Matrix * w3 = matrix_create(10, hidden2->nr);
+    Matrix * output = matrix_create(w3->nr, hidden2->nc);
 
     float loss = 0.0f;
 
     // ========================== FORWARD PASS ============================ //
 
-    ops_dot_product(w1, images, hidden1);
-    ops_dot_product(w2, hidden1, hidden2);
-    ops_dot_product(w3, hidden2, output);
+    matrix_dotproduct(w1, images, hidden1);
+    matrix_dotproduct(w2, hidden1, hidden2);
+    matrix_dotproduct(w3, hidden2, output);
     ops_svm(output, labels, &loss);
 
     // ========================= BACKWARD PASS ============================ //
@@ -63,14 +63,14 @@ int main (int argc, char * argv[]) {
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
-    data_destroy(&output);
-    data_destroy(&w3);
-    data_destroy(&hidden2);
-    data_destroy(&w2);
-    data_destroy(&hidden1);
-    data_destroy(&w1);
-    data_destroy(&labels);
-    data_destroy(&images);
+    matrix_destroy(&output);
+    matrix_destroy(&w3);
+    matrix_destroy(&hidden2);
+    matrix_destroy(&w2);
+    matrix_destroy(&hidden1);
+    matrix_destroy(&w1);
+    matrix_destroy(&labels);
+    matrix_destroy(&images);
 
     return EXIT_SUCCESS;
 }

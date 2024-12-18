@@ -1,5 +1,5 @@
 #include "afuns/afuns.h"
-#include "data/data.h"
+#include "matrix/matrix.h"
 #include "ops/ops.h"
 #include <assert.h>
 #include <math.h>
@@ -12,49 +12,20 @@ void ops_add_bias (void) {
 }
 
 
-void ops_dot_product (Matrix * left, Matrix * right, Matrix * result) {
-    assert(left->nc == right->nr && "Number of columns in left operand should be equal to the number of rows in the right operand.");
-    assert(result->nr == left->nr && "Number of rows in result should match the number of rows in left operand.");
-    assert(result->nc == right->nc && "Number of columns in result should match the number of columns in right operand.");
-    size_t nr = result->nr;
-    size_t nc = result->nc;
-    size_t n = left->nc;
-    for (size_t ir = 0; ir < nr; ir++) {
-        for (size_t ic = 0; ic < nc; ic++) {
-            size_t iresult = ir * nc + ic;
-            result->vals[iresult] = 0.0f;
-            for (size_t i = 0; i < n; i++) {
-                size_t ileft = ir * left->nc + i;
-                size_t iright = ic + i * right->nc;
-                result->vals[iresult] += left->vals[ileft] * right->vals[iright];
-            }
-        }
-    }
-}
-
-
-void ops_map_af (ActivationFunction af, Matrix * in, Matrix * out) {
-    assert(in->nr == out->nr && "Number of rows in input should match number of rows in output");
-    assert(in->nc == out->nc && "Number of columns in input should match number of columns in output");
-    size_t n = in->nr * in->nc;
+float ops_half_ssr(const Matrix * predicted, const Matrix * labels) {
+    assert(predicted->nr == labels->nr && "expected equal number of rows");
+    assert(predicted->nc == labels->nc && "expected equal number of rows");
+    assert(predicted->nr == 1 && "expected predicted number of rows to be 1");
+    assert(labels->nr == 1 && "expected labels number of rows to be 1");
+    size_t n = labels->nc;
+    float rv = 0.0f;
     for (size_t i = 0; i < n; i++) {
-        out->vals[i] = af(in->vals[i]);
+        float d = predicted->vals[i] - labels->vals[i];
+        rv += pow(d, 2);
     }
-}
-
-bool ops_map_eq (Matrix * a, Matrix * b, float eps) {
-    assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
-    assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
-    size_t n = a->nr * a->nc;
-    for (size_t i = 0; i < n; i++) {
-        float ai = a->vals[i];
-        float bi = b->vals[i];
-        bool cond = fabsf(ai - bi) > eps;
-        if (cond) {
-            return false;
-        }
-    }
-    return true;
+    // divide by 2 because that simplifies the derivative without affecting
+    // our ability to minimize the loss
+    return rv / 2;
 }
 
 
@@ -63,7 +34,7 @@ void ops_softmax (void) {
 
 
 void ops_svm(Matrix * scores, Matrix * labels, float * loss) {
-    Matrix * losses = data_create(1, scores->nc);
+    Matrix * losses = matrix_create(1, scores->nc);
     for (size_t ic = 0; ic < scores->nc; ic++) {
         float acc = 0.0;
         size_t m = (size_t) labels->vals[ic];
@@ -79,5 +50,5 @@ void ops_svm(Matrix * scores, Matrix * labels, float * loss) {
     for (size_t i = 0; i < losses->nc; i++) {
         *loss += losses->vals[i] / losses->nc;
     }
-    data_destroy(&losses);
+    matrix_destroy(&losses);
 }
