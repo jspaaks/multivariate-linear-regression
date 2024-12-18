@@ -92,7 +92,7 @@ int main (int argc, char * argv[]) {
     // ========================== FORWARD PASS ============================ //
 
     size_t niters = 50;
-    float learning_rate = 0.00001;
+    float learning_rate = 0.01;
     for (size_t i = 0; i < niters; i++) {
         matrix_dotproduct(w, features, predicted);
         matrix_subtract(predicted, labels, error);

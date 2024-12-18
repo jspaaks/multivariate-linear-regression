@@ -8,6 +8,7 @@ typedef struct matrix Matrix;
 struct matrix {
     size_t nr;
     size_t nc;
+    size_t n;
     float * vals;
 };
 

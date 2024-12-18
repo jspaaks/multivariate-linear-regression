@@ -20,11 +20,9 @@ void matrix_acc_rows(const Matrix * matrix, Matrix * result) {
 void matrix_add (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
     assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
-    for (size_t ir = 0; ir < left->nr; ir++) {
-        for (size_t ic = 0; ic < left->nc; ic++) {
-            size_t i = ir * left->nc + ic;
-            result->vals[i] = left->vals[i] + right->vals[i];
-        }
+    size_t n = left->nr * left->nc;
+    for (size_t i = 0; i < n; i++) {
+        result->vals[i] = left->vals[i] + right->vals[i];
     }
 }
 
@@ -32,11 +30,9 @@ void matrix_add (const Matrix * left, const Matrix * right, Matrix * result) {
 void matrix_add_ (Matrix * left, const Matrix * right) {
     assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
     assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
-    for (size_t ir = 0; ir < left->nr; ir++) {
-        for (size_t ic = 0; ic < left->nc; ic++) {
-            size_t i = ir * left->nc + ic;
-            left->vals[i] = left->vals[i] + right->vals[i];
-        }
+    size_t n = left->nr * left->nc;
+    for (size_t i = 0; i < n; i++) {
+        left->vals[i] = left->vals[i] + right->vals[i];
     }
 }
 
@@ -68,6 +64,7 @@ Matrix * matrix_create (size_t nr, size_t nc) {
 
     arr->nr = nr;
     arr->nc = nc;
+    arr->n = nr * nc;
     arr->vals = vals;
     return arr;
 }
@@ -105,8 +102,7 @@ void matrix_dotproduct (const Matrix * left, const Matrix * right, Matrix * resu
 void matrix_map_af (const ActivationFunction af, const Matrix * in, Matrix * out) {
     assert(in->nr == out->nr && "Number of rows in input should match number of rows in output");
     assert(in->nc == out->nc && "Number of columns in input should match number of columns in output");
-    size_t n = in->nr * in->nc;
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < in->n; i++) {
         out->vals[i] = af(in->vals[i]);
     }
 }
@@ -118,8 +114,7 @@ void matrix_map_af_ (const ActivationFunction af, Matrix * matrix) {
 bool matrix_map_eq (const Matrix * a, const Matrix * b, float eps) {
     assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
     assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
-    size_t n = a->nr * a->nc;
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < a->n; i++) {
         float ai = a->vals[i];
         float bi = b->vals[i];
         bool cond = fabsf(ai - bi) > eps;
@@ -132,21 +127,15 @@ bool matrix_map_eq (const Matrix * a, const Matrix * b, float eps) {
 
 
 void matrix_scale (const Matrix * matrix, float factor, Matrix * result) {
-    for (size_t ir = 0; ir < matrix->nr; ir++) {
-        for (size_t ic = 0; ic < matrix->nc; ic++) {
-            size_t i = ir * matrix->nc + ic;
-            result->vals[i] = matrix->vals[i] * factor;
-        }
+    for (size_t i = 0; i < matrix->n; i++) {
+        result->vals[i] = matrix->vals[i] * factor;
     }
 }
 
 
 void matrix_scale_ (const Matrix * matrix, float factor) {
-    for (size_t ir = 0; ir < matrix->nr; ir++) {
-        for (size_t ic = 0; ic < matrix->nc; ic++) {
-            size_t i = ir * matrix->nc + ic;
-            matrix->vals[i] = matrix->vals[i] * factor;
-        }
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = matrix->vals[i] * factor;
     }
 }
 
@@ -154,11 +143,8 @@ void matrix_scale_ (const Matrix * matrix, float factor) {
 void matrix_subtract (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
     assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
-    for (size_t ir = 0; ir < left->nr; ir++) {
-        for (size_t ic = 0; ic < left->nc; ic++) {
-            size_t i = ir * left->nc + ic;
-            result->vals[i] = left->vals[i] - right->vals[i];
-        }
+    for (size_t i = 0; i < left->n; i++) {
+        result->vals[i] = left->vals[i] - right->vals[i];
     }
 }
 
@@ -166,11 +152,8 @@ void matrix_subtract (const Matrix * left, const Matrix * right, Matrix * result
 void matrix_subtract_ (Matrix * left, const Matrix * right) {
     assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
     assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
-    for (size_t ir = 0; ir < left->nr; ir++) {
-        for (size_t ic = 0; ic < left->nc; ic++) {
-            size_t i = ir * left->nc + ic;
-            left->vals[i] = left->vals[i] - right->vals[i];
-        }
+    for (size_t i = 0; i < left->n; i++) {
+        left->vals[i] = left->vals[i] - right->vals[i];
     }
 }
 
