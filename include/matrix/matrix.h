@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 #include <stddef.h>
+#include <stdio.h>
 
 typedef struct matrix Matrix;
 
@@ -36,6 +37,7 @@ void matrix_lowest_per_row (const Matrix * matrix, Matrix * result);
 bool matrix_map_eq (const Matrix * a, const Matrix * b, float eps);
 void matrix_multiply_scalar (const Matrix * matrix, float factor, Matrix * result);
 void matrix_multiply_scalar_ (const Matrix * matrix, float factor);
+void matrix_print (FILE * stream, Matrix * matrix, char * title);
 void matrix_subtract (const Matrix * left, const Matrix * right, Matrix * result);
 void matrix_subtract_ (Matrix * left, const Matrix * right);
 void matrix_subtract_scalar (const Matrix * left, float right, Matrix * result);

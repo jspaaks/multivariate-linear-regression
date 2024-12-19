@@ -310,6 +310,20 @@ void matrix_multiply_scalar_ (const Matrix * matrix, float factor) {
 }
 
 
+void matrix_print (FILE * stream, Matrix * matrix, char * title) {
+    if (title != nullptr) {
+        fprintf(stream, "%s ", title);
+    }
+    fprintf(stream, "(%zux%zu):\n", matrix->nr, matrix->nc);
+    for (size_t ir = 0; ir < matrix->nr; ir++) {
+        for (size_t ic = 0; ic < matrix->nc; ic++) {
+            size_t i = ir * matrix->nc + ic;
+            fprintf(stream, "%10g%s", matrix->vals[i], ic == matrix->nc - 1 ? "\n" : ", ");
+        }
+    }
+}
+
+
 void matrix_subtract (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
     assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
