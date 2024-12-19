@@ -10,45 +10,8 @@
 #include "ops/ops.h"
 
 void print_usage (FILE *, char * []);
-void populate_features_and_labels (const char * path, Matrix * features, Matrix * labels);
-
-
-void populate_features_and_labels (const char * path, Matrix * features, Matrix * labels) {
-    errno = 0;
-    FILE * fp = fopen(path, "r");
-    if (fp == nullptr) {
-        fprintf(stderr, "%s\nError reading data from file '%s', aborting.\n", strerror(errno), path);
-        errno = 0;
-        exit(EXIT_FAILURE);
-    }
-    const size_t n = features->nc;
-    // by convention, add a first dummy feature and set it to 1 such
-    // that the corresponding weight becomes the intercept term
-    for (size_t i = 0; i < n; i++) {
-        features->vals[0 * n + i] = 1.0f;
-    }
-    // now read the actual data
-    constexpr size_t bufsize = 100;
-    char buffer[bufsize] = {};
-    for (size_t i = 0; i < n; i++) {
-        float * area = &features->vals[1 * n + i];
-        fgets(buffer, bufsize, fp);
-        sscanf(buffer, "%f,%*f,%*f\n", area);
-    }
-    fseek(fp, 0, SEEK_SET);
-    for (size_t i = 0; i < n; i++) {
-        float * bedrooms = &features->vals[2 * n + i];
-        fgets(buffer, bufsize, fp);
-        sscanf(buffer, "%*f,%f,%*f\n", bedrooms);
-    }
-    fseek(fp, 0, SEEK_SET);
-    for (size_t i = 0; i < n; i++) {
-        float * price = &labels->vals[i];
-        fgets(buffer, bufsize, fp);
-        sscanf(buffer, "%*f,%*f,%f\n", price);
-    }
-    fclose(fp);
-}
+void populate_features (const char * path, Matrix * features);
+void populate_labels (const char * path, Matrix * labels);
 
 
 int main (int argc, char * argv[]) {
@@ -71,12 +34,20 @@ int main (int argc, char * argv[]) {
     const size_t ni = 47;
     const size_t nf = 2;
     const size_t no = 1;
-    Matrix * features = matrix_create(nf + 1, ni);
-    Matrix * features_tr = matrix_create(ni, nf + 1);
-    Matrix * labels = matrix_create(no, ni);
     const char * data_path = argv[1];
-    populate_features_and_labels(data_path, features, labels);
-    matrix_transpose(features, features_tr);
+
+    Matrix * features = matrix_create(ni, 1 + nf);
+    Matrix * features_td = matrix_create(1 + nf, ni);
+    populate_features(data_path, features);
+    matrix_transpose(features, features_td);
+
+    Matrix * labels = matrix_create(ni, no);
+    Matrix * labels_td = matrix_create(no, ni);
+    populate_labels(data_path, labels);
+    matrix_transpose(labels, labels_td);
+
+    matrix_print(stdout, features, "features");
+    matrix_print(stdout, labels, "labels");
 
     // =================== INITIALIZE RANDOMIZATION ======================= //
 
@@ -84,39 +55,77 @@ int main (int argc, char * argv[]) {
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
-    Matrix * w = matrix_create(no, nf + 1);
+    Matrix * weights = matrix_create(no, 1 + nf);
     Matrix * predicted = matrix_create(no, ni);
     Matrix * error = matrix_create(no, ni);
-    Matrix * step = matrix_create(no, nf + 1);
-
-    // ========================== FORWARD PASS ============================ //
+    Matrix * gradient = matrix_create(no, 1 + nf);
+    Matrix * step = matrix_create(no, 1 + nf);
 
     size_t niters = 50;
-    float learning_rate = 0.01;
+    float learning_rate = 0.000000001;
     for (size_t i = 0; i < niters; i++) {
-        matrix_dotproduct(w, features, predicted);
-        matrix_subtract(predicted, labels, error);
-        matrix_dotproduct(error, features_tr, step);
-        matrix_scale_(step, -1 * learning_rate);
-        matrix_add_(w, step);
+        matrix_dotproduct(weights, features_td, predicted);
+        matrix_subtract(predicted, labels_td, error);
+        matrix_print(stdout, error, "error");
+        matrix_dotproduct(error, features, gradient);
+        matrix_multiply_scalar(gradient, -1 * learning_rate, step);
+        matrix_add_(weights, step);
     }
-
-    // ========================= BACKWARD PASS ============================ //
-
-    // TODO
+    matrix_print(stdout, weights, "weights");
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
-    //data_destroy(&output);
-    //data_destroy(&w3);
-    //data_destroy(&hidden2);
-    //data_destroy(&w2);
-    //data_destroy(&hidden1);
-    //data_destroy(&w1);
-    //data_destroy(&labels);
-    //data_destroy(&images);
+    matrix_destroy(&weights);
+    matrix_destroy(&predicted);
+    matrix_destroy(&error);
+    matrix_destroy(&step);
+    matrix_destroy(&gradient);
+    matrix_destroy(&labels);
+    matrix_destroy(&features_td);
+    matrix_destroy(&features);
 
     return EXIT_SUCCESS;
+}
+
+
+void populate_features (const char * path, Matrix * features) {
+    errno = 0;
+    FILE * fp = fopen(path, "r");
+    if (fp == nullptr) {
+        fprintf(stderr, "%s\nError reading data from file '%s', aborting.\n", strerror(errno), path);
+        errno = 0;
+        exit(EXIT_FAILURE);
+    }
+    constexpr size_t bufsize = 100;
+    char buffer[bufsize] = {};
+    for (size_t ir = 0; ir < features->nr; ir++) {
+        float * intercept = &features->vals[ir * features->nc + 0];
+        float * area      = &features->vals[ir * features->nc + 1];
+        float * bedrooms  = &features->vals[ir * features->nc + 2];
+        *intercept = 1.0f;
+        fgets(buffer, bufsize, fp);
+        sscanf(buffer, "%f,%f,%*f\n", area, bedrooms);
+    }
+    fclose(fp);
+}
+
+
+void populate_labels (const char * path, Matrix * labels) {
+    errno = 0;
+    FILE * fp = fopen(path, "r");
+    if (fp == nullptr) {
+        fprintf(stderr, "%s\nError reading data from file '%s', aborting.\n", strerror(errno), path);
+        errno = 0;
+        exit(EXIT_FAILURE);
+    }
+    constexpr size_t bufsize = 100;
+    char buffer[bufsize] = {};
+    for (size_t ir = 0; ir < labels->nr; ir++) {
+        float * price = &labels->vals[ir];
+        fgets(buffer, bufsize, fp);
+        sscanf(buffer, "%*f,%*f,%f\n", price);
+    }
+    fclose(fp);
 }
 
 
