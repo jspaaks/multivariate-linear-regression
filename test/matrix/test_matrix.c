@@ -235,6 +235,40 @@ Test(matrix, broadcast_right) {
 }
 
 
+Test(matrix, divide_scalar) {
+    Matrix * matrix = matrix_create(2, 2);
+    Matrix * actual = matrix_create(2, 2);
+    Matrix * expected = matrix_create(2, 2);
+    float factor = 10.0f;
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = i;
+        expected->vals[i] = i / factor;
+    }
+    matrix_divide_scalar(matrix, factor, actual);
+    bool cond = matrix_map_eq (actual, expected, 0.0001f);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&expected);
+    matrix_destroy(&actual);
+    matrix_destroy(&matrix);
+}
+
+
+Test(matrix, divide_scalar_) {
+    Matrix * matrix = matrix_create(2, 2);
+    Matrix * expected = matrix_create(2, 2);
+    float factor = 10.0f;
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = i;
+        expected->vals[i] = i / factor;
+    }
+    matrix_divide_scalar_(matrix, factor);
+    bool cond = matrix_map_eq (matrix, expected, 0.0001f);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&expected);
+    matrix_destroy(&matrix);
+}
+
+
 Test(matrix, dotproduct) {
     Matrix * a = matrix_create(2, 3);
     Matrix * b = matrix_create(3, 4);
@@ -382,16 +416,16 @@ Test(matrix, map_eq) {
 }
 
 
-Test(matrix, scale_scalar) {
+Test(matrix, multiply_scalar) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = i;
-        expected->vals[i] = factor * i;
+        expected->vals[i] = i * factor;
     }
-    matrix_scale_scalar(matrix, factor, actual);
+    matrix_multiply_scalar(matrix, factor, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -400,15 +434,15 @@ Test(matrix, scale_scalar) {
 }
 
 
-Test(matrix, scale_scalar_) {
+Test(matrix, multiply_scalar_) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = i;
-        expected->vals[i] = factor * i;
+        expected->vals[i] = i * factor;
     }
-    matrix_scale_scalar_(matrix, factor);
+    matrix_multiply_scalar_(matrix, factor);
     bool cond = matrix_map_eq (matrix, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);

@@ -154,6 +154,20 @@ void matrix_destroy(Matrix ** arr) {
 }
 
 
+void matrix_divide_scalar (const Matrix * matrix, float factor, Matrix * result) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        result->vals[i] = matrix->vals[i] / factor;
+    }
+}
+
+
+void matrix_divide_scalar_ (const Matrix * matrix, float factor) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = matrix->vals[i] / factor;
+    }
+}
+
+
 void matrix_dotproduct (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nc == right->nr && "Number of columns in left operand should be equal to the number of rows in the right operand.");
     assert(result->nr == left->nr && "Number of rows in result should match the number of rows in left operand.");
@@ -282,14 +296,14 @@ bool matrix_map_eq (const Matrix * a, const Matrix * b, float eps) {
 }
 
 
-void matrix_scale_scalar (const Matrix * matrix, float factor, Matrix * result) {
+void matrix_multiply_scalar (const Matrix * matrix, float factor, Matrix * result) {
     for (size_t i = 0; i < matrix->n; i++) {
         result->vals[i] = matrix->vals[i] * factor;
     }
 }
 
 
-void matrix_scale_scalar_ (const Matrix * matrix, float factor) {
+void matrix_multiply_scalar_ (const Matrix * matrix, float factor) {
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = matrix->vals[i] * factor;
     }
