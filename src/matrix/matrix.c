@@ -8,10 +8,13 @@
 #include <string.h>
 
 
-void matrix_acc_cols (const Matrix * matrix, Matrix * result) {
+void matrix_acc_per_col (const Matrix * matrix, Matrix * result) {
     assert(matrix->nc == result->nc && "expected number of columns in input to be equal to the number of columns in result");
     assert(result->nr == 1 && "expected number of rows in result to be equal to 1");
-    for (size_t ir = 0; ir < matrix->nr; ir++) {
+    for (size_t ic = 0; ic < matrix->nc; ic++) {
+        result->vals[ic] = matrix->vals[ic];
+    }
+    for (size_t ir = 1; ir < matrix->nr; ir++) {
         for (size_t ic = 0; ic < matrix->nc; ic++) {
             size_t i = ir * matrix->nc + ic;
             result->vals[ic] += matrix->vals[i];
@@ -20,11 +23,15 @@ void matrix_acc_cols (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_acc_rows (const Matrix * matrix, Matrix * result) {
+void matrix_acc_per_row (const Matrix * matrix, Matrix * result) {
     assert(matrix->nr == result->nr && "expected number of rows in input to be equal to the number of rows in result");
     assert(result->nc == 1 && "expected number of columns in result to be equal to 1");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
-        for (size_t ic = 0; ic < matrix->nc; ic++) {
+        size_t i = ir * matrix->nc;
+        result->vals[ir] = matrix->vals[i];
+    }
+    for (size_t ir = 0; ir < matrix->nr; ir++) {
+        for (size_t ic = 1; ic < matrix->nc; ic++) {
             size_t i = ir * matrix->nc + ic;
             result->vals[ir] += matrix->vals[i];
         }
@@ -76,7 +83,10 @@ float matrix_avg (const Matrix * matrix) {
 void matrix_avg_per_col (const Matrix * matrix, Matrix * result) {
     assert(result->nr == 1 && "expected number of rows in result to be 1");
     assert(matrix->nc == result->nc && "expected number of columns in matrix to be equal to number of columns in result");
-    for (size_t ir = 0; ir < matrix->nr; ir++) {
+    for (size_t ic = 0; ic < matrix->nc; ic++) {
+        result->vals[ic] = matrix->vals[ic] / matrix->nr;
+    }
+    for (size_t ir = 1; ir < matrix->nr; ir++) {
         for (size_t ic = 0; ic < matrix->nc; ic++) {
             size_t i = ir * matrix->nc + ic;
             result->vals[ic] += matrix->vals[i] / matrix->nr;
@@ -89,11 +99,16 @@ void matrix_avg_per_row (const Matrix * matrix, Matrix * result) {
     assert(result->nc == 1 && "expected number of columns in result to be 1");
     assert(matrix->nr == result->nr && "expected number of rows in matrix to be equal to number of rows in result");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
-        for (size_t ic = 0; ic < matrix->nc; ic++) {
+        size_t i = ir * matrix->nc;
+        result->vals[ir] = matrix->vals[i] / matrix->nc;
+    }
+    for (size_t ir = 0; ir < matrix->nr; ir++) {
+        for (size_t ic = 1; ic < matrix->nc; ic++) {
             size_t i = ir * matrix->nc + ic;
             result->vals[ir] += matrix->vals[i] / matrix->nc;
         }
     }
+
 }
 
 
@@ -185,6 +200,26 @@ void matrix_dotproduct (const Matrix * left, const Matrix * right, Matrix * resu
                 result->vals[iresult] += left->vals[ileft] * right->vals[iright];
             }
         }
+    }
+}
+
+
+void matrix_hadamardproduct (const Matrix * left, const Matrix * right, Matrix * result) {
+    assert(left->nr == right->nr && "Number of rows in left operand should match the number of rows in right operand.");
+    assert(left->nc == right->nc && "Number of columns in left operand should match the number of columns in right operand.");
+    assert(left->nr == result->nr && "Number of rows in left operand should match the number of rows in the result.");
+    assert(left->nc == result->nc && "Number of columns in left operand should match the number of columns in the result.");
+    for (size_t i = 0; i < left->n; i++) {
+        result->vals[i] = left->vals[i] * right->vals[i];
+    }
+}
+
+
+void matrix_hadamardproduct_ (Matrix * left, const Matrix * right) {
+    assert(left->nr == right->nr && "Number of rows in left operand should match the number of rows in right operand.");
+    assert(left->nc == right->nc && "Number of columns in left operand should match the number of columns in right operand.");
+    for (size_t i = 0; i < left->n; i++) {
+        left->vals[i] *= right->vals[i];
     }
 }
 

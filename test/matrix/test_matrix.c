@@ -2,7 +2,7 @@
 #include <criterion/criterion.h>
 
 
-Test(matrix, acc_cols) {
+Test(matrix, acc_per_col) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
@@ -14,7 +14,7 @@ Test(matrix, acc_cols) {
     expected->vals[0] = 2.0f;
     expected->vals[1] = 4.0f;
 
-    matrix_acc_cols(matrix, actual);
+    matrix_acc_per_col(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -24,7 +24,7 @@ Test(matrix, acc_cols) {
 }
 
 
-Test(matrix, acc_rows) {
+Test(matrix, acc_per_row) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
@@ -36,7 +36,7 @@ Test(matrix, acc_rows) {
     expected->vals[0] = 1.0f;
     expected->vals[1] = 5.0f;
 
-    matrix_acc_rows(matrix, actual);
+    matrix_acc_per_row(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -291,6 +291,52 @@ Test(matrix, dotproduct) {
     matrix_destroy(&c);
     matrix_destroy(&b);
     matrix_destroy(&a);
+}
+
+
+Test(matrix, hadamardproduct) {
+    Matrix * left = matrix_create(2, 3);
+    Matrix * right = matrix_create(2, 3);
+    Matrix * actual = matrix_create(2, 3);
+    Matrix * expected = matrix_create(2, 3);
+
+    for (size_t ir = 0; ir < left->nr; ir++) {
+        for (size_t ic = 0; ic < left->nc; ic++) {
+            size_t i = ir * left->nc + ic;
+            left->vals[i] = ic + 1;
+            right->vals[i] = ir + 1;
+            expected->vals[i] = (ic + 1) * (ir + 1);
+        }
+    }
+    matrix_hadamardproduct(left, right, actual);
+    bool cond = matrix_map_eq (actual, expected, 0.0001f);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&expected);
+    matrix_destroy(&actual);
+    matrix_destroy(&right);
+    matrix_destroy(&left);
+}
+
+
+Test(matrix, hadamardproduct_) {
+    Matrix * left = matrix_create(2, 3);
+    Matrix * right = matrix_create(2, 3);
+    Matrix * expected = matrix_create(2, 3);
+
+    for (size_t ir = 0; ir < left->nr; ir++) {
+        for (size_t ic = 0; ic < left->nc; ic++) {
+            size_t i = ir * left->nc + ic;
+            left->vals[i] = ic + 1;
+            right->vals[i] = ir + 1;
+            expected->vals[i] = (ic + 1) * (ir + 1);
+        }
+    }
+    matrix_hadamardproduct_(left, right);
+    bool cond = matrix_map_eq (left, expected, 0.0001f);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&expected);
+    matrix_destroy(&right);
+    matrix_destroy(&left);
 }
 
 

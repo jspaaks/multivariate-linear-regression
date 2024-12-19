@@ -12,8 +12,8 @@ struct matrix {
     float * vals;
 };
 
-void matrix_acc_cols (const Matrix * matrix, Matrix * result);
-void matrix_acc_rows (const Matrix * matrix, Matrix * result);
+void matrix_acc_per_col (const Matrix * matrix, Matrix * result);
+void matrix_acc_per_row (const Matrix * matrix, Matrix * result);
 void matrix_add (const Matrix * left, const Matrix * right, Matrix * result);
 void matrix_add_ (Matrix * left, const Matrix * right);
 void matrix_add_scalar (const Matrix * left, float right, Matrix * result);
@@ -28,6 +28,8 @@ void matrix_destroy (Matrix ** arr);
 void matrix_divide_scalar (const Matrix * matrix, float factor, Matrix * result);
 void matrix_divide_scalar_ (const Matrix * matrix, float factor);
 void matrix_dotproduct (const Matrix * left, const Matrix * right, Matrix * result);
+void matrix_hadamardproduct (const Matrix * left, const Matrix * right, Matrix * result);
+void matrix_hadamardproduct_ (Matrix * left, const Matrix * right);
 float matrix_highest (const Matrix * matrix);
 void matrix_highest_per_col (const Matrix * matrix, Matrix * result);
 void matrix_highest_per_row (const Matrix * matrix, Matrix * result);
