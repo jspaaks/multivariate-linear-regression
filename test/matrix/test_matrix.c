@@ -2,7 +2,7 @@
 #include <criterion/criterion.h>
 
 
-Test(matrix, acc_per_col) {
+Test(matrix, accd) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
@@ -14,7 +14,7 @@ Test(matrix, acc_per_col) {
     expected->vals[0] = 2.0f;
     expected->vals[1] = 4.0f;
 
-    matrix_acc_per_col(matrix, actual);
+    matrix_accd(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -24,7 +24,7 @@ Test(matrix, acc_per_col) {
 }
 
 
-Test(matrix, acc_per_row) {
+Test(matrix, accr) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
@@ -36,7 +36,7 @@ Test(matrix, acc_per_row) {
     expected->vals[0] = 1.0f;
     expected->vals[1] = 5.0f;
 
-    matrix_acc_per_row(matrix, actual);
+    matrix_accr(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -86,7 +86,7 @@ Test(matrix, add_) {
 }
 
 
-Test(matrix, add_scalar) {
+Test(matrix, adds) {
     Matrix * left = matrix_create(2, 2);
     float right = 10.0f;
     Matrix * actual = matrix_create(2, 2);
@@ -96,7 +96,7 @@ Test(matrix, add_scalar) {
         left->vals[i] = i;
         expected->vals[i] = 10 + i;
     }
-    matrix_add_scalar(left, right, actual);
+    matrix_adds(left, right, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -105,7 +105,7 @@ Test(matrix, add_scalar) {
 }
 
 
-Test(matrix, add_scalar_) {
+Test(matrix, adds_) {
     Matrix * left = matrix_create(2, 2);
     float right = 10.0f;
     Matrix * expected = matrix_create(2, 2);
@@ -114,7 +114,7 @@ Test(matrix, add_scalar_) {
         left->vals[i] = i;
         expected->vals[i] = 10 + i;
     }
-    matrix_add_scalar_(left, right);
+    matrix_adds_(left, right);
     bool cond = matrix_map_eq (left, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -137,7 +137,7 @@ Test(matrix, avg) {
 }
 
 
-Test(matrix, avg_per_col) {
+Test(matrix, avgd) {
     Matrix * matrix = matrix_create(2, 3);
     Matrix * actual = matrix_create(1, 3);
     Matrix * expected = matrix_create(1, 3);
@@ -150,7 +150,7 @@ Test(matrix, avg_per_col) {
         expected->vals[i] = i + 1.5f;
     }
 
-    matrix_avg_per_col(matrix, actual);
+    matrix_avgd(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -160,7 +160,7 @@ Test(matrix, avg_per_col) {
 }
 
 
-Test(matrix, avg_per_row) {
+Test(matrix, avgr) {
     Matrix * matrix = matrix_create(3, 2);
     Matrix * actual = matrix_create(3, 1);
     Matrix * expected = matrix_create(3, 1);
@@ -173,7 +173,7 @@ Test(matrix, avg_per_row) {
         expected->vals[i] = 2 * i + 0.5f;
     }
 
-    matrix_avg_per_row(matrix, actual);
+    matrix_avgr(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -183,7 +183,7 @@ Test(matrix, avg_per_row) {
 }
 
 
-Test(matrix, broadcast_down) {
+Test(matrix, bcastd) {
     Matrix * matrix = matrix_create(1, 3);
     Matrix * actual = matrix_create(4, 3);
     Matrix * expected = matrix_create(4, 3);
@@ -199,7 +199,7 @@ Test(matrix, broadcast_down) {
         }
     }
 
-    matrix_broadcast_down(matrix, actual);
+    matrix_bcastd(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -209,7 +209,7 @@ Test(matrix, broadcast_down) {
 }
 
 
-Test(matrix, broadcast_right) {
+Test(matrix, bcastr) {
     Matrix * matrix = matrix_create(3, 1);
     Matrix * actual = matrix_create(3, 4);
     Matrix * expected = matrix_create(3, 4);
@@ -225,7 +225,7 @@ Test(matrix, broadcast_right) {
         }
     }
 
-    matrix_broadcast_right(matrix, actual);
+    matrix_bcastr(matrix, actual);
 
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -235,7 +235,7 @@ Test(matrix, broadcast_right) {
 }
 
 
-Test(matrix, divide_scalar) {
+Test(matrix, divs) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
@@ -244,7 +244,7 @@ Test(matrix, divide_scalar) {
         matrix->vals[i] = i;
         expected->vals[i] = i / factor;
     }
-    matrix_divide_scalar(matrix, factor, actual);
+    matrix_divs(matrix, factor, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -253,7 +253,7 @@ Test(matrix, divide_scalar) {
 }
 
 
-Test(matrix, divide_scalar_) {
+Test(matrix, divs_) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
@@ -261,7 +261,7 @@ Test(matrix, divide_scalar_) {
         matrix->vals[i] = i;
         expected->vals[i] = i / factor;
     }
-    matrix_divide_scalar_(matrix, factor);
+    matrix_divs_(matrix, factor);
     bool cond = matrix_map_eq (matrix, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -269,7 +269,7 @@ Test(matrix, divide_scalar_) {
 }
 
 
-Test(matrix, dotproduct) {
+Test(matrix, dotp) {
     Matrix * a = matrix_create(2, 3);
     Matrix * b = matrix_create(3, 4);
     Matrix * c = matrix_create(2, 4);
@@ -279,7 +279,7 @@ Test(matrix, dotproduct) {
     for (size_t i = 0; i < b->n; i++) {
         b->vals[i] = i + 10;
     }
-    matrix_dotproduct(a, b, c);
+    matrix_dotp(a, b, c);
     const float expected[8] = {  50.0f,  53.0f,  56.0f,  59.0f, 176.0f, 188.0f, 200.0f, 212.0f};
     const size_t n = c->nr * c->nc;
     for (size_t i = 0; i < n; i++) {
@@ -294,7 +294,7 @@ Test(matrix, dotproduct) {
 }
 
 
-Test(matrix, hadamardproduct) {
+Test(matrix, hadp) {
     Matrix * left = matrix_create(2, 3);
     Matrix * right = matrix_create(2, 3);
     Matrix * actual = matrix_create(2, 3);
@@ -308,7 +308,7 @@ Test(matrix, hadamardproduct) {
             expected->vals[i] = (ic + 1) * (ir + 1);
         }
     }
-    matrix_hadamardproduct(left, right, actual);
+    matrix_hadp(left, right, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -318,7 +318,7 @@ Test(matrix, hadamardproduct) {
 }
 
 
-Test(matrix, hadamardproduct_) {
+Test(matrix, hadp_) {
     Matrix * left = matrix_create(2, 3);
     Matrix * right = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
@@ -331,7 +331,7 @@ Test(matrix, hadamardproduct_) {
             expected->vals[i] = (ic + 1) * (ir + 1);
         }
     }
-    matrix_hadamardproduct_(left, right);
+    matrix_hadp_(left, right);
     bool cond = matrix_map_eq (left, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -340,12 +340,12 @@ Test(matrix, hadamardproduct_) {
 }
 
 
-Test(matrix, highest) {
+Test(matrix, max) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = i;
     }
-    float actual = matrix_highest(matrix);
+    float actual = matrix_max(matrix);
     float expected = 5.0f;
     float tolerance = 0.001f;
     float lower = expected - tolerance;
@@ -355,7 +355,7 @@ Test(matrix, highest) {
 }
 
 
-Test(matrix, highest_per_col) {
+Test(matrix, maxd) {
     Matrix * matrix = matrix_create(3, 2);
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
@@ -364,7 +364,7 @@ Test(matrix, highest_per_col) {
     }
     expected->vals[0] = 4.0f;
     expected->vals[1] = 5.0f;
-    matrix_highest_per_col(matrix, actual);
+    matrix_maxd(matrix, actual);
     bool cond = matrix_map_eq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -373,7 +373,7 @@ Test(matrix, highest_per_col) {
 }
 
 
-Test(matrix, highest_per_row) {
+Test(matrix, maxr) {
     Matrix * matrix = matrix_create(2, 3);
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
@@ -382,7 +382,7 @@ Test(matrix, highest_per_row) {
     }
     expected->vals[0] = 2.0f;
     expected->vals[1] = 5.0f;
-    matrix_highest_per_row(matrix, actual);
+    matrix_maxr(matrix, actual);
     bool cond = matrix_map_eq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -391,12 +391,12 @@ Test(matrix, highest_per_row) {
 }
 
 
-Test(matrix, lowest) {
+Test(matrix, min) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = i;
     }
-    float actual = matrix_lowest(matrix);
+    float actual = matrix_min(matrix);
     float expected = 0.0f;
     float tolerance = 0.001f;
     float lower = expected - tolerance;
@@ -406,7 +406,7 @@ Test(matrix, lowest) {
 }
 
 
-Test(matrix, lowest_per_col) {
+Test(matrix, mind) {
     Matrix * matrix = matrix_create(3, 2);
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
@@ -415,7 +415,7 @@ Test(matrix, lowest_per_col) {
     }
     expected->vals[0] = 0.0f;
     expected->vals[1] = 1.0f;
-    matrix_lowest_per_col(matrix, actual);
+    matrix_mind(matrix, actual);
     bool cond = matrix_map_eq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -424,7 +424,7 @@ Test(matrix, lowest_per_col) {
 }
 
 
-Test(matrix, lowest_per_row) {
+Test(matrix, minr) {
     Matrix * matrix = matrix_create(2, 3);
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
@@ -433,7 +433,7 @@ Test(matrix, lowest_per_row) {
     }
     expected->vals[0] = 0.0f;
     expected->vals[1] = 3.0f;
-    matrix_lowest_per_row(matrix, actual);
+    matrix_minr(matrix, actual);
     bool cond = matrix_map_eq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -462,7 +462,7 @@ Test(matrix, map_eq) {
 }
 
 
-Test(matrix, multiply_scalar) {
+Test(matrix, scap) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
@@ -471,7 +471,7 @@ Test(matrix, multiply_scalar) {
         matrix->vals[i] = i;
         expected->vals[i] = i * factor;
     }
-    matrix_multiply_scalar(matrix, factor, actual);
+    matrix_scap(matrix, factor, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -480,7 +480,7 @@ Test(matrix, multiply_scalar) {
 }
 
 
-Test(matrix, multiply_scalar_) {
+Test(matrix, scap_) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
@@ -488,7 +488,7 @@ Test(matrix, multiply_scalar_) {
         matrix->vals[i] = i;
         expected->vals[i] = i * factor;
     }
-    matrix_multiply_scalar_(matrix, factor);
+    matrix_scap_(matrix, factor);
     bool cond = matrix_map_eq (matrix, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -496,7 +496,7 @@ Test(matrix, multiply_scalar_) {
 }
 
 
-Test(matrix, subtract) {
+Test(matrix, sub) {
     Matrix * left = matrix_create(2, 3);
     Matrix * right = matrix_create(2, 3);
     Matrix * actual = matrix_create(2, 3);
@@ -506,7 +506,7 @@ Test(matrix, subtract) {
         right->vals[i] = i;
         expected->vals[i] = 10;
     }
-    matrix_subtract(left, right, actual);
+    matrix_sub(left, right, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -516,7 +516,7 @@ Test(matrix, subtract) {
 }
 
 
-Test(matrix, subtract_) {
+Test(matrix, sub_) {
     Matrix * left = matrix_create(2, 3);
     Matrix * right = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
@@ -525,7 +525,7 @@ Test(matrix, subtract_) {
         right->vals[i] = i;
         expected->vals[i] = 10;
     }
-    matrix_subtract_(left, right);
+    matrix_sub_(left, right);
     bool cond = matrix_map_eq (left, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -534,7 +534,7 @@ Test(matrix, subtract_) {
 }
 
 
-Test(matrix, subtract_scalar) {
+Test(matrix, subs) {
     Matrix * left = matrix_create(2, 3);
     Matrix * actual = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
@@ -543,7 +543,7 @@ Test(matrix, subtract_scalar) {
         expected->vals[i] = i;
     }
     float right = 10.0f;
-    matrix_subtract_scalar(left, right, actual);
+    matrix_subs(left, right, actual);
     bool cond = matrix_map_eq (actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -552,7 +552,7 @@ Test(matrix, subtract_scalar) {
 }
 
 
-Test(matrix, subtract_scalar_) {
+Test(matrix, subs_) {
     Matrix * left = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
     for (size_t i = 0; i < left->n; i++) {
@@ -560,7 +560,7 @@ Test(matrix, subtract_scalar_) {
         expected->vals[i] = i;
     }
     float right = 10.0f;
-    matrix_subtract_scalar_(left, right);
+    matrix_subs_(left, right);
     bool cond = matrix_map_eq (left, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
@@ -568,7 +568,7 @@ Test(matrix, subtract_scalar_) {
 }
 
 
-Test(matrix, transpose) {
+Test(matrix, tr) {
     Matrix * input = matrix_create(2, 3);
     input->vals[0] = 1.0f;
     input->vals[1] = 2.0f;
@@ -579,7 +579,7 @@ Test(matrix, transpose) {
 
     Matrix * actual = matrix_create(3, 2);
 
-    matrix_transpose(input, actual);
+    matrix_tr(input, actual);
 
     Matrix * expected = matrix_create(3, 2);
     expected->vals[0] = 1.0f;
