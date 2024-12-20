@@ -52,9 +52,9 @@ int main (int argc, char * argv[]) {
 
     // ========================== FORWARD PASS ============================ //
 
-    matrix_dotproduct(w1, images, hidden1);
-    matrix_dotproduct(w2, hidden1, hidden2);
-    matrix_dotproduct(w3, hidden2, output);
+    matrix_dotp(w1, images, hidden1);
+    matrix_dotp(w2, hidden1, hidden2);
+    matrix_dotp(w3, hidden2, output);
     ops_svm(output, labels, &loss);
 
     // ========================= BACKWARD PASS ============================ //
