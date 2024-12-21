@@ -8,7 +8,7 @@
 #include <string.h>
 
 
-void matrix_accd (const Matrix * matrix, Matrix * result) {
+void matrix_accdwn (const Matrix * matrix, Matrix * result) {
     assert(matrix->nc == result->nc && "expected number of columns in input to be equal to the number of columns in result");
     assert(result->nr == 1 && "expected number of rows in result to be equal to 1");
     for (size_t ic = 0; ic < matrix->nc; ic++) {
@@ -23,7 +23,7 @@ void matrix_accd (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_accr (const Matrix * matrix, Matrix * result) {
+void matrix_accrgt (const Matrix * matrix, Matrix * result) {
     assert(matrix->nr == result->nr && "expected number of rows in input to be equal to the number of rows in result");
     assert(result->nc == 1 && "expected number of columns in result to be equal to 1");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
@@ -39,39 +39,21 @@ void matrix_accr (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_add (const Matrix * left, const Matrix * right, Matrix * result) {
-    assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
-    assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
-    for (size_t i = 0; i < left->n; i++) {
-        result->vals[i] = left->vals[i] + right->vals[i];
-    }
-}
-
-
-void matrix_add_ (Matrix * left, const Matrix * right) {
-    assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
-    assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
-    for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = left->vals[i] + right->vals[i];
-    }
-}
-
-
-void matrix_adds (const Matrix * left, float right, Matrix * result) {
+void matrix_addsca (const Matrix * left, float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->vals[i] = left->vals[i] + right;
     }
 }
 
 
-void matrix_adds_ (Matrix * left, float right) {
+void matrix_addsca_ (Matrix * left, float right) {
     for (size_t i = 0; i < left->n; i++) {
         left->vals[i] = left->vals[i] + right;
     }
 }
 
 
-float matrix_avg (const Matrix * matrix) {
+float matrix_avgall (const Matrix * matrix) {
     float avg = 0.0f;
     for (size_t i = 0; i < matrix->n; i++) {
         avg += matrix->vals[i] / matrix->n;
@@ -80,7 +62,7 @@ float matrix_avg (const Matrix * matrix) {
 }
 
 
-void matrix_avgd (const Matrix * matrix, Matrix * result) {
+void matrix_avgdwn (const Matrix * matrix, Matrix * result) {
     assert(result->nr == 1 && "expected number of rows in result to be 1");
     assert(matrix->nc == result->nc && "expected number of columns in matrix to be equal to number of columns in result");
     for (size_t ic = 0; ic < matrix->nc; ic++) {
@@ -95,7 +77,7 @@ void matrix_avgd (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_avgr (const Matrix * matrix, Matrix * result) {
+void matrix_avgrgt (const Matrix * matrix, Matrix * result) {
     assert(result->nc == 1 && "expected number of columns in result to be 1");
     assert(matrix->nr == result->nr && "expected number of rows in matrix to be equal to number of rows in result");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
@@ -161,29 +143,21 @@ Matrix * matrix_create (size_t nr, size_t nc) {
 }
 
 
-void matrix_destroy(Matrix ** arr) {
-    free((*arr)->vals);
-    (*arr)->vals = nullptr;
-    free(*arr);
-    *arr = nullptr;
-}
-
-
-void matrix_divs (const Matrix * matrix, float factor, Matrix * result) {
+void matrix_divsca (const Matrix * matrix, float factor, Matrix * result) {
     for (size_t i = 0; i < matrix->n; i++) {
         result->vals[i] = matrix->vals[i] / factor;
     }
 }
 
 
-void matrix_divs_ (const Matrix * matrix, float factor) {
+void matrix_divsca_ (const Matrix * matrix, float factor) {
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = matrix->vals[i] / factor;
     }
 }
 
 
-void matrix_dotp (const Matrix * left, const Matrix * right, Matrix * result) {
+void matrix_dotpro (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nc == right->nr && "Number of columns in left operand should be equal to the number of rows in the right operand.");
     assert(result->nr == left->nr && "Number of rows in result should match the number of rows in left operand.");
     assert(result->nc == right->nc && "Number of columns in result should match the number of columns in right operand.");
@@ -204,7 +178,74 @@ void matrix_dotp (const Matrix * left, const Matrix * right, Matrix * result) {
 }
 
 
-void matrix_hadp (const Matrix * left, const Matrix * right, Matrix * result) {
+void matrix_destroy(Matrix ** arr) {
+    free((*arr)->vals);
+    (*arr)->vals = nullptr;
+    free(*arr);
+    *arr = nullptr;
+}
+
+
+void matrix_ebeadd (const Matrix * left, const Matrix * right, Matrix * result) {
+    assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
+    assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
+    for (size_t i = 0; i < left->n; i++) {
+        result->vals[i] = left->vals[i] + right->vals[i];
+    }
+}
+
+
+void matrix_ebeadd_ (Matrix * left, const Matrix * right) {
+    assert(left->nr == right->nr && "Expected number of rows to be equal when adding 2 instances of Matrix");
+    assert(left->nc == right->nc && "Expected number of columns to be equal when adding 2 instances of Matrix");
+    for (size_t i = 0; i < left->n; i++) {
+        left->vals[i] = left->vals[i] + right->vals[i];
+    }
+}
+
+
+void matrix_ebediv (const Matrix * left, const Matrix * right, Matrix * result) {
+    for (size_t i = 0; i < left->n; i++) {
+        result->vals[i] = left->vals[i] / right->vals[i];
+    }
+}
+
+
+void matrix_ebemap (const Matrix * matrix, float (*f) (float), Matrix * result) {
+    assert(matrix->nr == result->nr && "Number of rows in input should match the number of rows in output");
+    assert(matrix->nc == result->nc && "Number of columns in input should match the number of columns in output");
+    for (size_t i = 0; i < matrix->n; i++) {
+        result->vals[i] = f(matrix->vals[i]);
+    }
+}
+
+
+void matrix_ebemap_ (Matrix * matrix, float (*f) (float)) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = f(matrix->vals[i]);
+    }
+}
+
+
+void matrix_ebesub (const Matrix * left, const Matrix * right, Matrix * result) {
+    assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
+    assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
+    for (size_t i = 0; i < left->n; i++) {
+        result->vals[i] = left->vals[i] - right->vals[i];
+    }
+}
+
+
+void matrix_ebesub_ (Matrix * left, const Matrix * right) {
+    assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
+    assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
+    for (size_t i = 0; i < left->n; i++) {
+        left->vals[i] = left->vals[i] - right->vals[i];
+    }
+}
+
+
+void matrix_hadpro (const Matrix * left, const Matrix * right, Matrix * result) {
     assert(left->nr == right->nr && "Number of rows in left operand should match the number of rows in right operand.");
     assert(left->nc == right->nc && "Number of columns in left operand should match the number of columns in right operand.");
     assert(left->nr == result->nr && "Number of rows in left operand should match the number of rows in the result.");
@@ -215,7 +256,7 @@ void matrix_hadp (const Matrix * left, const Matrix * right, Matrix * result) {
 }
 
 
-void matrix_hadp_ (Matrix * left, const Matrix * right) {
+void matrix_hadpro_ (Matrix * left, const Matrix * right) {
     assert(left->nr == right->nr && "Number of rows in left operand should match the number of rows in right operand.");
     assert(left->nc == right->nc && "Number of columns in left operand should match the number of columns in right operand.");
     for (size_t i = 0; i < left->n; i++) {
@@ -224,7 +265,7 @@ void matrix_hadp_ (Matrix * left, const Matrix * right) {
 }
 
 
-float matrix_max (const Matrix * matrix) {
+float matrix_maxall (const Matrix * matrix) {
     float upper = matrix->vals[0];
     for (size_t i = 1; i < matrix->n; i++) {
         if (upper < matrix->vals[i]) {
@@ -235,7 +276,7 @@ float matrix_max (const Matrix * matrix) {
 }
 
 
-void matrix_maxd (const Matrix * matrix, Matrix * result) {
+void matrix_maxdwn (const Matrix * matrix, Matrix * result) {
     assert(matrix->nc == result->nc && "expected the number of columns in input to be equal to the number of columns in the result");
     assert(result->nr == 1 && "expected the number of rows in the result to be equal to 1");
     for (size_t ic = 0; ic < matrix->nc; ic++) {
@@ -252,7 +293,7 @@ void matrix_maxd (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_maxr (const Matrix * matrix, Matrix * result) {
+void matrix_maxrgt (const Matrix * matrix, Matrix * result) {
     assert(matrix->nr == result->nr && "expected the number of rows in input to be equal to the number of rows in the result");
     assert(result->nc == 1 && "expected the number of columns in the result to be equal to 1");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
@@ -270,7 +311,7 @@ void matrix_maxr (const Matrix * matrix, Matrix * result) {
 }
 
 
-float matrix_min (const Matrix * matrix) {
+float matrix_minall (const Matrix * matrix) {
     float lower = matrix->vals[0];
     for (size_t i = 1; i < matrix->n; i++) {
         if (matrix->vals[i] < lower) {
@@ -281,7 +322,7 @@ float matrix_min (const Matrix * matrix) {
 }
 
 
-void matrix_mind (const Matrix * matrix, Matrix * result) {
+void matrix_mindwn (const Matrix * matrix, Matrix * result) {
     assert(matrix->nc == result->nc && "expected the number of columns in input to be equal to the number of columns in the result");
     assert(result->nr == 1 && "expected the number of rows in the result to be equal to 1");
     for (size_t ic = 0; ic < matrix->nc; ic++) {
@@ -298,7 +339,7 @@ void matrix_mind (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_minr (const Matrix * matrix, Matrix * result) {
+void matrix_minrgt (const Matrix * matrix, Matrix * result) {
     assert(matrix->nr == result->nr && "expected the number of rows in input to be equal to the number of rows in the result");
     assert(result->nc == 1 && "expected the number of columns in the result to be equal to 1");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
@@ -316,21 +357,6 @@ void matrix_minr (const Matrix * matrix, Matrix * result) {
 }
 
 
-bool matrix_map_eq (const Matrix * a, const Matrix * b, float eps) {
-    assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
-    assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
-    for (size_t i = 0; i < a->n; i++) {
-        float ai = a->vals[i];
-        float bi = b->vals[i];
-        bool cond = fabsf(ai - bi) > eps;
-        if (cond) {
-            return false;
-        }
-    }
-    return true;
-}
-
-
 void matrix_print (FILE * stream, Matrix * matrix, char * title) {
     if (title != nullptr) {
         fprintf(stream, "%s ", title);
@@ -345,53 +371,81 @@ void matrix_print (FILE * stream, Matrix * matrix, char * title) {
 }
 
 
-void matrix_scap (const Matrix * left, float right, Matrix * result) {
+void matrix_scapro (const Matrix * left, float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->vals[i] = left->vals[i] * right;
     }
 }
 
 
-void matrix_scap_ (Matrix * left, float right) {
+void matrix_scapro_ (Matrix * left, float right) {
     for (size_t i = 0; i < left->n; i++) {
         left->vals[i] = left->vals[i] * right;
     }
 }
 
 
-void matrix_sub (const Matrix * left, const Matrix * right, Matrix * result) {
-    assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
-    assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
-    for (size_t i = 0; i < left->n; i++) {
-        result->vals[i] = left->vals[i] - right->vals[i];
+void matrix_stzdwn_ (Matrix * matrix, Matrix * avgs, Matrix * stddevs) {
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    Matrix * avgs_bcastd = matrix_create(nr, nc);
+    Matrix * stddevs_bcastd = matrix_create(nr, nc);
+    {
+        Matrix * deviations = matrix_create(nr, nc);
+        Matrix * deviations_sq = matrix_create(nr, nc);
+        Matrix * tmp = matrix_create(1, nc);
+
+        matrix_avgdwn(matrix, avgs);
+        matrix_bcastd(avgs, avgs_bcastd);
+        matrix_ebesub(matrix, avgs_bcastd, deviations);
+        matrix_hadpro(deviations, deviations, deviations_sq);
+        matrix_accdwn(deviations_sq, tmp);
+        matrix_ebemap(tmp, sqrtf, stddevs);
+
+        matrix_destroy(&tmp);
+        matrix_destroy(&deviations_sq);
+        matrix_destroy(&deviations);
     }
+    {
+        matrix_bcastd(stddevs, stddevs_bcastd);
+        matrix_ebesub_(matrix, avgs_bcastd);
+        matrix_ebediv(matrix, stddevs_bcastd, matrix);
+    }
+    matrix_destroy(&stddevs_bcastd);
+    matrix_destroy(&avgs_bcastd);
 }
 
 
-void matrix_sub_ (Matrix * left, const Matrix * right) {
-    assert(left->nr == right->nr && "Expected number of rows to be equal when subtracting 2 instances of Matrix");
-    assert(left->nc == right->nc && "Expected number of columns to be equal when subtracting 2 instances of Matrix");
-    for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = left->vals[i] - right->vals[i];
-    }
-}
-
-
-void matrix_subs (const Matrix * left, float right, Matrix * result) {
+void matrix_subsca (const Matrix * left, float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->vals[i] = left->vals[i] - right;
     }
 }
 
 
-void matrix_subs_ (Matrix * left, float right) {
+void matrix_subsca_ (Matrix * left, float right) {
     for (size_t i = 0; i < left->n; i++) {
         left->vals[i] = left->vals[i] - right;
     }
 }
 
 
-void matrix_tr (Matrix * input, const Matrix * transposed) {
+bool matrix_testeq (const Matrix * a, const Matrix * b, float eps) {
+    assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
+    assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
+    for (size_t i = 0; i < a->n; i++) {
+        float ai = a->vals[i];
+        float bi = b->vals[i];
+        bool cond = fabsf(ai - bi) > eps;
+        if (cond) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+void matrix_transp (Matrix * input, const Matrix * transposed) {
     assert(input->nr == transposed->nc && "Number of rows in input should be equal to the number of columns in the output.");
     assert(input->nc == transposed->nr && "Number of columns in input should be equal to the number of rows in the output.");
     size_t nr = input->nr;
