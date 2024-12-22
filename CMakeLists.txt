@@ -13,6 +13,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 add_subdirectory(${PROJECT_ROOT}/src/afuns)
+add_subdirectory(${PROJECT_ROOT}/src/boxmuller)
 add_subdirectory(${PROJECT_ROOT}/src/data)
 add_subdirectory(${PROJECT_ROOT}/src/ops)
 add_subdirectory(${PROJECT_ROOT}/src/lfuns)
