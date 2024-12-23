@@ -5,14 +5,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "data/data.h"
+#include "data.h"
 #include "lfuns/lfuns.h"
 #include "ops/ops.h"
 
 void print_usage (FILE *, char * []);
-void populate_features (const char * path, Matrix * features);
-void populate_labels (const char * path, Matrix * labels);
-
 
 int main (int argc, char * argv[]) {
 
@@ -37,14 +34,20 @@ int main (int argc, char * argv[]) {
     const char * data_path = argv[1];
 
     Matrix * features = matrix_create(ni, 1 + nf);
-    Matrix * features_td = matrix_create(1 + nf, ni);
+    Matrix * features_avgs = matrix_create(1, 1 + nf);
+    Matrix * features_stddevs = matrix_create(1, 1 + nf);
+    Matrix * features_tr = matrix_create(1 + nf, ni);
     populate_features(data_path, features);
-    matrix_transpose(features, features_td);
+    matrix_stzdwn(features, features_avgs, features_stddevs, features);
+    matrix_transp(features, features_tr);
 
     Matrix * labels = matrix_create(ni, no);
-    Matrix * labels_td = matrix_create(no, ni);
+    Matrix * labels_avgs = matrix_create(1, no);
+    Matrix * labels_stddevs = matrix_create(1, no);
+    Matrix * labels_tr = matrix_create(no, ni);
     populate_labels(data_path, labels);
-    matrix_transpose(labels, labels_td);
+    matrix_stzdwn(labels, labels_avgs, labels_stddevs, labels);
+    matrix_transp(labels, labels_tr);
 
     matrix_print(stdout, features, "features");
     matrix_print(stdout, labels, "labels");
@@ -56,96 +59,59 @@ int main (int argc, char * argv[]) {
     // ======================= INITIALIZE ARRAYS ========================== //
 
     Matrix * weights = matrix_create(no, 1 + nf);
-    weights->vals[0] = 50.0f;
-    weights->vals[1] = 0.4f;
-    weights->vals[2] = 2.0f;
-
-
     Matrix * predicted = matrix_create(no, ni);
     Matrix * error = matrix_create(no, ni);
+    Matrix * error_bcastd = matrix_create(1 + nf, ni);
+    Matrix * gradients = matrix_create(1 + nf, ni);
+    Matrix * gradient = matrix_create(1 + nf, no);
+    Matrix * step = matrix_create(1 + nf, no);
+    Matrix * step_tr = matrix_create(no, 1 + nf);
     Matrix * error_avg = matrix_create(no, 1);
-    Matrix * error_tr = matrix_create(ni, no);
-    Matrix * error_tr_bd = matrix_create(ni, 1 + nf);
-    Matrix * tmp = matrix_create(ni, 1 + nf);
-    Matrix * gradient = matrix_create(no, 1 + nf);
-    Matrix * step = matrix_create(no, 1 + nf);
-
-    size_t niters = 50000000;
-    float learning_rate = 0.0000000001;
+    Matrix * answer = matrix_create(no, 1 + nf);
+//
+    size_t niters = 100;
+    float learning_rate = 0.01f;
     for (size_t i = 0; i < niters; i++) {
-        matrix_dotproduct(weights, features_td, predicted);
-        matrix_subtract(predicted, labels_td, error);
-        matrix_avg_per_row(error, error_avg);
-        matrix_print(stdout, error_avg, "error_avg");
-        matrix_transpose(error, error_tr);
-        matrix_broadcast_right(error_tr, error_tr_bd);
-        matrix_hadamardproduct(features, error_tr_bd, tmp);
-        matrix_acc_per_col(tmp, gradient);
-        matrix_multiply_scalar(gradient, -1 * learning_rate, step);
-        matrix_add_(weights, step);
+        matrix_dotpro(weights, features_tr, predicted);
+        matrix_ebesub(predicted, labels_tr, error);
+        matrix_scapro(error, 2.0f, error);
+        matrix_bctdwn(error, error_bcastd);
+        matrix_hadpro(error_bcastd, features_tr, gradients);
+        matrix_avgrgt(gradients, gradient);
+        matrix_scapro(gradient, learning_rate, step);
+        matrix_transp(step, step_tr);
+        matrix_ebesub(weights, step_tr, weights);
     }
+    matrix_avgrgt(error, error_avg);
+    matrix_hadpro(weights, features_avgs, answer);
+//
     matrix_print(stdout, weights, "weights");
     matrix_print(stdout, error_avg, "error_avg");
-
+    matrix_print(stdout, answer, "answer");
+//
+//
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
-
-    matrix_destroy(&step);
-    matrix_destroy(&gradient);
-    matrix_destroy(&tmp);
-    matrix_destroy(&error_tr_bd);
-    matrix_destroy(&error_tr);
+//
     matrix_destroy(&error_avg);
+    matrix_destroy(&step);
+    matrix_destroy(&step_tr);
+    matrix_destroy(&gradient);
+    matrix_destroy(&gradients);
+    matrix_destroy(&error_bcastd);
     matrix_destroy(&error);
     matrix_destroy(&predicted);
     matrix_destroy(&weights);
-    matrix_destroy(&labels_td);
+    matrix_destroy(&labels_tr);
+    matrix_destroy(&labels_stddevs);
+    matrix_destroy(&labels_avgs);
     matrix_destroy(&labels);
-    matrix_destroy(&features_td);
+    matrix_destroy(&features_tr);
+    matrix_destroy(&features_stddevs);
+    matrix_destroy(&features_avgs);
     matrix_destroy(&features);
 
 
     return EXIT_SUCCESS;
-}
-
-
-void populate_features (const char * path, Matrix * features) {
-    errno = 0;
-    FILE * fp = fopen(path, "r");
-    if (fp == nullptr) {
-        fprintf(stderr, "%s\nError reading data from file '%s', aborting.\n", strerror(errno), path);
-        errno = 0;
-        exit(EXIT_FAILURE);
-    }
-    constexpr size_t bufsize = 100;
-    char buffer[bufsize] = {};
-    for (size_t ir = 0; ir < features->nr; ir++) {
-        float * intercept = &features->vals[ir * features->nc + 0];
-        float * area      = &features->vals[ir * features->nc + 1];
-        float * bedrooms  = &features->vals[ir * features->nc + 2];
-        *intercept = 1.0f;
-        fgets(buffer, bufsize, fp);
-        sscanf(buffer, "%f,%f,%*f\n", area, bedrooms);
-    }
-    fclose(fp);
-}
-
-
-void populate_labels (const char * path, Matrix * labels) {
-    errno = 0;
-    FILE * fp = fopen(path, "r");
-    if (fp == nullptr) {
-        fprintf(stderr, "%s\nError reading data from file '%s', aborting.\n", strerror(errno), path);
-        errno = 0;
-        exit(EXIT_FAILURE);
-    }
-    constexpr size_t bufsize = 100;
-    char buffer[bufsize] = {};
-    for (size_t ir = 0; ir < labels->nr; ir++) {
-        float * price = &labels->vals[ir];
-        fgets(buffer, bufsize, fp);
-        sscanf(buffer, "%*f,%*f,%f\n", price);
-    }
-    fclose(fp);
 }
 
 
