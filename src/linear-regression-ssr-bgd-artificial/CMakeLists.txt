@@ -54,15 +54,13 @@ target_link_libraries(
     tgt_exe_linear_regression_ssr_bgd_artificial
     PRIVATE
         m
-        tgt_lib_afuns
-        tgt_lib_lfuns
         tgt_lib_matrix
-        tgt_lib_ops
 )
 
 target_sources(
     tgt_exe_linear_regression_ssr_bgd_artificial
     PRIVATE
+        ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-artificial/data.c
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-artificial/main.c
 )
 
