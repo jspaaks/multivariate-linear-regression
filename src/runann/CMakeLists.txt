@@ -55,7 +55,6 @@ target_link_libraries(
     PRIVATE
         m
         tgt_lib_afuns
-        tgt_lib_data
         tgt_lib_lfuns
         tgt_lib_matrix
         tgt_lib_ops
@@ -64,6 +63,7 @@ target_link_libraries(
 target_sources(
     tgt_exe_runann
     PRIVATE
+        ${PROJECT_ROOT}/src/runann/data.c
         ${PROJECT_ROOT}/src/runann/main.c
 )
 

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "data/data.h"
+#include "data.h"
 #include "lfuns/lfuns.h"
 #include "ops/ops.h"
 

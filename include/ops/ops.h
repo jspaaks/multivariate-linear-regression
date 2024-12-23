@@ -1,8 +1,6 @@
 #ifndef OPS_H
 #define OPS_H
-#include "afuns/afuns.h"
-#include "data/data.h"
-#include "ops/ops.h"
+#include "matrix/matrix.h"
 #include <stddef.h>
 
 void ops_add_bias (void);

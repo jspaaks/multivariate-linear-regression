@@ -14,7 +14,6 @@ endif()
 
 add_subdirectory(${PROJECT_ROOT}/src/afuns)
 add_subdirectory(${PROJECT_ROOT}/src/boxmuller)
-add_subdirectory(${PROJECT_ROOT}/src/data)
 add_subdirectory(${PROJECT_ROOT}/src/ops)
 add_subdirectory(${PROJECT_ROOT}/src/lfuns)
 add_subdirectory(${PROJECT_ROOT}/src/matrix)

@@ -1,4 +1,4 @@
-#include "data/data.h"
+#include "data.h"
 #include "matrix/matrix.h"
 #include <errno.h>
 #include <stdint.h>

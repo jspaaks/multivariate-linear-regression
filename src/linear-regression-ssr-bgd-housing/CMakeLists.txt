@@ -63,6 +63,7 @@ target_link_libraries(
 target_sources(
     tgt_exe_linear_regression_ssr_bgd_housing
     PRIVATE
+        ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-housing/data.c
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-housing/main.c
 )
 
