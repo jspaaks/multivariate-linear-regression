@@ -105,7 +105,10 @@ int main (int argc, char * argv[]) {
 void print_usage(FILE * stream, char * argv[]) {
     fprintf(stream,
             "Usage: %s\n"
-            "   Generate artificial data and subsequently use these data to fit a\n"
-            "   multivariate linear regression model using iterative approximation\n"
-            "   with batch gradient descent.\n", argv[0]);
+            "    Generate 10000 random draws of points [-1, 1] in 2-D space, then\n"
+            "    use true weights a = 9.87, b = 6.54, c = 3.21 to generate artificial\n"
+            "    data according to z(x,y|a,b,c) = a + bx + cy. Then use batch gradient\n"
+            "    descent to iteratively approximate the true value of the weights, by\n"
+            "    minimizing the sum of squared residuals between artificial data and\n"
+            "    predicted data.\n", argv[0]);
 }
