@@ -27,8 +27,7 @@ int main (int argc, char * argv[]) {
 
     // =================== INITIALIZE RANDOMIZATION ======================= //
 
-    // srand(time(nullptr));
-    srand(12345);
+    srand(time(nullptr));
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
