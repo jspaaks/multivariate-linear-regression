@@ -60,6 +60,7 @@ target_sources(
     tgt_lib_boxmuller
     PRIVATE
         ${PROJECT_ROOT}/src/boxmuller/randn.c
+        ${PROJECT_ROOT}/src/boxmuller/randu.c
     PUBLIC
         FILE_SET fset_lib_boxmuller_headers
         TYPE HEADERS

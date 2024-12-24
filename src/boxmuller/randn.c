@@ -1,9 +1,7 @@
 #include <boxmuller/boxmuller.h>
 #include <math.h>
-#include <stddef.h>
 #include <stdlib.h>
-
-double randu(void);
+#include "randu.h"
 
 
 /*
@@ -20,14 +18,4 @@ double boxmuller_randn (void) {
         r2 = u * u + v * v;
     } while (r2 > 1.0 || r2 == 0.0);
     return u * sqrt(-2.0 * log(r2) / r2);
-}
-
-
-/* 
- * Draw a random number from a uniform unit distribution [0,1]
- */
-double randu (void) {
-    int z = rand();
-    double zd = (double) z;
-    return zd / RAND_MAX;
 }
