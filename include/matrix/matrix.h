@@ -36,7 +36,7 @@ float matrix_minall (const Matrix * matrix);
 void matrix_mindwn (const Matrix * matrix, Matrix * result);
 void matrix_minrgt (const Matrix * matrix, Matrix * result);
 void matrix_print (FILE * stream, Matrix * matrix, char * title);
-// float matrix_sdvall (const Matrix * matrix);
+float matrix_sdvall (const Matrix * matrix);
 // void matrix_sdvdwn (const Matrix * matrix, Matrix * result);
 // void matrix_sdvrgt (const Matrix * matrix, Matrix * result);
 void matrix_scapro (const Matrix * left, float right, Matrix * result);
@@ -46,7 +46,7 @@ void matrix_stzdwn (const Matrix * matrix, Matrix * avgs, Matrix * stddevs, Matr
 void matrix_subsca (const Matrix * left, float right, Matrix * result);
 bool matrix_testeq (const Matrix * a, const Matrix * b, float eps);
 void matrix_transp (const Matrix * matrix, const Matrix * result);
-// float matrix_varall (const Matrix * matrix);
+float matrix_varall (const Matrix * matrix);
 // void matrix_vardwn (const Matrix * matrix, Matrix * result);
 // void matrix_varrgt (const Matrix * matrix, Matrix * result);
 void matrix_zero_ (Matrix * matrix);

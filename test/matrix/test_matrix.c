@@ -1,6 +1,13 @@
 #include "matrix/matrix.h"
 #include <criterion/criterion.h>
 
+void derive_limits_of_acceptability(float expected, float tolerance, float * lower, float * upper);
+
+void derive_limits_of_acceptability(float expected, float tolerance, float * lower, float * upper) {
+    *lower = expected - tolerance;
+    *upper = expected + tolerance;
+}
+
 
 Test(matrix, accdwn) {
     Matrix * matrix = matrix_create(2, 2);
@@ -72,8 +79,9 @@ Test(matrix, avgall) {
     }
     float expected = 2.5f;
     float tolerance = 0.0001f;
-    float lower = expected - tolerance;
-    float upper = expected + tolerance;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
     float actual = matrix_avgall(matrix);
     cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
     matrix_destroy(&matrix);
@@ -302,8 +310,9 @@ Test(matrix, maxall) {
     float actual = matrix_maxall(matrix);
     float expected = 5.0f;
     float tolerance = 0.001f;
-    float lower = expected - tolerance;
-    float upper = expected + tolerance;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
     cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
     matrix_destroy(&matrix);
 }
@@ -353,8 +362,9 @@ Test(matrix, minall) {
     float actual = matrix_minall(matrix);
     float expected = 0.0f;
     float tolerance = 0.001f;
-    float lower = expected - tolerance;
-    float upper = expected + tolerance;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
     cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
     matrix_destroy(&matrix);
 }
@@ -410,6 +420,27 @@ Test(matrix, scapro) {
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
     matrix_destroy(&expected);
     matrix_destroy(&actual);
+    matrix_destroy(&matrix);
+}
+
+
+Test(matrix, sdvall) {
+    Matrix * matrix = matrix_create(1, 8);
+    matrix->vals[0] = 2.0f;
+    matrix->vals[1] = 4.0f;
+    matrix->vals[2] = 4.0f;
+    matrix->vals[3] = 4.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 5.0f;
+    matrix->vals[6] = 7.0f;
+    matrix->vals[7] = 9.0f;
+    float actual = matrix_sdvall(matrix);
+    float expected = 2.0f;
+    float tolerance = 0.001f;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
+    cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
     matrix_destroy(&matrix);
 }
 
@@ -532,6 +563,27 @@ Test(matrix, transp) {
     matrix_destroy(&input);
     matrix_destroy(&actual);
     matrix_destroy(&expected);
+}
+
+
+Test(matrix, varall) {
+    Matrix * matrix = matrix_create(1, 8);
+    matrix->vals[0] = 2.0f;
+    matrix->vals[1] = 4.0f;
+    matrix->vals[2] = 4.0f;
+    matrix->vals[3] = 4.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 5.0f;
+    matrix->vals[6] = 7.0f;
+    matrix->vals[7] = 9.0f;
+    float actual = matrix_varall(matrix);
+    float expected = 4.0f;
+    float tolerance = 0.001f;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
+    cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
+    matrix_destroy(&matrix);
 }
 
 

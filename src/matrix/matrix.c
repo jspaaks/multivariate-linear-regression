@@ -71,8 +71,8 @@ void matrix_avgdwn (const Matrix * matrix, Matrix * result) {
 
 
 void matrix_avgrgt (const Matrix * matrix, Matrix * result) {
-    assert(result->nc == 1 && "expected number of columns in result to be 1");
     assert(matrix->nr == result->nr && "expected number of rows in matrix to be equal to number of rows in result");
+    assert(result->nc == 1 && "expected number of columns in result to be 1");
     for (size_t ir = 0; ir < matrix->nr; ir++) {
         size_t i = ir * matrix->nc;
         result->vals[ir] = matrix->vals[i] / matrix->nc;
@@ -368,6 +368,11 @@ void matrix_subsca (const Matrix * left, float right, Matrix * result) {
 }
 
 
+float matrix_sdvall (const Matrix * matrix) {
+    return sqrt(matrix_varall(matrix));
+}
+
+
 bool matrix_testeq (const Matrix * a, const Matrix * b, float eps) {
     assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
     assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
@@ -396,6 +401,22 @@ void matrix_transp (const Matrix * matrix, const Matrix * result) {
         }
     }
 }
+
+
+float matrix_varall (const Matrix * matrix) {
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    Matrix * residuals = matrix_create(nr, nc);
+    Matrix * residuals2 = matrix_create(nr, nc);
+    float avg = matrix_avgall(matrix);
+    matrix_subsca(matrix, avg, residuals);
+    matrix_hadpro(residuals, residuals, residuals2);
+    float rv = matrix_avgall(residuals2);
+    matrix_destroy(&residuals);
+    matrix_destroy(&residuals2);
+    return rv;
+}
+
 
 void matrix_zero_ (Matrix * matrix) {
     for (size_t i = 0; i < matrix->n; i++) {
