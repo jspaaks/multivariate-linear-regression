@@ -373,6 +373,18 @@ float matrix_sdvall (const Matrix * matrix) {
 }
 
 
+void matrix_sdvdwn (const Matrix * matrix, Matrix * result) {
+    matrix_vardwn(matrix, result);
+    matrix_ebemap(result, sqrtf, result);
+}
+
+
+void matrix_sdvrgt (const Matrix * matrix, Matrix * result) {
+    matrix_varrgt(matrix, result);
+    matrix_ebemap(result, sqrtf, result);
+}
+
+
 bool matrix_testeq (const Matrix * a, const Matrix * b, float eps) {
     assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
     assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
@@ -415,6 +427,40 @@ float matrix_varall (const Matrix * matrix) {
     matrix_destroy(&residuals);
     matrix_destroy(&residuals2);
     return rv;
+}
+
+
+void matrix_vardwn (const Matrix * matrix, Matrix * result) {
+    assert(matrix->nc == result->nc && "Number of columns in input should be equal to the number of columns in the output.");
+    assert(result->nr == 1 && "Number of rows in the output should be 1.");
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    for (size_t ic = 0; ic < nc; ic++) {
+        Matrix * tmp = matrix_create(nr, 1);
+        for (size_t ir = 0; ir < nr; ir++) {
+            size_t i = ir * nc + ic;
+            tmp->vals[ir] = matrix->vals[i];
+        }
+        result->vals[ic] = matrix_varall(tmp);
+        matrix_destroy(&tmp);
+    }
+}
+
+
+void matrix_varrgt (const Matrix * matrix, Matrix * result) {
+    assert(matrix->nr == result->nr && "Number of rows in input should be equal to the number of rows in the output.");
+    assert(result->nc == 1 && "Number of columns in the output should be 1.");
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    for (size_t ir = 0; ir < nr; ir++) {
+        Matrix * tmp = matrix_create(1, nr);
+        for (size_t ic = 0; ic < nc; ic++) {
+            size_t i = ir * nc + ic;
+            tmp->vals[ic] = matrix->vals[i];
+        }
+        result->vals[ir] = matrix_varall(tmp);
+        matrix_destroy(&tmp);
+    }
 }
 
 

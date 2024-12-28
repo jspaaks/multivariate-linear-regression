@@ -445,6 +445,64 @@ Test(matrix, sdvall) {
 }
 
 
+Test(matrix, sdvdwn) {
+    Matrix * matrix = matrix_create(3, 3);
+    Matrix * actual = matrix_create(1, 3);
+    Matrix * expected = matrix_create(1, 3);
+
+    matrix->vals[0] = 0.0f;
+    matrix->vals[1] = 1.0f;
+    matrix->vals[2] = 2.0f;
+    matrix->vals[3] = 3.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 7.0f;
+    matrix->vals[6] = 8.0f;
+    matrix->vals[7] = 11.0f;
+    matrix->vals[8] = 14.0f;
+
+    expected->vals[0] = 3.300;
+    expected->vals[1] = 4.110;
+    expected->vals[2] = 4.922;
+
+    matrix_sdvdwn(matrix, actual);
+
+    bool cond = matrix_testeq(actual, expected, 0.01);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&matrix);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
+}
+
+
+Test(matrix, sdvrgt) {
+    Matrix * matrix = matrix_create(3, 3);
+    Matrix * actual = matrix_create(3, 1);
+    Matrix * expected = matrix_create(3, 1);
+
+    matrix->vals[0] = 0.0f;
+    matrix->vals[1] = 1.0f;
+    matrix->vals[2] = 2.0f;
+    matrix->vals[3] = 3.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 7.0f;
+    matrix->vals[6] = 8.0f;
+    matrix->vals[7] = 11.0f;
+    matrix->vals[8] = 14.0f;
+
+    expected->vals[0] = 0.816;
+    expected->vals[1] = 1.633;
+    expected->vals[2] = 2.449;
+
+    matrix_sdvrgt(matrix, actual);
+
+    bool cond = matrix_testeq(actual, expected, 0.01);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&matrix);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
+}
+
+
 Test(matrix, stzdwn) {
     Matrix * matrix = matrix_create(3, 2);
     Matrix * actual = matrix_create(3, 2);
@@ -584,6 +642,64 @@ Test(matrix, varall) {
     derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
     cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
     matrix_destroy(&matrix);
+}
+
+
+Test(matrix, vardwn) {
+    Matrix * matrix = matrix_create(3, 3);
+    Matrix * actual = matrix_create(1, 3);
+    Matrix * expected = matrix_create(1, 3);
+
+    matrix->vals[0] = 0.0f;
+    matrix->vals[1] = 1.0f;
+    matrix->vals[2] = 2.0f;
+    matrix->vals[3] = 3.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 7.0f;
+    matrix->vals[6] = 8.0f;
+    matrix->vals[7] = 11.0f;
+    matrix->vals[8] = 14.0f;
+
+    expected->vals[0] = 10.889;
+    expected->vals[1] = 16.889;
+    expected->vals[2] = 24.222;
+
+    matrix_vardwn(matrix, actual);
+
+    bool cond = matrix_testeq(actual, expected, 0.01);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&matrix);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
+}
+
+
+Test(matrix, varrgt) {
+    Matrix * matrix = matrix_create(3, 3);
+    Matrix * actual = matrix_create(3, 1);
+    Matrix * expected = matrix_create(3, 1);
+
+    matrix->vals[0] = 0.0f;
+    matrix->vals[1] = 1.0f;
+    matrix->vals[2] = 2.0f;
+    matrix->vals[3] = 3.0f;
+    matrix->vals[4] = 5.0f;
+    matrix->vals[5] = 7.0f;
+    matrix->vals[6] = 8.0f;
+    matrix->vals[7] = 11.0f;
+    matrix->vals[8] = 14.0f;
+
+    expected->vals[0] = 0.667;
+    expected->vals[1] = 2.667;
+    expected->vals[2] = 6.000;
+
+    matrix_varrgt(matrix, actual);
+
+    bool cond = matrix_testeq(actual, expected, 0.01);
+    cr_assert(cond, "expected a and b to be equal within the given tolerance");
+    matrix_destroy(&matrix);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
 }
 
 
