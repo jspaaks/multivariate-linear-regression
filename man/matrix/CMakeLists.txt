@@ -30,9 +30,7 @@ install(
         matrix_sdvall.3
         matrix_sdvdwn.3
         matrix_sdvrgt.3
-        matrix_stzall.3
         matrix_stzdwn.3
-        matrix_stzrgt.3
         matrix_subsca.3
         matrix_testeq.3
         matrix_transp.3
