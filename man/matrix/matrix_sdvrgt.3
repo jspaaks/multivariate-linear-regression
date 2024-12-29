@@ -1,0 +1,14 @@
+.TH matrix_sdvrgt 3
+.SH NAME
+matrix_sdvrgt \- Calculate the standard deviation of each row of a matrix
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBvoid matrix_sdvrgt (const Matrix * \fImatrix\fR\fB, Matrix * \fIresult\fR\fB);
+.SH DESCRIPTION
+.B martix_sdvrgt
+calculates the standard deviation of each row of a matrix \fImatrix\fR, returning the resulting column of values in \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix_sdvdwn\fR(3), \fBmatrix_sdvall\fR(3), \fBmatrix\fR(3)
