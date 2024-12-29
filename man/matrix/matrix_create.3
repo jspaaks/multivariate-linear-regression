@@ -1,0 +1,16 @@
+.TH matrix_create 3
+.SH NAME
+matrix_create \- Create a matrix object in memory
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBMatrix * matrix_create (size_t \fInr\fR\fB, size_t \fInc\fR\fB);\fR
+.SH DESCRIPTION
+.B matrix_create
+creates a matrix object with \fInr\fR rows and \fInc\fR columns in memory.
+.SH RETURN VALUE
+A pointer to the created matrix object. The user is responsible for freeing the memory allocated by \fBmatrix_create\fR using \fBmatrix_destroy\fR.
+.SH SEE ALSO
+\fBmatrix_destroy\fR(3), \fBmatrix\fR(3)
