@@ -3,5 +3,42 @@ install(
         matrix_accall.3
         matrix_accdwn.3
         matrix_accrgt.3
-    DESTINATION man/matrix
+        matrix_addsca.3
+        matrix_avgall.3
+        matrix_avgdwn.3
+        matrix_avgrgt.3
+        matrix_bctdwn.3
+        matrix_bctrgt.3
+        matrix_create.3
+        matrix_destroy.3
+        matrix_divsca.3
+        matrix_dotpro.3
+        matrix_ebeadd.3
+        matrix_ebediv.3
+        matrix_ebemap.3
+        matrix_ebesub.3
+        matrix_hadpro.3
+        matrix_maxall.3
+        matrix_maxdwn.3
+        matrix_maxrgt.3
+        matrix_minall.3
+        matrix_mindwn.3
+        matrix_minrgt.3
+        matrix_print.3
+        matrix_scapro.3
+        matrix_sdvall.3
+        matrix_sdvdwn.3
+        matrix_sdvrgt.3
+        matrix_stzall.3
+        matrix_stzdwn.3
+        matrix_stzrgt.3
+        matrix_subsca.3
+        matrix_testeq.3
+        matrix_transp.3
+        matrix_varall.3
+        matrix_vardwn.3
+        matrix_varrgt.3
+        matrix_zero.3
+        matrix.3
+    DESTINATION man/man3
 )
