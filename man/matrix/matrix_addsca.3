@@ -1,0 +1,14 @@
+.TH matrix_addsca 3
+.SH NAME
+matrix_addsca \- Add a scalar value to a matrix
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBvoid matrix_addsca (const Matrix * \fIleft\fR\fB, float \fIright\fR\fB, Matrix * \fIresult\fR\fB);\fR
+.SH DESCRIPTION
+.B matrix_addsca
+adds a scalar value \fIright\fR to a matrix \fIleft\fR, and returns the result in matrix \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix_subsca\fR(3), \fBmatrix_divsca\fR(3), \fBmatrix_scapro\fR(3), \fBmatrix_ebeadd\fR(3), \fBmatrix\fR(3) 
