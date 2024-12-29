@@ -722,7 +722,7 @@ Test(matrix, varrgt) {
 }
 
 
-Test(matrix, zero_) {
+Test(matrix, zero) {
     Matrix * actual = matrix_create(2, 3);
     actual->vals[0] = 1.0f;
     actual->vals[1] = 2.0f;
@@ -731,7 +731,7 @@ Test(matrix, zero_) {
     actual->vals[4] = 5.0f;
     actual->vals[5] = 6.0f;
 
-    matrix_zero_(actual);
+    matrix_zero(actual);
 
     Matrix * expected = matrix_create(2, 3);
     expected->vals[0] = 0.0f;

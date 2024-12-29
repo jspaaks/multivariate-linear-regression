@@ -473,7 +473,7 @@ void matrix_varrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_zero_ (Matrix * matrix) {
+void matrix_zero (Matrix * matrix) {
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = 0.0f;
     }
