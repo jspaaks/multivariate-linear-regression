@@ -1,0 +1,14 @@
+.TH matrix_ebeadd 3
+.SH NAME
+matrix_ebeadd \- Element\-by\-element addition of two matrices
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBvoid matrix_ebeadd (const Matrix * \fIleft\fR\fB, const Matrix * \fIright\fR\fB, Matrix * \fIresult\fR\fB);\fR
+.SH DESCRIPTION
+.B matrix_ebeadd
+calculates the element\-by\-element sum of two matrices \fIleft\fR and \fIright\fR, and puts the result in matrix \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix_addsca\fR(3), \fBmatrix\fR(3)

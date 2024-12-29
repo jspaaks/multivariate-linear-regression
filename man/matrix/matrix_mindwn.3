@@ -1,0 +1,14 @@
+.TH matrix_mindwn 3
+.SH NAME
+matrix_mindwn \- Calculate the minimum of each column of a matrix
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBvoid matrix_mindwn (const Matrix * \fImatrix\fR\fB, Matrix * \fIresult\fR\fB);
+.SH DESCRIPTION
+.B martix_mindwn
+calculates the minimum of each column of a matrix \fImatrix\fR, returning the resulting row of values in \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix_minrgt\fR(3), \fBmatrix_minall\fR(3), \fBmatrix\fR(3)

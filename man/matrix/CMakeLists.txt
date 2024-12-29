@@ -1,3 +1,4 @@
+include(GNUInstallDirs)
 install(
     FILES
         matrix_accall.3
@@ -40,5 +41,5 @@ install(
         matrix_varrgt.3
         matrix_zero.3
         matrix.3
-    DESTINATION man/man3
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man3     # I'd prefer to use TYPE instead of DESTINATION but it seems I need the man3 subdirectory
 )

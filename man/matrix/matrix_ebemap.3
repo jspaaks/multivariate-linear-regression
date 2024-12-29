@@ -1,0 +1,14 @@
+.TH matrix_ebemap 3
+.SH NAME
+matrix_ebemap \- Apply a function to each element of a matrix
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+.br
+\fBvoid matrix_ebemap (const Matrix * \fImatrix\fR\fB, float (*\fIf\fR\fB) (float), Matrix * \fIresult\fR\fB);\fR
+.SH DESCRIPTION
+.B matrix_ebemap
+applies the function \fIf\fR to each element of matrix \fImatrix\fR, and puts the result in \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix\fR(3)
