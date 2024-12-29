@@ -1,0 +1,14 @@
+.TH matrix_accdwn 3
+.SH NAME
+matrix_accdwn \- accumulate the rows of a matrix
+.SH LIBRARY
+matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
+.SH SYNOPSIS
+.B #include \[dq]matrix/matrix.h\[dq]
+
+\fBvoid matrix_accdwn (const Matrix * \fImatrix\fR\fB, Matrix * \fIresult\fR\fB);
+.SH DESCRIPTION
+.B martix_accdwn
+accumulates the rows of a matrix \fImatrix\fR, returning the resulting row of values in \fIresult\fR.
+.SH SEE ALSO
+\fBmatrix_accrgt\fR(3), \fBmatrix_accall\fR(3)
