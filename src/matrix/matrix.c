@@ -8,6 +8,15 @@
 #include <string.h>
 
 
+float matrix_accall (const Matrix * matrix) {
+    float rv = 0.0f;
+    for (size_t i = 0; i < matrix->n; i++) {
+        rv += matrix->vals[i];
+    }
+    return rv;
+}
+
+
 void matrix_accdwn (const Matrix * matrix, Matrix * result) {
     assert(matrix->nc == result->nc && "expected number of columns in input to be equal to the number of columns in result");
     assert(result->nr == 1 && "expected number of rows in result to be equal to 1");

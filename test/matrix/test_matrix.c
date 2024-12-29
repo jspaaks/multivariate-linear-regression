@@ -9,6 +9,25 @@ void derive_limits_of_acceptability(float expected, float tolerance, float * low
 }
 
 
+Test(matrix, accall) {
+    Matrix * matrix = matrix_create(3, 2);
+    matrix->vals[0] =   2.0f;
+    matrix->vals[1] =   4.0f;
+    matrix->vals[2] =  12.0f;
+    matrix->vals[3] =  22.0f;
+    matrix->vals[4] = 452.0f;
+    matrix->vals[5] =  -4.0f;
+    float expected  = 488.0f;
+    float tolerance =   0.1f;
+    float lower;
+    float upper;
+    derive_limits_of_acceptability(expected, tolerance, &lower, &upper);
+    float actual = matrix_accall(matrix);
+    cr_assert(lower < actual && actual < upper, "expected actual to be equal to %.1f within the given tolerance (was %.1f)", expected, actual);
+    matrix_destroy(&matrix);
+}
+
+
 Test(matrix, accdwn) {
     Matrix * matrix = matrix_create(2, 2);
     Matrix * actual = matrix_create(1, 2);

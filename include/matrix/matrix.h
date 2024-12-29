@@ -3,6 +3,12 @@
 #include <stddef.h>
 #include <stdio.h>
 
+/*
+ *  This library contains various common operations on 2-D arrays, which
+ *  are implemented as dope vectors.
+ *  See https://en.wikipedia.org/wiki/Dope_vector
+ */
+
 typedef struct matrix Matrix;
 
 struct matrix {
@@ -12,6 +18,7 @@ struct matrix {
     float * vals;
 };
 
+float matrix_accall (const Matrix * matrix);
 void matrix_accdwn (const Matrix * matrix, Matrix * result);
 void matrix_accrgt (const Matrix * matrix, Matrix * result);
 void matrix_addsca (const Matrix * left, float right, Matrix * result);
