@@ -409,7 +409,7 @@ bool matrix_testeq (const Matrix * a, const Matrix * b, float eps) {
 }
 
 
-void matrix_transp (const Matrix * matrix, const Matrix * result) {
+void matrix_transp (const Matrix * matrix, Matrix * result) {
     assert(matrix->nr == result->nc && "Number of rows in input should be equal to the number of columns in the output.");
     assert(matrix->nc == result->nr && "Number of columns in input should be equal to the number of rows in the output.");
     size_t nr = matrix->nr;
