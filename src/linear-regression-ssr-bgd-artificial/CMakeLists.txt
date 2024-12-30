@@ -54,6 +54,8 @@ target_link_libraries(
     tgt_exe_linear_regression_ssr_bgd_artificial
     PRIVATE
         m
+        plplot
+        tgt_lib_boxmuller
         tgt_lib_matrix
 )
 
@@ -62,6 +64,7 @@ target_sources(
     PRIVATE
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-artificial/data.c
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-artificial/main.c
+        ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-artificial/plotting.c
 )
 
 install(TARGETS tgt_exe_linear_regression_ssr_bgd_artificial)

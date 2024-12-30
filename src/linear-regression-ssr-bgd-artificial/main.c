@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 #include "data.h"
+#include "plotting.h"
 #include "matrix/matrix.h"
 
 void print_usage (FILE *, char * []);
@@ -30,8 +31,10 @@ int main (int argc, char * argv[]) {
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
-    const size_t ni = 10000;
+    const size_t ni = 100;
     const size_t nf = 2;
+    const size_t niters = 500;
+    const float learning_rate = 0.01f;
 
     Matrix * features = matrix_create(ni, 1 + nf);
     Matrix * features_transp = matrix_create(1 + nf, ni);
@@ -39,48 +42,42 @@ int main (int argc, char * argv[]) {
     Matrix * gradients = matrix_create(1 + nf, ni);
     Matrix * labels = matrix_create(ni, 1);
     Matrix * labels_transp = matrix_create(1, ni);
+    Matrix * plotting_iterations = matrix_create(niters + 1, 1);
+    Matrix * plotting_sigma = matrix_create(niters + 1, 1);
     Matrix * predicted = matrix_create(1, ni);
     Matrix * residuals = matrix_create(1, ni);
-    Matrix * residuals_bcastd = matrix_create(1 + nf, ni);
+    Matrix * residuals_bctdwn = matrix_create(1 + nf, ni);
     Matrix * step = matrix_create(1 + nf, 1);
     Matrix * step_transp = matrix_create(1, 1 + nf);
+    Matrix * true_residuals_transp = matrix_create(1, ni);
     Matrix * true_weights = matrix_create(1, 1 + nf);
     Matrix * weights = matrix_create(1, 1 + nf);
 
     // ============================= DATA ================================= //
 
-    true_weights->vals[0] = 9.87;
-    true_weights->vals[1] = 6.54;
-    true_weights->vals[2] = 3.21;
-
+    populate_true_weights(true_weights);
     populate_features(features);
     matrix_transp(features, features_transp);
-    matrix_print(stdout, features, "features");
-
-    populate_labels (true_weights, features_transp, labels_transp);
+    populate_labels (true_weights, features_transp, labels_transp, true_residuals_transp);
     matrix_transp(labels_transp, labels);
-    matrix_print(stdout, labels, "labels");
 
-    size_t niters = 3800;
-    float learning_rate = 0.01f;
-    for (size_t i = 0; i < niters; i++) {
+    // ========================== ITERATION ============================== //
+
+    for (size_t i = 0; i <= niters; i++) {
         matrix_dotpro(weights, features_transp, predicted);
         matrix_ebesub(predicted, labels_transp, residuals);
-        matrix_bctdwn(residuals, residuals_bcastd);
-        matrix_hadpro(residuals_bcastd, features_transp, gradients);
+        {
+            plotting_iterations->vals[i] = i;
+            plotting_sigma->vals[i] = matrix_sdvall(residuals);
+        }
+        matrix_bctdwn(residuals, residuals_bctdwn);
+        matrix_hadpro(residuals_bctdwn, features_transp, gradients);
         matrix_avgrgt(gradients, gradient);
         matrix_scapro(gradient, learning_rate, step);
         matrix_transp(step, step_transp);
         matrix_ebesub(weights, step_transp, weights);
-        if (i % 100 == 0) {
-            fprintf(stdout, "======================= %zu =======================\n", i);
-            matrix_print(stdout, weights, "weights");
-            Matrix * residuals_avgrgt = matrix_create(1,1);
-            matrix_avgrgt(residuals, residuals_avgrgt);
-            matrix_print(stdout, residuals_avgrgt, "residuals_avgrgt");
-            matrix_destroy(&residuals_avgrgt);
-        }
     }
+    plot_residuals("qtwidget", plotting_iterations, plotting_sigma, niters, ni);
 
     //// =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
@@ -90,13 +87,17 @@ int main (int argc, char * argv[]) {
     matrix_destroy(&gradients);
     matrix_destroy(&labels_transp);
     matrix_destroy(&labels);
+    matrix_destroy(&plotting_iterations);
+    matrix_destroy(&plotting_sigma);
     matrix_destroy(&predicted);
-    matrix_destroy(&residuals_bcastd);
+    matrix_destroy(&residuals_bctdwn);
     matrix_destroy(&residuals);
     matrix_destroy(&step_transp);
     matrix_destroy(&step);
+    matrix_destroy(&true_residuals_transp);
     matrix_destroy(&true_weights);
     matrix_destroy(&weights);
+
 
     return EXIT_SUCCESS;
 }
