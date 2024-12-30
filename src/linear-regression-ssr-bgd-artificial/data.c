@@ -30,7 +30,7 @@ void populate_true_weights (Matrix * true_weights) {
     assert(true_weights->nr == 1);
     assert(true_weights->nc == 3);
     assert(true_weights->n == 3);
-    true_weights->vals[0] = 9.87;
-    true_weights->vals[1] = 6.54;
-    true_weights->vals[2] = 3.21;
+    true_weights->vals[0] = 98.7;
+    true_weights->vals[1] = 65.4;
+    true_weights->vals[2] = 32.1;
 }

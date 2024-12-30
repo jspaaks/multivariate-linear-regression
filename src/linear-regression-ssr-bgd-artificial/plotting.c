@@ -79,7 +79,7 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
         .xmin = 0.0,
         .xmax = niters,
         .ymin = 0.0,
-        .ymax = 20.0
+        .ymax = 50.0
     };
 
     // advance the page ...?
@@ -104,11 +104,14 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
     {
         char title[100];
         sprintf(title, "n#di#u = %zu", ni);
-        pllab("iterations", "#gs#dresiduals#u", title);
+        pllab("iteration", "#gs#dresiduals#u", title);
     }
 
     // pick a plotting color
     plcol0(7);
+
+    // set line width
+    plwidth(2.0);
 
     // plot the iterations v mean_squared_residuals data
     plline(niters, x, y);

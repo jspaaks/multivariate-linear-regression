@@ -33,7 +33,7 @@ int main (int argc, char * argv[]) {
 
     const size_t ni = 100;
     const size_t nf = 2;
-    const size_t niters = 500;
+    const size_t niters = 2500;
     const float learning_rate = 0.01f;
 
     Matrix * features = matrix_create(ni, 1 + nf);
@@ -77,6 +77,9 @@ int main (int argc, char * argv[]) {
         matrix_transp(step, step_transp);
         matrix_ebesub(weights, step_transp, weights);
     }
+
+    matrix_print(stdout, true_weights, "true_weights");
+    matrix_print(stdout, weights, "weights");
     plot_residuals("qtwidget", plotting_iterations, plotting_sigma, niters, ni);
 
     //// =================== DEALLOCATE DYNAMIC MEMORY ====================== //
