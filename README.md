@@ -1,71 +1,27 @@
 # ann
 
-TODO
+For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
-1. add backpropagation
-1. add gradient check https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3503s as a unit test
-1. add minibatching https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3776s
-1. add multistart
-1. consider making the test binaries startable from ctest: https://cmake.org/cmake/help/v3.28/command/add_test.html
+## Executables
 
-## CMake
+- `linear-regression-ssr-bgd-artificial`: 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
 
-The project has been initialized with a [CMakeLists.txt](CMakeLists.txt)-based
-configuration for building with CMake:
+## Libraries
 
-```shell
-# change into the build directory
-cd build/cmake
-
-# generate the build files
-cmake ../..
-
-# build the project
-cmake --build .
-
-# install the project to <repo>/build/cmake/dist
-cmake --install .
-
-# run the program to see if it works
-./dist/bin/runann
-```
-
-Should output something like:
-
-```text
-...
-```
-
-## Testing
-
-The tests require that [Criterion](https://github.com/Snaipe/Criterion) is installed on the system, e.g. with
-
-```shell
-sudo apt install libcriterion-dev
-```
-
-Run the tests with
-
-```shell
-./dist/bin/test_ann -j1 --verbose
-```
-## Code::Blocks
-
-Use [Code::Blocks IDE](https://www.codeblocks.org/) to open [.codeblocks/project.cbp](.codeblocks/project.cbp). 
-
-## `clang-format`
-
-The file `.clang-format` contains an initial configuration for (automatic) formatting with [clang-format](https://clang.llvm.org/docs/ClangFormat.html). Run the formatter with e.g.:
-
-```shell
-# dry run on main.c
-clang-format -Werror --dry-run main.c
-
-# format in place all *.c and *.h files under ./src
-clang-format -i `find ./src -type f -name '*.[c|h]'`
-```
+- `matrix`: Matrix data type and operations on instances of that type
+- `boxmuller`: normally distributed random number generation
 
 ## Data
+
+### Artificial
+
+Some executables use artificial data, where data is generated on the fly using known parameterizations and known linear model, which is subsequently corrupted using random normal residuals of known magnitude.
+
+### Housing
+
+Data set used in Stanford's CS221 course. Housing prices around Portland, Oregon, as a more or less linear but noisy function of square footage and number of bedrooms.
+
+### Yann LeCun handwritten numbers
 
 Wayback Machine copies of Yann LeCun et al. handwritten numbers data.
 
@@ -127,7 +83,7 @@ $ xxd -d -s 16 -o -16 -l 784 -c 28 t10k-images.idx3-ubyte
 00000756: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
 ```
 
-## Experiment
+#### Experiment
 
 https://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf
 
@@ -144,5 +100,5 @@ https://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf
 
 ## Acknowledgements
 
-_This project was generated using [Copier](https://pypi.org/project/copier)
+_This project was initialized using [Copier](https://pypi.org/project/copier)
 and the [Copier template for C projects](https://github.com/jspaaks/copier-template-for-c-projects)._
