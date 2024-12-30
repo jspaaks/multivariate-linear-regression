@@ -55,6 +55,8 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 
 ## TODO
 
+1. linear-regression-ssr-bgd-artificial but using sgd
+1. linear-regression-ssr-bgd-artificial but using housing data
 1. add gradient check https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3503s as a unit test
 1. add minibatching https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3776s
 1. add multistart
