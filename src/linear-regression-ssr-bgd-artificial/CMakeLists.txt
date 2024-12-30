@@ -53,7 +53,6 @@ target_include_directories(
 target_link_libraries(
     tgt_exe_linear_regression_ssr_bgd_artificial
     PRIVATE
-        m
         plplot
         tgt_lib_boxmuller
         tgt_lib_matrix

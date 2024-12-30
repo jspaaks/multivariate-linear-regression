@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <errno.h>
 #include <limits.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -82,7 +81,7 @@ int main (int argc, char * argv[]) {
     matrix_print(stdout, weights, "weights");
     plot_residuals("qtwidget", plotting_iterations, plotting_sigma, niters, ni);
 
-    //// =================== DEALLOCATE DYNAMIC MEMORY ====================== //
+    // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
     matrix_destroy(&features_transp);
     matrix_destroy(&features);
@@ -101,7 +100,6 @@ int main (int argc, char * argv[]) {
     matrix_destroy(&true_weights);
     matrix_destroy(&weights);
 
-
     return EXIT_SUCCESS;
 }
 
@@ -109,10 +107,11 @@ int main (int argc, char * argv[]) {
 void print_usage(FILE * stream, char * argv[]) {
     fprintf(stream,
             "Usage: %s\n"
-            "    Generate 10000 random draws of points [-1, 1] in 2-D space, then\n"
-            "    use true weights a = 9.87, b = 6.54, c = 3.21 to generate artificial\n"
-            "    data according to z(x,y|a,b,c) = a + bx + cy. Then use batch gradient\n"
-            "    descent to iteratively approximate the true value of the weights, by\n"
-            "    minimizing the sum of squared residuals between artificial data and\n"
-            "    predicted data.\n", argv[0]);
+            "   Generate 100 random draws of points [-1, 1] in 2-D space, then use\n"
+            "   true weights a = 98.7, b = 65.4, c = 32.1 to generate artificial\n"
+            "   data according to z(x,y|a,b,c,e) = a + bx + cy + e, where e is drawn\n"
+            "   from a random normal distribution with standard deviation equal to 10.\n"
+            "   Then use batch gradient descent to iteratively approximate the true\n"
+            "   value of the weights, by minimizing the sum of squared residuals\n"
+            "   between artificial data and predicted data using 2500 iterations.\n", argv[0]);
 }
