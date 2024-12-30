@@ -1,6 +1,7 @@
+/.codeblocks
 /build
 /cachegrind.out.*
 /callgrind.out.*
-/.codeblocks
-/data/*
+/data/*ubyte
+/data/*ubyte.gz
 /src/development
