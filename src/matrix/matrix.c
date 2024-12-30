@@ -319,7 +319,7 @@ void matrix_minrgt (const Matrix * matrix, Matrix * result) {
 
 
 void matrix_print (FILE * stream, Matrix * matrix, char * description) {
-    if (description != nullptr) {
+    if (description != nullptr && *description != '\0') {
         fprintf(stream, "%s ", description);
     }
     fprintf(stream, "(%zux%zu):\n", matrix->nr, matrix->nc);
