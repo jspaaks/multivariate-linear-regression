@@ -122,9 +122,9 @@ void matrix_bctrgt (const Matrix * matrix, Matrix * result) {
 
 Matrix * matrix_create (size_t nr, size_t nc) {
     errno = 0;
-    Matrix * arr = calloc(1, sizeof(Matrix));
-    if (arr == nullptr) {
-        fprintf(stderr, "%s\nError allocating memory for Matrix instance, aborting.\n", strerror(errno));
+    MatrixResizable * m = calloc(1, sizeof(MatrixResizable));
+    if (m == nullptr) {
+        fprintf(stderr, "%s\nError allocating memory for MatrixResizable instance, aborting.\n", strerror(errno));
         errno = 0;
         exit(EXIT_FAILURE);
     }
@@ -132,16 +132,16 @@ Matrix * matrix_create (size_t nr, size_t nc) {
     errno = 0;
     float * vals = calloc(nr * nc, sizeof(float));
     if (vals == nullptr) {
-        fprintf(stderr, "%s\nError allocating memory for values of Matrix instance, aborting.\n", strerror(errno));
+        fprintf(stderr, "%s\nError allocating memory for values of MatrixResizable instance, aborting.\n", strerror(errno));
         errno = 0;
         exit(EXIT_FAILURE);
     }
 
-    arr->nr = nr;
-    arr->nc = nc;
-    arr->n = nr * nc;
-    arr->vals = vals;
-    return arr;
+    m->nr = nr;
+    m->nc = nc;
+    m->n = nr * nc;
+    m->vals = vals;
+    return (Matrix *) m;
 }
 
 

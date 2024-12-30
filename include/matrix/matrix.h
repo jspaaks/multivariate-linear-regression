@@ -10,11 +10,19 @@
  */
 
 typedef struct matrix Matrix;
+typedef struct matrix_resizable MatrixResizable;
 
-struct matrix {
+struct matrix_resizable {
     size_t nr;
     size_t nc;
     size_t n;
+    float * vals;
+};
+
+struct matrix {
+    const size_t nr;
+    const size_t nc;
+    const size_t n;
     float * vals;
 };
 
