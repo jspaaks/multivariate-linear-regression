@@ -226,6 +226,16 @@ void matrix_hadpro (const Matrix * left, const Matrix * right, Matrix * result) 
 }
 
 
+void matrix_hstack (const Matrix * top, const Matrix * bottom, Matrix * result) {
+    assert(false && "Not implemented");
+}
+
+
+void matrix_ident (Matrix * matrix) {
+    assert(false && "Not implemented");
+}
+
+
 float matrix_maxall (const Matrix * matrix) {
     float upper = matrix->vals[0];
     for (size_t i = 1; i < matrix->n; i++) {
@@ -339,21 +349,28 @@ void matrix_scapro (const Matrix * left, float right, Matrix * result) {
 }
 
 
+void matrix_stzall (const Matrix * matrix, float * avg, float * stddev, float * result) {
+    assert(false && "Not implemented");
+}
+
+
 void matrix_stzdwn (const Matrix * matrix, Matrix * avgs, Matrix * stddevs, Matrix * result) {
+    assert(matrix->nr == result->nr && "number of rows in input should be same as number of rows in output");
+    assert(matrix->nc == result->nc && "number of columns in input should be same as number of columns in output");
     size_t nr = matrix->nr;
     size_t nc = matrix->nc;
-    Matrix * avgs_bcastd = matrix_create(nr, nc);
-    Matrix * stddevs_bcastd = matrix_create(nr, nc);
+    Matrix * avgs_bctdwn = matrix_create(nr, nc);
+    Matrix * stddevs_bctdwn = matrix_create(nr, nc);
     {
         Matrix * deviations = matrix_create(nr, nc);
         Matrix * deviations_sq = matrix_create(nr, nc);
         Matrix * tmp = matrix_create(1, nc);
 
         matrix_avgdwn(matrix, avgs);
-        matrix_bctdwn(avgs, avgs_bcastd);
-        matrix_ebesub(matrix, avgs_bcastd, deviations);
+        matrix_bctdwn(avgs, avgs_bctdwn);
+        matrix_ebesub(avgs_bctdwn, matrix, deviations);
         matrix_hadpro(deviations, deviations, deviations_sq);
-        matrix_accdwn(deviations_sq, tmp);
+        matrix_avgdwn(deviations_sq, tmp);
         matrix_ebemap(tmp, sqrtf, stddevs);
 
         matrix_destroy(&tmp);
@@ -361,12 +378,45 @@ void matrix_stzdwn (const Matrix * matrix, Matrix * avgs, Matrix * stddevs, Matr
         matrix_destroy(&deviations);
     }
     {
-        matrix_bctdwn(stddevs, stddevs_bcastd);
-        matrix_ebesub(matrix, avgs_bcastd, result);
-        matrix_ebediv(result, stddevs_bcastd, result);
+        matrix_bctdwn(stddevs, stddevs_bctdwn);
+        matrix_ebesub(matrix, avgs_bctdwn, result);
+        matrix_ebediv(result, stddevs_bctdwn, result);
     }
-    matrix_destroy(&stddevs_bcastd);
-    matrix_destroy(&avgs_bcastd);
+    matrix_destroy(&stddevs_bctdwn);
+    matrix_destroy(&avgs_bctdwn);
+}
+
+
+void matrix_stzrgt (const Matrix * matrix, Matrix * avgs, Matrix * stddevs, Matrix * result) {
+    assert(matrix->nr == result->nr && "number of rows in input should be same as number of rows in output");
+    assert(matrix->nc == result->nc && "number of columns in input should be same as number of columns in output");
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    Matrix * avgs_bctrgt = matrix_create(nr, nc);
+    Matrix * stddevs_bctrgt = matrix_create(nr, nc);
+    {
+        Matrix * deviations = matrix_create(nr, nc);
+        Matrix * deviations_sq = matrix_create(nr, nc);
+        Matrix * tmp = matrix_create(nr, 1);
+
+        matrix_avgrgt(matrix, avgs);
+        matrix_bctrgt(avgs, avgs_bctrgt);
+        matrix_ebesub(avgs_bctrgt, matrix, deviations);
+        matrix_hadpro(deviations, deviations, deviations_sq);
+        matrix_avgrgt(deviations_sq, tmp);
+        matrix_ebemap(tmp, sqrtf, stddevs);
+
+        matrix_destroy(&tmp);
+        matrix_destroy(&deviations_sq);
+        matrix_destroy(&deviations);
+    }
+    {
+        matrix_bctrgt(stddevs, stddevs_bctrgt);
+        matrix_ebesub(matrix, avgs_bctrgt, result);
+        matrix_ebediv(result, stddevs_bctrgt, result);
+    }
+    matrix_destroy(&stddevs_bctrgt);
+    matrix_destroy(&avgs_bctrgt);
 }
 
 
@@ -424,6 +474,21 @@ void matrix_transp (const Matrix * matrix, Matrix * result) {
 }
 
 
+void matrix_ustzall (const Matrix * matrix, float * avg, float * stddev, float * result) {
+    assert(false && "Not implemented");
+}
+
+
+void matrix_ustzdwn (const Matrix * matrix, const Matrix * avgs, const Matrix * stddevs, Matrix * result) {
+    assert(false && "Not implemented");
+}
+
+
+void matrix_ustzrgt (const Matrix * matrix, const Matrix * avgs, const Matrix * stddevs, Matrix * result) {
+    assert(false && "Not implemented");
+}
+
+
 float matrix_varall (const Matrix * matrix) {
     size_t nr = matrix->nr;
     size_t nc = matrix->nc;
@@ -473,8 +538,18 @@ void matrix_varrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
+void matrix_vstack (const Matrix * left, const Matrix * right, Matrix * result) {
+    assert(false && "Not implemented");
+}
+
+
 void matrix_zero (Matrix * matrix) {
     for (size_t i = 0; i < matrix->n; i++) {
         matrix->vals[i] = 0.0f;
     }
+}
+
+
+void matrix_write (const char * filename, const Matrix * matrix) {
+    assert(false && "Not implemented");
 }
