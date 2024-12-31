@@ -540,29 +540,82 @@ Test(matrix, stzdwn) {
 
     expected->vals[0] =  0.0f;
     expected->vals[1] =  0.0f;
-    expected->vals[2] = -0.707f;
-    expected->vals[3] = -0.707f;
-    expected->vals[4] =  0.707f;
-    expected->vals[5] =  0.707f;
+    expected->vals[2] = -1.224f;
+    expected->vals[3] = -1.224f;
+    expected->vals[4] =  1.224f;
+    expected->vals[5] =  1.224f;
 
     avgs_expected->vals[0] =   5.0f;
     avgs_expected->vals[1] = -10.0f;
 
-    stddevs_expected->vals[0] = 4.242f;
-    stddevs_expected->vals[1] = 7.071f;
+    stddevs_expected->vals[0] = 2.449f;
+    stddevs_expected->vals[1] = 4.082f;
 
     matrix_stzdwn(matrix, avgs_actual, stddevs_actual, actual);
     {
         bool cond = matrix_testeq (actual, expected, 0.001f);
-        cr_assert(cond, "expected a and b to be equal within the given tolerance");
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (1)");
     }
     {
         bool cond = matrix_testeq (avgs_actual, avgs_expected, 0.001f);
-        cr_assert(cond, "expected a and b to be equal within the given tolerance");
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (2)");
     }
     {
         bool cond = matrix_testeq (stddevs_actual, stddevs_expected, 0.001f);
-        cr_assert(cond, "expected a and b to be equal within the given tolerance");
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (3)");
+    }
+
+    matrix_destroy(&stddevs_expected);
+    matrix_destroy(&stddevs_actual);
+    matrix_destroy(&avgs_expected);
+    matrix_destroy(&avgs_actual);
+    matrix_destroy(&expected);
+    matrix_destroy(&actual);
+    matrix_destroy(&matrix);
+}
+
+
+Test(matrix, stzrgt) {
+    Matrix * matrix = matrix_create(2, 3);
+    Matrix * actual = matrix_create(2, 3);
+    Matrix * expected = matrix_create(2, 3);
+    Matrix * avgs_actual = matrix_create(2, 1);
+    Matrix * avgs_expected = matrix_create(2, 1);
+    Matrix * stddevs_actual = matrix_create(2, 1);
+    Matrix * stddevs_expected = matrix_create(2, 1);
+
+    matrix->vals[0] =    5.0f;
+    matrix->vals[1] =    2.0f;
+    matrix->vals[2] =    8.0f;
+    matrix->vals[3] =  -10.0f;
+    matrix->vals[4] =  -15.0f;
+    matrix->vals[5] =   -5.0f;
+
+    expected->vals[0] =  0.0f;
+    expected->vals[1] = -1.224f;
+    expected->vals[2] =  1.224f;
+    expected->vals[3] =  0.0f;
+    expected->vals[4] = -1.224f;
+    expected->vals[5] =  1.224f;
+
+    avgs_expected->vals[0] =   5.0f;
+    avgs_expected->vals[1] = -10.0f;
+
+    stddevs_expected->vals[0] = 2.449f;
+    stddevs_expected->vals[1] = 4.082f;
+
+    matrix_stzrgt(matrix, avgs_actual, stddevs_actual, actual);
+    {
+        bool cond = matrix_testeq (actual, expected, 0.001f);
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (1)");
+    }
+    {
+        bool cond = matrix_testeq (avgs_actual, avgs_expected, 0.001f);
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (2)");
+    }
+    {
+        bool cond = matrix_testeq (stddevs_actual, stddevs_expected, 0.001f);
+        cr_assert(cond, "expected a and b to be equal within the given tolerance (3)");
     }
 
     matrix_destroy(&stddevs_expected);
