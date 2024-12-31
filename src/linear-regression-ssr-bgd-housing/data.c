@@ -6,7 +6,7 @@
 #include <string.h>
 
 
-void populate_features (const char * path, Matrix * features) {
+void populate_features (const char * path, Matrix * features_raw) {
     errno = 0;
     FILE * fp = fopen(path, "r");
     if (fp == nullptr) {
@@ -16,10 +16,12 @@ void populate_features (const char * path, Matrix * features) {
     }
     constexpr size_t bufsize = 100;
     char buffer[bufsize] = {};
-    for (size_t ir = 0; ir < features->nr; ir++) {
-        float * intercept = &features->vals[ir * features->nc + 0];
-        float * area      = &features->vals[ir * features->nc + 1];
-        float * bedrooms  = &features->vals[ir * features->nc + 2];
+    size_t nr = features_raw->nr;
+    size_t nc = features_raw->nc;
+    for (size_t ir = 0; ir < nr; ir++) {
+        float * intercept = &features_raw->vals[ir * nc + 0];
+        float * area      = &features_raw->vals[ir * nc + 1];
+        float * bedrooms  = &features_raw->vals[ir * nc + 2];
         *intercept = 1.0f;
         fgets(buffer, bufsize, fp);
         sscanf(buffer, "%f,%f,%*f\n", area, bedrooms);
@@ -28,7 +30,7 @@ void populate_features (const char * path, Matrix * features) {
 }
 
 
-void populate_labels (const char * path, Matrix * labels) {
+void populate_labels (const char * path, Matrix * labels_raw_transp) {
     errno = 0;
     FILE * fp = fopen(path, "r");
     if (fp == nullptr) {
@@ -38,8 +40,8 @@ void populate_labels (const char * path, Matrix * labels) {
     }
     constexpr size_t bufsize = 100;
     char buffer[bufsize] = {};
-    for (size_t ir = 0; ir < labels->nr; ir++) {
-        float * price = &labels->vals[ir];
+    for (size_t ic = 0; ic < labels_raw_transp->nc; ic++) {
+        float * price = &labels_raw_transp->vals[ic];
         fgets(buffer, bufsize, fp);
         sscanf(buffer, "%*f,%*f,%f\n", price);
     }

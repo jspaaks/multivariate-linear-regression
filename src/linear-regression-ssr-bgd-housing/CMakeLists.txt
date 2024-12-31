@@ -53,11 +53,8 @@ target_include_directories(
 target_link_libraries(
     tgt_exe_linear_regression_ssr_bgd_housing
     PRIVATE
-        m
-        tgt_lib_afuns
-        tgt_lib_lfuns
+        plplot
         tgt_lib_matrix
-        tgt_lib_ops
 )
 
 target_sources(
@@ -65,6 +62,7 @@ target_sources(
     PRIVATE
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-housing/data.c
         ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-housing/main.c
+        ${PROJECT_ROOT}/src/linear-regression-ssr-bgd-housing/plotting.c
 )
 
 install(TARGETS tgt_exe_linear_regression_ssr_bgd_housing)

@@ -6,10 +6,12 @@
 #include <time.h>
 #include <string.h>
 #include "data.h"
-#include "lfuns/lfuns.h"
-#include "ops/ops.h"
+#include "plotting.h"
+#include "matrix/matrix.h"
 
 void print_usage (FILE *, char * []);
+void standardize_dwn(Matrix * features_raw, Matrix * features_raw_avg, Matrix * features_raw_sdv, Matrix * features);
+void standardize_rgt(Matrix * labels_raw_transp, Matrix * labels_raw_transp_avgs, Matrix * labels_raw_transp_sdvs, Matrix * labels_transp);
 
 int main (int argc, char * argv[]) {
 
@@ -26,90 +28,103 @@ int main (int argc, char * argv[]) {
         }
     }
 
-    // ============================= DATA ================================= //
-
-    const size_t ni = 47;
-    const size_t nf = 2;
-    const size_t no = 1;
-    const char * data_path = argv[1];
-
-    Matrix * features = matrix_create(ni, 1 + nf);
-    Matrix * features_avgs = matrix_create(1, 1 + nf);
-    Matrix * features_stddevs = matrix_create(1, 1 + nf);
-    Matrix * features_tr = matrix_create(1 + nf, ni);
-    populate_features(data_path, features);
-    matrix_stzdwn(features, features_avgs, features_stddevs, features);
-    matrix_transp(features, features_tr);
-
-    Matrix * labels = matrix_create(ni, no);
-    Matrix * labels_avgs = matrix_create(1, no);
-    Matrix * labels_stddevs = matrix_create(1, no);
-    Matrix * labels_tr = matrix_create(no, ni);
-    populate_labels(data_path, labels);
-    matrix_stzdwn(labels, labels_avgs, labels_stddevs, labels);
-    matrix_transp(labels, labels_tr);
-
-    matrix_print(stdout, features, "features");
-    matrix_print(stdout, labels, "labels");
-
     // =================== INITIALIZE RANDOMIZATION ======================= //
 
     srand(time(nullptr));
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
-    Matrix * weights = matrix_create(no, 1 + nf);
-    Matrix * predicted = matrix_create(no, ni);
-    Matrix * error = matrix_create(no, ni);
-    Matrix * error_bcastd = matrix_create(1 + nf, ni);
+    const size_t ni = 47;
+    const size_t nf = 2;
+    const size_t nepochs = 1000;
+    const float learning_rate = 0.01f;
+
+    Matrix * features = matrix_create(ni, 1 + nf);
+    Matrix * features_raw = matrix_create(ni, 1 + nf);
+    Matrix * features_raw_avgs = matrix_create(1, 1 + nf);
+    Matrix * features_raw_sdvs = matrix_create(1, 1 + nf);
+    Matrix * features_transp = matrix_create(1 + nf, ni);
+    Matrix * gradient = matrix_create(1 + nf, 1);
     Matrix * gradients = matrix_create(1 + nf, ni);
-    Matrix * gradient = matrix_create(1 + nf, no);
-    Matrix * step = matrix_create(1 + nf, no);
-    Matrix * step_tr = matrix_create(no, 1 + nf);
-    Matrix * error_avg = matrix_create(no, 1);
-    Matrix * answer = matrix_create(no, 1 + nf);
-//
-    size_t niters = 100;
-    float learning_rate = 0.01f;
-    for (size_t i = 0; i < niters; i++) {
-        matrix_dotpro(weights, features_tr, predicted);
-        matrix_ebesub(predicted, labels_tr, error);
-        matrix_scapro(error, 2.0f, error);
-        matrix_bctdwn(error, error_bcastd);
-        matrix_hadpro(error_bcastd, features_tr, gradients);
+    Matrix * labels = matrix_create(ni, 1);
+    Matrix * labels_transp = matrix_create(1, ni);
+    Matrix * labels_raw_transp = matrix_create(1, ni);
+    Matrix * labels_raw_transp_avgs = matrix_create(1, 1);
+    Matrix * labels_raw_transp_sdvs = matrix_create(1, 1);
+    Matrix * plotting_iterations = matrix_create(nepochs + 1, 1);
+    Matrix * plotting_sigma = matrix_create(nepochs + 1, 1);
+    Matrix * predicted = matrix_create(1, ni);
+    Matrix * residuals = matrix_create(1, ni);
+    Matrix * residuals_bctdwn = matrix_create(1 + nf, ni);
+    Matrix * step = matrix_create(1 + nf, 1);
+    Matrix * step_transp = matrix_create(1, 1 + nf);
+    Matrix * true_residuals_transp = matrix_create(1, ni);
+    Matrix * true_weights = matrix_create(1, 1 + nf);
+    Matrix * weights = matrix_create(1, 1 + nf);
+
+    // ============================= DATA ================================= //
+
+    const char * data_path = argv[1];
+    populate_features(data_path, features_raw);
+    standardize_dwn(features_raw, features_raw_avgs, features_raw_sdvs, features);
+    matrix_transp(features, features_transp);
+
+    matrix_print(stdout, features_raw, "features_raw");
+    matrix_print(stdout, features_raw_avgs, "features_raw_avgs");
+    matrix_print(stdout, features_raw_sdvs, "features_raw_sdvs");
+    matrix_print(stdout, features, "features");
+    matrix_print(stdout, features_transp, "features_transp");
+
+    populate_labels(data_path, labels_raw_transp);
+    standardize_rgt(labels_raw_transp, labels_raw_transp_avgs, labels_raw_transp_sdvs, labels_transp);
+    matrix_transp(labels_transp, labels);
+
+    matrix_print(stdout, labels_raw_transp, "labels_raw_transp");
+    matrix_print(stdout, labels_raw_transp_avgs, "labels_raw_transp_avgs");
+    matrix_print(stdout, labels_raw_transp_sdvs, "labels_raw_transp_sdvs");
+    matrix_print(stdout, labels_transp, "labels_transp");
+    matrix_print(stdout, labels, "labels");
+
+    // ========================== ITERATION ============================== //
+
+    for (size_t i = 0; i <= nepochs; i++) {
+        matrix_dotpro(weights, features_transp, predicted);
+        matrix_ebesub(predicted, labels_transp, residuals);
+        {
+            plotting_iterations->vals[i] = i;
+            plotting_sigma->vals[i] = matrix_sdvall(residuals);
+        }
+        matrix_bctdwn(residuals, residuals_bctdwn);
+        matrix_hadpro(residuals_bctdwn, features_transp, gradients);
         matrix_avgrgt(gradients, gradient);
         matrix_scapro(gradient, learning_rate, step);
-        matrix_transp(step, step_tr);
-        matrix_ebesub(weights, step_tr, weights);
+        matrix_transp(step, step_transp);
+        matrix_ebesub(weights, step_transp, weights);
     }
-    matrix_avgrgt(error, error_avg);
-    matrix_hadpro(weights, features_avgs, answer);
-//
+
     matrix_print(stdout, weights, "weights");
-    matrix_print(stdout, error_avg, "error_avg");
-    matrix_print(stdout, answer, "answer");
-//
-//
+    plot_residuals("qtwidget", plotting_iterations, plotting_sigma, nepochs, ni);
+
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
-//
-    matrix_destroy(&error_avg);
-    matrix_destroy(&step);
-    matrix_destroy(&step_tr);
+
+    matrix_destroy(&features_transp);
+    matrix_destroy(&features);
+    matrix_destroy(&features_raw);
     matrix_destroy(&gradient);
     matrix_destroy(&gradients);
-    matrix_destroy(&error_bcastd);
-    matrix_destroy(&error);
-    matrix_destroy(&predicted);
-    matrix_destroy(&weights);
-    matrix_destroy(&labels_tr);
-    matrix_destroy(&labels_stddevs);
-    matrix_destroy(&labels_avgs);
+    matrix_destroy(&labels_raw_transp);
+    matrix_destroy(&labels_transp);
     matrix_destroy(&labels);
-    matrix_destroy(&features_tr);
-    matrix_destroy(&features_stddevs);
-    matrix_destroy(&features_avgs);
-    matrix_destroy(&features);
-
+    matrix_destroy(&plotting_iterations);
+    matrix_destroy(&plotting_sigma);
+    matrix_destroy(&predicted);
+    matrix_destroy(&residuals_bctdwn);
+    matrix_destroy(&residuals);
+    matrix_destroy(&step_transp);
+    matrix_destroy(&step);
+    matrix_destroy(&true_residuals_transp);
+    matrix_destroy(&true_weights);
+    matrix_destroy(&weights);
 
     return EXIT_SUCCESS;
 }
@@ -122,4 +137,21 @@ void print_usage(FILE * stream, char * argv[]) {
             "   use these data to fit a multivariate linear regression\n"
             "   model using (1) the normal equation and (2) iterative\n"
             "   approximation with gradient descent.\n", argv[0]);
+}
+
+
+void standardize_dwn(Matrix * features_raw, Matrix * features_raw_avgs, Matrix * features_raw_sdvs, Matrix * features) {
+    matrix_stzdwn(features_raw, features_raw_avgs, features_raw_sdvs, features);
+    // undo scaling of the intercept column:
+    for (size_t ir = 0; ir < features->nr; ir++) {
+        size_t i = ir * features->nc;
+        features->vals[i] = 1.0f;
+    }
+    features_raw_avgs->vals[0] = 1.0f;
+    features_raw_sdvs->vals[0] = 0.0f;
+}
+
+
+void standardize_rgt(Matrix * labels_raw_transp, Matrix * labels_raw_transp_avgs, Matrix * labels_raw_transp_sdvs, Matrix * labels_transp) {
+    matrix_stzrgt(labels_raw_transp, labels_raw_transp_avgs, labels_raw_transp_sdvs, labels_transp);
 }
