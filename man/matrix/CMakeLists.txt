@@ -19,12 +19,14 @@ install(
         matrix_ebemap.3
         matrix_ebesub.3
         matrix_hadpro.3
+        matrix_hstack.3
         matrix_maxall.3
         matrix_maxdwn.3
         matrix_maxrgt.3
         matrix_minall.3
         matrix_mindwn.3
         matrix_minrgt.3
+        matrix_ones.3
         matrix_print.3
         matrix_scapro.3
         matrix_sdvall.3
@@ -37,7 +39,8 @@ install(
         matrix_varall.3
         matrix_vardwn.3
         matrix_varrgt.3
-        matrix_zero.3
+        matrix_vstack.3
+        matrix_zeros.3
         matrix.3
     DESTINATION ${CMAKE_INSTALL_MANDIR}/man3     # I'd prefer to use TYPE instead of DESTINATION but it seems I need the man3 subdirectory
 )

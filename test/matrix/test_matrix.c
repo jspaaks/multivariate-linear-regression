@@ -321,6 +321,51 @@ Test(matrix, hadpro) {
 }
 
 
+Test(matrix, hstack) {
+    Matrix * left = matrix_create(2, 3);
+    Matrix * right = matrix_create(2, 3);
+    Matrix * actual = matrix_create(2, 6);
+    Matrix * expected = matrix_create(2, 6);
+
+    left->vals[0] = 1.0f;
+    left->vals[1] = 2.0f;
+    left->vals[2] = 3.0f;
+    left->vals[3] = 7.0f;
+    left->vals[4] = 8.0f;
+    left->vals[5] = 9.0f;
+
+    right->vals[0] =  4.0f;
+    right->vals[1] =  5.0f;
+    right->vals[2] =  6.0f;
+    right->vals[3] = 10.0f;
+    right->vals[4] = 11.0f;
+    right->vals[5] = 12.0f;
+
+    matrix_hstack(left, right, actual);
+
+    expected->vals[0] =   1.0f;
+    expected->vals[1] =   2.0f;
+    expected->vals[2] =   3.0f;
+    expected->vals[3] =   4.0f;
+    expected->vals[4] =   5.0f;
+    expected->vals[5] =   6.0f;
+    expected->vals[6] =   7.0f;
+    expected->vals[7] =   8.0f;
+    expected->vals[8] =   9.0f;
+    expected->vals[9] =  10.0f;
+    expected->vals[10] = 11.0f;
+    expected->vals[11] = 12.0f;
+
+    bool cond = matrix_testeq(actual, expected, 0.01f);
+    cr_assert(cond, "vstack failed");
+
+    matrix_destroy(&left);
+    matrix_destroy(&right);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
+}
+
+
 Test(matrix, maxall) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {
@@ -422,6 +467,34 @@ Test(matrix, minrgt) {
     matrix_destroy(&expected);
     matrix_destroy(&actual);
     matrix_destroy(&matrix);
+}
+
+
+
+Test(matrix, ones) {
+    Matrix * actual = matrix_create(2, 3);
+    actual->vals[0] = 1.0f;
+    actual->vals[1] = 2.0f;
+    actual->vals[2] = 3.0f;
+    actual->vals[3] = 4.0f;
+    actual->vals[4] = 5.0f;
+    actual->vals[5] = 6.0f;
+
+    matrix_ones(actual);
+
+    Matrix * expected = matrix_create(2, 3);
+    expected->vals[0] = 1.0f;
+    expected->vals[1] = 1.0f;
+    expected->vals[2] = 1.0f;
+    expected->vals[3] = 1.0f;
+    expected->vals[4] = 1.0f;
+    expected->vals[5] = 1.0f;
+
+    bool cond = matrix_testeq(actual, expected, 0.01f);
+    cr_assert(cond, "ones failed");
+
+    matrix_destroy(&expected);
+    matrix_destroy(&actual);
 }
 
 
@@ -775,7 +848,52 @@ Test(matrix, varrgt) {
 }
 
 
-Test(matrix, zero) {
+Test(matrix, vstack) {
+    Matrix * top = matrix_create(2, 3);
+    Matrix * bottom = matrix_create(2, 3);
+    Matrix * actual = matrix_create(4, 3);
+    Matrix * expected = matrix_create(4, 3);
+
+    top->vals[0] = 1.0f;
+    top->vals[1] = 2.0f;
+    top->vals[2] = 3.0f;
+    top->vals[3] = 4.0f;
+    top->vals[4] = 5.0f;
+    top->vals[5] = 6.0f;
+
+    bottom->vals[0] =  7.0f;
+    bottom->vals[1] =  8.0f;
+    bottom->vals[2] =  9.0f;
+    bottom->vals[3] = 10.0f;
+    bottom->vals[4] = 11.0f;
+    bottom->vals[5] = 12.0f;
+
+    matrix_vstack(top, bottom, actual);
+
+    expected->vals[0] =   1.0f;
+    expected->vals[1] =   2.0f;
+    expected->vals[2] =   3.0f;
+    expected->vals[3] =   4.0f;
+    expected->vals[4] =   5.0f;
+    expected->vals[5] =   6.0f;
+    expected->vals[6] =   7.0f;
+    expected->vals[7] =   8.0f;
+    expected->vals[8] =   9.0f;
+    expected->vals[9] =  10.0f;
+    expected->vals[10] = 11.0f;
+    expected->vals[11] = 12.0f;
+
+    bool cond = matrix_testeq(actual, expected, 0.01f);
+    cr_assert(cond, "vstack failed");
+
+    matrix_destroy(&top);
+    matrix_destroy(&bottom);
+    matrix_destroy(&actual);
+    matrix_destroy(&expected);
+}
+
+
+Test(matrix, zeros) {
     Matrix * actual = matrix_create(2, 3);
     actual->vals[0] = 1.0f;
     actual->vals[1] = 2.0f;
@@ -784,7 +902,7 @@ Test(matrix, zero) {
     actual->vals[4] = 5.0f;
     actual->vals[5] = 6.0f;
 
-    matrix_zero(actual);
+    matrix_zeros(actual);
 
     Matrix * expected = matrix_create(2, 3);
     expected->vals[0] = 0.0f;
@@ -795,7 +913,7 @@ Test(matrix, zero) {
     expected->vals[5] = 0.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
-    cr_assert(cond, "zero failed");
+    cr_assert(cond, "zeros failed");
 
     matrix_destroy(&expected);
     matrix_destroy(&actual);

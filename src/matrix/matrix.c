@@ -226,8 +226,24 @@ void matrix_hadpro (const Matrix * left, const Matrix * right, Matrix * result) 
 }
 
 
-void matrix_hstack (const Matrix * top, const Matrix * bottom, Matrix * result) {
-    assert(false && "Not implemented");
+void matrix_hstack (const Matrix * left, const Matrix * right, Matrix * result) {
+    assert(left->nr == right->nr && "expected left and right number of rows to be equal");
+    assert(left->nr == result->nr && "expected top number of rows to be equal to result's number of rows");
+    size_t nr = left->nr;
+    for (size_t ir = 0; ir < nr; ir++) {
+        for (size_t ic = 0; ic < left->nc; ic++) {
+            size_t i = ir * result->nc + ic;
+            size_t j = ir * left->nc + ic;
+            result->vals[i] = left->vals[j];
+        }
+    }
+    for (size_t ir = 0; ir < nr; ir++) {
+        for (size_t ic = 0; ic < right->nc; ic++) {
+            size_t i = ir * result->nc + left->nc + ic;
+            size_t j = ir * left->nc + ic;
+            result->vals[i] = right->vals[j];
+        }
+    }
 }
 
 
@@ -324,6 +340,13 @@ void matrix_minrgt (const Matrix * matrix, Matrix * result) {
                 result->vals[ir] = matrix->vals[i];
             }
         }
+    }
+}
+
+
+void matrix_ones (Matrix * matrix) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = 1.0f;
     }
 }
 
@@ -538,18 +561,25 @@ void matrix_varrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_vstack (const Matrix * left, const Matrix * right, Matrix * result) {
-    assert(false && "Not implemented");
-}
-
-
-void matrix_zero (Matrix * matrix) {
-    for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = 0.0f;
+void matrix_vstack (const Matrix * top, const Matrix * bottom, Matrix * result) {
+    assert(top->nc == bottom->nc && "expected top and bottom number of columns to be equal");
+    assert(top->nc == result->nc && "expected top number of columns to be equal to result's number of columns");
+    for (size_t i = 0; i < top->n; i++) {
+        result->vals[i] = top->vals[i];
+    }
+    for (size_t i = 0; i < bottom->n; i++) {
+        result->vals[top->n + i] = bottom->vals[i];
     }
 }
 
 
 void matrix_write (const char * filename, const Matrix * matrix) {
     assert(false && "Not implemented");
+}
+
+
+void matrix_zeros (Matrix * matrix) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        matrix->vals[i] = 0.0f;
+    }
 }
