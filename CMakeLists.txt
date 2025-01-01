@@ -12,6 +12,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_BINARY_DIR}/dist")
 endif()
 
+add_subdirectory(${PROJECT_ROOT}/man/boxmuller)
 add_subdirectory(${PROJECT_ROOT}/man/matrix)
 add_subdirectory(${PROJECT_ROOT}/src/afuns)
 add_subdirectory(${PROJECT_ROOT}/src/boxmuller)

@@ -1,0 +1,12 @@
+.TH boxmuller_randn 3
+.SH NAME
+boxmuller_randn \- Randomly draw a number from a standard normal distribution using Box-Muller transform
+.SH LIBRARY
+boxmuller (\fIlibboxmuller\fR, \fI\-lboxmuller\fR)
+.SH SYNOPSIS
+.B #include \[dq]boxmuller/boxmuller.h\[dq]
+.br
+\fBdouble boxmuller_randn (void);\fR
+.SH DESCRIPTION
+.B boxmuller_randn
+randomly draws a number from the standard normal distribution with mean zero and standard deviation 1, using the Box-Muller transform.
