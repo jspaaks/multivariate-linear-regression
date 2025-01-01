@@ -4,6 +4,7 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 
 ## Executables
 
+- `mkdata`: makes an n-dimensional linear data set with normally distributed noise of a given standard deviation
 - `linear-regression-ssr-bgd-artificial`: 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
 
 ## Libraries
