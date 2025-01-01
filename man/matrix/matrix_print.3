@@ -6,9 +6,9 @@ matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
 .SH SYNOPSIS
 .B #include \[dq]matrix/matrix.h\[dq]
 .br
-\fBvoid matrix_print (FILE * \fIstream\fR\fB, Matrix * \fImatrix\fR\fB, char * \fItitle\fR\fB);\fR
+\fBvoid matrix_print (FILE * \fIstream\fR\fB, const char * \fIvarname\fR\fB, const Matrix * \fImatrix\fR\fB);\fR
 .SH DESCRIPTION
 .B martix_print
-prints a text representation of the matrix \fImatrix\fR to the file descriptor \fIstream\fR, along with a description, \fItitle\fR.
+prints a text representation of the matrix \fImatrix\fR to the file descriptor \fIstream\fR, along with the matrix's variable name, \fIvarname\fR.
 .SH SEE ALSO
-\fBmatrix\fR(3)
+\fBmatrix_write\fR(3), \fBmatrix\fR(3)

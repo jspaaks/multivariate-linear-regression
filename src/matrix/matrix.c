@@ -351,9 +351,9 @@ void matrix_ones (Matrix * matrix) {
 }
 
 
-void matrix_print (FILE * stream, Matrix * matrix, char * description) {
-    if (description != nullptr && *description != '\0') {
-        fprintf(stream, "%s ", description);
+void matrix_print (FILE * stream, const char * varname, const Matrix * matrix) {
+    if (varname != nullptr && *varname != '\0') {
+        fprintf(stream, "%s ", varname);
     }
     fprintf(stream, "(%zux%zu):\n", matrix->nr, matrix->nc);
     for (size_t ir = 0; ir < matrix->nr; ir++) {
@@ -573,8 +573,20 @@ void matrix_vstack (const Matrix * top, const Matrix * bottom, Matrix * result) 
 }
 
 
-void matrix_write (const char * filename, const Matrix * matrix) {
-    assert(false && "Not implemented");
+void matrix_write (const char * basename, const char * varname, const Matrix * matrix) {
+    char filename[261];
+    strncpy(filename, basename, 128);
+    strncat(filename, varname, 128);
+    strncat(filename, ".txt", 4);
+    errno = 0;
+    FILE * fp = fopen(filename, "w+");
+    if (fp == nullptr) {
+        fprintf(stderr, "%s\nError opening file '%s', aborting.\n", strerror(errno), filename);
+        errno = 0;
+        exit(EXIT_FAILURE);
+    }
+    matrix_print(fp, varname, matrix);
+    fclose(fp);
 }
 
 

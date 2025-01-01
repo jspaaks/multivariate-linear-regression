@@ -53,7 +53,7 @@ float matrix_minall (const Matrix * matrix);
 void matrix_mindwn (const Matrix * matrix, Matrix * result);
 void matrix_minrgt (const Matrix * matrix, Matrix * result);
 void matrix_ones (Matrix * matrix);
-void matrix_print (FILE * stream, Matrix * matrix, char * title);
+void matrix_print (FILE * stream, const char * varname, const Matrix * matrix);
 void matrix_scapro (const Matrix * left, float right, Matrix * result);
 float matrix_sdvall (const Matrix * matrix);
 void matrix_sdvdwn (const Matrix * matrix, Matrix * result);
@@ -71,7 +71,7 @@ float matrix_varall (const Matrix * matrix);
 void matrix_vardwn (const Matrix * matrix, Matrix * result);
 void matrix_varrgt (const Matrix * matrix, Matrix * result);
 void matrix_vstack (const Matrix * top, const Matrix * bottom, Matrix * result);
-void matrix_write (const char * filename, const Matrix * matrix);
+void matrix_write (const char * basename, const char * varname, const Matrix * matrix);
 void matrix_zeros (Matrix * matrix);
 
 #endif

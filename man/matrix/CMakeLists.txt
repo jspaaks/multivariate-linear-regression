@@ -40,6 +40,7 @@ install(
         matrix_vardwn.3
         matrix_varrgt.3
         matrix_vstack.3
+        matrix_write.3
         matrix_zeros.3
         matrix.3
     DESTINATION ${CMAKE_INSTALL_MANDIR}/man3     # I'd prefer to use TYPE instead of DESTINATION but it seems I need the man3 subdirectory
