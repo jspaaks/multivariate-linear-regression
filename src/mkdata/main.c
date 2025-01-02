@@ -26,9 +26,9 @@ int main (int argc, char * argv[]) {
     // ======================= COLLECT USER INPUT ========================= //
 
     const size_t nsamples = 7;
-    constexpr size_t nfeatures = 2;
+    const size_t nfeatures = 2;
     const float sigma = 10.0f;
-    const char basename[128] = "artificial-data.";
+    const char basename[129] = "artificial-data.";
 
     // ======================= INITIALIZE ARRAYS ========================== //
 
@@ -59,7 +59,6 @@ int main (int argc, char * argv[]) {
     populate_labels(true_weights, features, sigma, labels, true_residuals);
 
     // ============================== IO ================================== //
-
 
     matrix_print(stdout, "true_weights", true_weights);
     matrix_print(stdout, "features", features);
@@ -92,9 +91,11 @@ void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds
     for ( size_t ic = 0; ic < lower_bounds->nc; ic++) {
         assert(lower_bounds->vals[ic] < upper_bounds->vals[ic] && "Expected lower bounds to be smaller than their corresponding upper bounds");
     }
-    for (size_t ir = 0; ir < features->nr; ir++) {
-        for (size_t ic = 0; ic < features->nc; ic++) {
-            size_t i = ir * features->nc + ic;
+    size_t nr = features->nr;
+    size_t nc = features->nc;
+    for (size_t ir = 0; ir < nr; ir++) {
+        for (size_t ic = 0; ic < nc; ic++) {
+            size_t i = ir * nc + ic;
             float range = upper_bounds->vals[ic] - lower_bounds->vals[ic];
             float u = (float) rand() / RAND_MAX;
             features->vals[i] = lower_bounds->vals[ic] + u * range;
