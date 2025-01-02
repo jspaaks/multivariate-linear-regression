@@ -7,141 +7,53 @@ matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
 .SH DESCRIPTION
 Available API man pages:
 
-.B matrix_accall
-Calculate the sum of all matrix elements
-.br
-.B matrix_accdwn
-Calculate the sum of each column of a matrix
-.br
-.B matrix_accrgt
-Calculate the sum of each row of a matrix
-.br
-.B matrix_addsca
-Add a scalar value to a matrix
-.br
-.B matrix_avgall
-Calculate the average of all matrix elements 
-.br
-.B matrix_avgdwn
-Calculate the average of each column of a matrix
-.br
-.B matrix_avgrgt
-Calculate the average of each row of a matrix
-.br
-.B matrix_bctdwn
-Broadcast a row matrix down
-.br
-.B matrix_bctrgt
-Broadcast a column matrix right
-.br
-.B matrix_create
-Create a matrix object in memory
-.br
-.B matrix_destroy
-Free the memory associated with a matrix object
-.br
-.B matrix_divsca
-Divide a matrix by a scalar value
-.br
-.B matrix_dotpro
-Calculate the dot product of two matrices
-.br
-.B matrix_ebeadd
-Element\-by\-element addition of two matrices
-.br
-.B matrix_ebediv
-Element\-by\-element division of two matrices
-.br
-.B matrix_ebemap
-Apply a function to each element of a matrix
-.br
-.B matrix_ebesub
-Element\-by\-element subtraction of two matrices
-.br
-.B matrix_hadpro
-Element\-by\-element multiplication (Hadamard product) of two matrices
-.br
-.B matrix_hstack
-Stack one matrix to the left of another
-.br
-.B matrix_maxall
-Calculate the maximum of all matrix elements
-.br
-.B matrix_maxdwn
-Calculate the maximum of each column of a matrix
-.br
-.B matrix_maxrgt
-Calculate the maximum of each row of a matrix
-.br
-.B matrix_minall
-Calculate the minimum of all elements of a matrix
-.br
-.B matrix_mindwn
-Calculate the minimum of each column of a matrix
-.br
-.B matrix_minrgt
-Calculate the minimum of each row of a matrix
-.br
-.B matrix_ones
-Set all elements of a matrix to 1
-.br
-.B matrix_print
-Print a matrix
-.br
-.B matrix_scapro
-Multiply a matrix with a scalar
-.br
-.B matrix_sdvall
-Calculate the standard deviation of all elements of a matrix
-.br
-.B matrix_sdvdwn
-Calculate the standard deviation of each column of a matrix
-.br
-.B matrix_sdvrgt
-Calculate the standard deviation of each row of a matrix
-.br
-.B matrix_stzall
-TODO
-.br
-.B matrix_stzdwn
-Scale and translate each column of a matrix to have zero mean and unit variance
-.br
-.B matrix_stzrgt
-TODO
-.br
-.B matrix_subsca
-Subtract a scalar from a matrix
-.br
-.B matrix_testeq
-Test whether two matrices are equal within a tolerance
-.br
-.B matrix_transp
-Transpose a matrix
-.br
-.B matrix_ustzall
-TODO
-.br
-.B matrix_ustzdwn
-TODO
-.br
-.B matrix_ustzrgt
-TODO
-.br
-.B matrix_varall
-Calculate the variance of all elements of a matrix
-.br
-.B matrix_vardwn
-Calculate the variance of each column of a matrix
-.br
-.B matrix_varrgt
-Calculate the variance of each row of a matrix
-.br
-.B matrix_vstack
-Stack one matrix one top of another
-.br
-.B matrix_write
-Write a matrix to file
-.br
-.B matrix_zeros
-Set all elements of a matrix to 0
-.br
+.TS
+l l.
+\fBmatrix_accall\fR	Calculate the sum of all matrix elements
+\fBmatrix_accdwn\fR	Calculate the sum of each column of a matrix
+\fBmatrix_accrgt\fR	Calculate the sum of each row of a matrix
+\fBmatrix_addsca\fR	Add a scalar value to a matrix
+\fBmatrix_avgall\fR	Calculate the average of all matrix elements 
+\fBmatrix_avgdwn\fR	Calculate the average of each column of a matrix
+\fBmatrix_avgrgt\fR	Calculate the average of each row of a matrix
+\fBmatrix_bctdwn\fR	Broadcast a row matrix down
+\fBmatrix_bctrgt\fR	Broadcast a column matrix right
+\fBmatrix_create\fR	Create a matrix object in memory
+\fBmatrix_destroy\fR	Free the memory associated with a matrix object
+\fBmatrix_divsca\fR	Divide a matrix by a scalar value
+\fBmatrix_dotpro\fR	Calculate the dot product of two matrices
+\fBmatrix_ebeadd\fR	Element\-by\-element addition of two matrices
+\fBmatrix_ebediv\fR	Element\-by\-element division of two matrices
+\fBmatrix_ebemap\fR	Apply a function to each element of a matrix
+\fBmatrix_ebesub\fR	Element\-by\-element subtraction of two matrices
+\fBmatrix_hadpro\fR	Element\-by\-element multiplication (Hadamard product) of two matrices
+\fBmatrix_hstack\fR	Stack one matrix to the left of another
+\fBmatrix_ident\fR	Set the elements of a matrix such that it represents the identity matrix
+\fBmatrix_maxall\fR	Calculate the maximum of all matrix elements
+\fBmatrix_maxdwn\fR	Calculate the maximum of each column of a matrix
+\fBmatrix_maxrgt\fR	Calculate the maximum of each row of a matrix
+\fBmatrix_minall\fR	Calculate the minimum of all elements of a matrix
+\fBmatrix_mindwn\fR	Calculate the minimum of each column of a matrix
+\fBmatrix_minrgt\fR	Calculate the minimum of each row of a matrix
+\fBmatrix_ones\fR	Set all elements of a matrix to 1
+\fBmatrix_print\fR	Print a matrix
+\fBmatrix_scapro\fR	Multiply a matrix with a scalar
+\fBmatrix_sdvall\fR	Calculate the standard deviation of all elements of a matrix
+\fBmatrix_sdvdwn\fR	Calculate the standard deviation of each column of a matrix
+\fBmatrix_sdvrgt\fR	Calculate the standard deviation of each row of a matrix
+\fBmatrix_stzall\fR	TODO
+\fBmatrix_stzdwn\fR	Scale and translate each column of a matrix to have zero mean and unit variance
+\fBmatrix_stzrgt\fR	TODO
+\fBmatrix_subsca\fR	Subtract a scalar from a matrix
+\fBmatrix_testeq\fR	Test whether two matrices are equal within a tolerance
+\fBmatrix_transp\fR	Transpose a matrix
+\fBmatrix_ustzall\fR	TODO
+\fBmatrix_ustzdwn\fR	TODO
+\fBmatrix_ustzrgt\fR	TODO
+\fBmatrix_varall\fR	Calculate the variance of all elements of a matrix
+\fBmatrix_vardwn\fR	Calculate the variance of each column of a matrix
+\fBmatrix_varrgt\fR	Calculate the variance of each row of a matrix
+\fBmatrix_vstack\fR	Stack one matrix one top of another
+\fBmatrix_write\fR	Write a matrix to file
+\fBmatrix_zeros\fR	Set all elements of a matrix to 0
+.TE
