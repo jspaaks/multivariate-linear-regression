@@ -5,32 +5,31 @@
 #include <time.h>
 #include "boxmuller/boxmuller.h"
 #include "matrix/matrix.h"
+#include "options.h"
 
-void print_usage (FILE *, char * []);
+void show_usage (FILE * stream);
 void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds, Matrix * features);
 void populate_labels (const Matrix * true_weights, const Matrix * features, float sigma, Matrix * labels, Matrix * true_residuals);
 
+
 int main (int argc, char * argv[]) {
 
-    if (argc > 1) {
-        print_usage(stdout, argv);
-        bool a = strncmp(argv[1], "-h", 3) == 0;
-        bool b = strncmp(argv[1], "--help", 7) == 0;
-        if (a || b) {
-            exit(EXIT_SUCCESS);
-        } else {
-            exit(EXIT_FAILURE);
-        }
+    // =================== INITIALIZE RANDOMIZATION ======================= //
+
+    srand(time(nullptr));
+
+    // =========== COLLECT USER INPUT AND INITIALIZE ARRAYS ================ //
+
+    if (scan_for_help(argc, argv)) {
+        show_usage(stdout);
+        exit(EXIT_SUCCESS);
     }
 
-    // ======================= COLLECT USER INPUT ========================= //
-
-    const size_t nsamples = 7;
-    const size_t nfeatures = 2;
-    const float sigma = 10.0f;
-    const char basename[129] = "artificial-data.";
-
-    // ======================= INITIALIZE ARRAYS ========================== //
+    char basename[129] = "artificial-data.";
+    size_t nfeatures = scan_for_nfeatures(argc, argv);
+    size_t nsamples = scan_for_nsamples(argc, argv);
+    float sigma = scan_for_sigma(argc, argv);
+    scan_for_basename(argc, argv, basename);
 
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * labels = matrix_create(nsamples, 1);
@@ -39,27 +38,24 @@ int main (int argc, char * argv[]) {
     Matrix * true_weights = matrix_create(1, 1 + nfeatures);
     Matrix * upper_bounds = matrix_create(1, nfeatures);
 
-    lower_bounds->vals[0] = 0.01;
-    lower_bounds->vals[1] = 100;
+    scan_for_true_weights(argc, argv, nfeatures, features);
+    scan_for_lower_bounds(argc, argv, nfeatures, lower_bounds);
+    scan_for_upper_bounds(argc, argv, nfeatures, upper_bounds);
 
-    upper_bounds->vals[0] = 0.02;
-    upper_bounds->vals[1] = 200;
+    fprintf(stdout, "nfeatures = %zu\n", nfeatures);
+    fprintf(stdout, "nsamples = %zu\n", nsamples);
+    fprintf(stdout, "sigma = %f\n", sigma);
+    fprintf(stdout, "basename = \"%s\"\n", basename);
 
-    true_weights->vals[0] = 98.7;
-    true_weights->vals[1] = 65.4;
-    true_weights->vals[2] = 32.1;
-
-    // =================== INITIALIZE RANDOMIZATION ======================= //
-
-    srand(time(nullptr));
-
-    // ============================= DATA ================================= //
+    // ===================== MAKE ARTIFICIAL DATA ========================= //
 
     populate_features(lower_bounds, upper_bounds, features);
     populate_labels(true_weights, features, sigma, labels, true_residuals);
 
     // ============================== IO ================================== //
 
+    matrix_print(stdout, "lower_bounds", lower_bounds);
+    matrix_print(stdout, "upper_bounds", upper_bounds);
     matrix_print(stdout, "true_weights", true_weights);
     matrix_print(stdout, "features", features);
     matrix_print(stdout, "labels", labels);
@@ -127,7 +123,6 @@ void populate_labels (const Matrix * true_weights, const Matrix * features, floa
 }
 
 
-void print_usage(FILE * stream, char * argv[]) {
-    fprintf(stream,
-            "Usage: %s\n", argv[0]);
+void show_usage (FILE * stream) {
+    fprintf(stream, "Usage: \n");
 }

@@ -61,6 +61,7 @@ target_sources(
     tgt_exe_mkdata
     PRIVATE
         ${PROJECT_ROOT}/src/mkdata/main.c
+        ${PROJECT_ROOT}/src/mkdata/options.c
 )
 
 install(TARGETS tgt_exe_mkdata)
