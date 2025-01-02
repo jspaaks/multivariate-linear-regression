@@ -366,6 +366,30 @@ Test(matrix, hstack) {
 }
 
 
+Test(matrix, ident) {
+    Matrix * expected = matrix_create(3, 3);
+    Matrix * ident = matrix_create(3, 3);
+
+    matrix_ident(ident);
+
+    expected->vals[0] = 1.0f;
+    expected->vals[1] = 0.0f;
+    expected->vals[2] = 0.0f;
+    expected->vals[3] = 0.0f;
+    expected->vals[4] = 1.0f;
+    expected->vals[5] = 0.0f;
+    expected->vals[6] = 0.0f;
+    expected->vals[7] = 0.0f;
+    expected->vals[8] = 1.0f;
+
+    bool cond = matrix_testeq(ident, expected, 0.01f);
+    cr_assert(cond, "matrix_ident failed");
+
+    matrix_destroy(&expected);
+    matrix_destroy(&ident);
+}
+
+
 Test(matrix, maxall) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {

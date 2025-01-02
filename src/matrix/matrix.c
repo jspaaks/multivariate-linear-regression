@@ -248,7 +248,19 @@ void matrix_hstack (const Matrix * left, const Matrix * right, Matrix * result) 
 
 
 void matrix_ident (Matrix * matrix) {
-    assert(false && "Not implemented");
+    assert(matrix->nr == matrix->nc && "Expected a square matrix");
+    size_t nr = matrix->nr;
+    size_t nc = matrix->nc;
+    for (size_t ir = 0; ir < nr; ir++) {
+        for (size_t ic = 0; ic < nc; ic++) {
+            size_t i = ir * nc + ic;
+            if (ir == ic) {
+                matrix->vals[i] = 1.0f;
+            } else {
+                matrix->vals[i] = 0.0f;
+            }
+        }
+    }
 }
 
 
@@ -373,6 +385,10 @@ void matrix_scapro (const Matrix * left, float right, Matrix * result) {
 
 
 void matrix_stzall (const Matrix * matrix, float * avg, float * stddev, float * result) {
+    assert(matrix != nullptr && "dummy assert");
+    assert(avg != nullptr && "dummy assert");
+    assert(stddev != nullptr && "dummy assert");
+    assert(result != nullptr && "dummy assert");
     assert(false && "Not implemented");
 }
 
@@ -498,16 +514,28 @@ void matrix_transp (const Matrix * matrix, Matrix * result) {
 
 
 void matrix_ustzall (const Matrix * matrix, float * avg, float * stddev, float * result) {
+    assert(matrix != nullptr && "dummy assert");
+    assert(avg != nullptr && "dummy assert");
+    assert(stddev != nullptr && "dummy assert");
+    assert(result != nullptr && "dummy assert");
     assert(false && "Not implemented");
 }
 
 
 void matrix_ustzdwn (const Matrix * matrix, const Matrix * avgs, const Matrix * stddevs, Matrix * result) {
+    assert(matrix != nullptr && "dummy assert");
+    assert(avgs != nullptr && "dummy assert");
+    assert(stddevs != nullptr && "dummy assert");
+    assert(result != nullptr && "dummy assert");
     assert(false && "Not implemented");
 }
 
 
 void matrix_ustzrgt (const Matrix * matrix, const Matrix * avgs, const Matrix * stddevs, Matrix * result) {
+    assert(matrix != nullptr && "dummy assert");
+    assert(avgs != nullptr && "dummy assert");
+    assert(stddevs != nullptr && "dummy assert");
+    assert(result != nullptr && "dummy assert");
     assert(false && "Not implemented");
 }
 

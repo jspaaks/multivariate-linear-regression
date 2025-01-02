@@ -20,6 +20,7 @@ install(
         matrix_ebesub.3
         matrix_hadpro.3
         matrix_hstack.3
+        matrix_ident.3
         matrix_maxall.3
         matrix_maxdwn.3
         matrix_maxrgt.3
