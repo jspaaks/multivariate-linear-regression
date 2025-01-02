@@ -69,21 +69,21 @@ int main (int argc, char * argv[]) {
     standardize_dwn(features_raw, features_raw_avgs, features_raw_sdvs, features);
     matrix_transp(features, features_transp);
 
-    matrix_print(stdout, features_raw, "features_raw");
-    matrix_print(stdout, features_raw_avgs, "features_raw_avgs");
-    matrix_print(stdout, features_raw_sdvs, "features_raw_sdvs");
-    matrix_print(stdout, features, "features");
-    matrix_print(stdout, features_transp, "features_transp");
+    matrix_print(stdout, "features_raw", features_raw);
+    matrix_print(stdout, "features_raw_avgs", features_raw_avgs);
+    matrix_print(stdout, "features_raw_sdvs", features_raw_sdvs);
+    matrix_print(stdout, "features", features);
+    matrix_print(stdout, "features_transp", features_transp);
 
     populate_labels(data_path, labels_raw_transp);
     standardize_rgt(labels_raw_transp, labels_raw_transp_avgs, labels_raw_transp_sdvs, labels_transp);
     matrix_transp(labels_transp, labels);
 
-    matrix_print(stdout, labels_raw_transp, "labels_raw_transp");
-    matrix_print(stdout, labels_raw_transp_avgs, "labels_raw_transp_avgs");
-    matrix_print(stdout, labels_raw_transp_sdvs, "labels_raw_transp_sdvs");
-    matrix_print(stdout, labels_transp, "labels_transp");
-    matrix_print(stdout, labels, "labels");
+    matrix_print(stdout, "labels_raw_transp", labels_raw_transp);
+    matrix_print(stdout, "labels_raw_transp_avgs", labels_raw_transp_avgs);
+    matrix_print(stdout, "labels_raw_transp_sdvs", labels_raw_transp_sdvs);
+    matrix_print(stdout, "labels_transp", labels_transp);
+    matrix_print(stdout, "labels", labels);
 
     // ========================== ITERATION ============================== //
 
@@ -102,7 +102,7 @@ int main (int argc, char * argv[]) {
         matrix_ebesub(weights, step_transp, weights);
     }
 
-    matrix_print(stdout, weights, "weights");
+    matrix_print(stdout, "weights", weights);
     plot_residuals("qtwidget", plotting_iterations, plotting_sigma, nepochs, ni);
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //

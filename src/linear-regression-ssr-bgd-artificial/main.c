@@ -77,8 +77,8 @@ int main (int argc, char * argv[]) {
         matrix_ebesub(weights, step_transp, weights);
     }
 
-    matrix_print(stdout, true_weights, "true_weights");
-    matrix_print(stdout, weights, "weights");
+    matrix_print(stdout, "true_weights", true_weights);
+    matrix_print(stdout, "weights", weights);
     plot_residuals("qtwidget", plotting_iterations, plotting_sigma, niters, ni);
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
