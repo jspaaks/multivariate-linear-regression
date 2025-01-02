@@ -9,6 +9,9 @@ matrix (\fIlibmatrix\fR, \fI\-lmatrix\fR)
 \fBvoid matrix_write (const char * \fIbasename\fR\fB, const char * \fIvarname\fR\fB, const Matrix * \fImatrix\fR\fB);\fR
 .SH DESCRIPTION
 .B martix_write
-writes a text representation of the matrix \fImatrix\fR to a text file. If the file exists, it is overwritten. If the file does not exist, it is created. The filename is constructed by concatenating the \fIbasename\fR with \fIvarname\fR and the string ".txt".
+writes a text representation of the matrix \fImatrix\fR to a text file. If the file exists,
+it is overwritten. If the file does not exist, it is created. The filename is constructed
+by concatenating the \fIbasename\fR with \fIvarname\fR and the string \".txt\". Characters
+past index 127 in \fIbasename\fR and \fIvarname\fR are ignored.
 .SH SEE ALSO
 \fBmatrix_print\fR(3), \fBmatrix\fR(3)

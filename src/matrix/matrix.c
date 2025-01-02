@@ -574,10 +574,23 @@ void matrix_vstack (const Matrix * top, const Matrix * bottom, Matrix * result) 
 
 
 void matrix_write (const char * basename, const char * varname, const Matrix * matrix) {
-    char filename[261];
-    strncpy(filename, basename, 128);
-    strncat(filename, varname, 128);
-    strncat(filename, ".txt", 4);
+    constexpr size_t ell = 128 + 128 + 4 + 1;
+    char filename[ell] = { '\0' };
+    const char extension[5] = ".txt";
+    char * p = &filename[0];
+    size_t n0 = strlen(basename) < 128 ? strlen(basename) : 128;
+    size_t n1 = strlen(varname) < 128 ? strlen(varname) : 128;
+    size_t n2 = strlen(extension);
+    for (size_t i = 0; i < n0; i++, p++) {
+        *p = basename[i];
+    }
+    for (size_t i = 0; i < n1; i++, p++) {
+        *p = varname[i];
+    }
+    for (size_t i = 0; i < n2; i++, p++) {
+        *p = extension[i];
+    }
+    *(++p) = '\0';
     errno = 0;
     FILE * fp = fopen(filename, "w+");
     if (fp == nullptr) {
