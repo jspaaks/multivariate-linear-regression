@@ -14,6 +14,7 @@ endif()
 
 add_subdirectory(${PROJECT_ROOT}/man/boxmuller)
 add_subdirectory(${PROJECT_ROOT}/man/matrix)
+add_subdirectory(${PROJECT_ROOT}/man/mkdata)
 add_subdirectory(${PROJECT_ROOT}/src/afuns)
 add_subdirectory(${PROJECT_ROOT}/src/boxmuller)
 add_subdirectory(${PROJECT_ROOT}/src/ops)

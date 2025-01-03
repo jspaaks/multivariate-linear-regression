@@ -12,7 +12,7 @@ void scan_for_basename (int argc, char * argv[], char * basename) {
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--basename' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--basename' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
             sscanf(argv[j], " %s", basename);
@@ -43,7 +43,7 @@ size_t scan_for_nfeatures (int argc, char * argv[]) {
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--nfeatures' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--nfeatures' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
             sscanf(argv[j], " %zu", &nfeatures);
@@ -52,7 +52,7 @@ size_t scan_for_nfeatures (int argc, char * argv[]) {
         }
     }
     if (!found) {
-        fprintf(stderr, "parameter '--nfeatures' is required\n");
+        fprintf(stderr, "ERROR: parameter '--nfeatures' is required\n");
         exit(EXIT_FAILURE);
     }
     return nfeatures;
@@ -68,7 +68,7 @@ size_t scan_for_nsamples (int argc, char * argv[]) {
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--nsamples' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--nsamples' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
             sscanf(argv[j], " %zu", &nsamples);
@@ -77,29 +77,10 @@ size_t scan_for_nsamples (int argc, char * argv[]) {
         }
     }
     if (!found) {
-        fprintf(stderr, "parameter '--nsamples' is required\n");
+        fprintf(stderr, "ERROR: parameter '--nsamples' is required\n");
         exit(EXIT_FAILURE);
     }
     return nsamples;
-}
-
-
-float scan_for_sigma (int argc, char * argv[]) {
-    float sigma = 1.0f;
-    for (int i = 0; i < argc; i++) {
-        bool shrt = strncmp(argv[i], "-s", 3) == 0;
-        bool lng = strncmp(argv[i], "--sigma", 8) == 0;
-        if (shrt || lng) {
-            size_t j = i + 1;
-            if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--sigma' is missing its value\n");
-                exit(EXIT_FAILURE);
-            }
-            sscanf(argv[j], " %f", &sigma);
-            break;
-        }
-    }
-    return sigma;
 }
 
 
@@ -113,7 +94,7 @@ void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--lower_bounds' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--lower_bounds' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -130,7 +111,7 @@ void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 char remainder[128] = {};
                 int nscanned = sscanf(token, " %f %127s ", &lower_bounds->vals[nfound], remainder);
                 if (nscanned != 1) {
-                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                    fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                                     "floating point values from --lower_bounds\n", nfound);
                     exit(EXIT_FAILURE);
                 }
@@ -138,13 +119,32 @@ void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 str = nullptr;
             }
             if (nfound != nfeatures) {
-                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                fprintf(stderr, "ERROR: Expected to sscanf %zu floating point values for parameter "
                                 "'--lower_bounds', but found %zu\n", nfeatures, nfound);
                 exit(EXIT_FAILURE);
             }
             break;
         }
     }
+}
+
+
+float scan_for_sigma (int argc, char * argv[]) {
+    float sigma = 1.0f;
+    for (int i = 0; i < argc; i++) {
+        bool shrt = strncmp(argv[i], "-s", 3) == 0;
+        bool lng = strncmp(argv[i], "--sigma", 8) == 0;
+        if (shrt || lng) {
+            size_t j = i + 1;
+            if (j >= (size_t) argc) {
+                fprintf(stderr, "ERROR: parameter '--sigma' is missing its value\n");
+                exit(EXIT_FAILURE);
+            }
+            sscanf(argv[j], " %f", &sigma);
+            break;
+        }
+    }
+    return sigma;
 }
 
 
@@ -156,7 +156,7 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--true_weights' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--true_weights' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -173,7 +173,7 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
                 char remainder[128] = {};
                 int nscanned = sscanf(token, " %f %127s ", &true_weights->vals[nfound], remainder);
                 if (nscanned != 1) {
-                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                    fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                                     "floating point values from --true_weights\n", nfound);
                     exit(EXIT_FAILURE);
                 }
@@ -181,7 +181,7 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
                 str = nullptr;
             }
             if (nfound != nfeatures + 1) {
-                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                fprintf(stderr, "ERROR: Expected to sscanf %zu floating point values for parameter "
                                 "'--true_weights', but found %zu\n", nfeatures + 1, nfound);
                 exit(EXIT_FAILURE);
             }
@@ -191,9 +191,63 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
         }
     }
     if (!found) {
-        fprintf(stderr, "parameter '--true_weights' is required\n");
+        fprintf(stderr, "ERROR: parameter '--true_weights' is required\n");
         exit(EXIT_FAILURE);
     }
+}
+
+
+bool scan_for_unauthorized (int argc, char * argv[]) {
+    char * authorized[] = {
+        "-d",
+        "--nfeatures",
+        "-n",
+        "--nsamples",
+        "-w",
+        "--true_weights",
+        "-b",
+        "--basename",
+        "-l",
+        "--lower_bounds",
+        "-s",
+        "--sigma",
+        "-u",
+        "--upper_bounds",
+        "-h",
+        "--help"
+        "-d",
+        "--nfeatures",
+        "-n",
+        "--nsamples",
+        "-w",
+        "--true_weights",
+        "-b",
+        "--basename",
+        "-l",
+        "--lower_bounds",
+        "-s",
+        "--sigma",
+        "-u",
+        "--upper_bounds",
+    };
+    const size_t n = sizeof authorized / sizeof authorized[0];
+    for (int i = 1; i < argc; i++) {
+        char * arg = argv[i];
+        bool is_shrt = strncmp(arg, "-", 1) == 0 && strlen(arg) == 2;
+        bool is_long = strncmp(arg, "--", 2) == 0 && strlen(arg) > 2;
+        bool is_key = is_shrt || is_long;
+        if (!is_key) {
+            continue; // arg is a value
+        }
+        bool found = false;
+        for (size_t j = 0; j < n && !found; j++) {
+            found = strcmp(arg, authorized[j]) == 0;
+        }
+        if (found) continue;
+        fprintf(stdout, "Unauthorized option name \"%s\"\n.", arg);
+        return true;
+    }
+    return false;
 }
 
 
@@ -207,7 +261,7 @@ void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
         if (shrt || lng) {
             size_t j = i + 1;
             if (j >= (size_t) argc) {
-                fprintf(stderr, "parameter '--upper_bounds' is missing its value\n");
+                fprintf(stderr, "ERROR: parameter '--upper_bounds' is missing its value\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -224,7 +278,7 @@ void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 char remainder[128] = {};
                 int nscanned = sscanf(token, " %f %127s ", &upper_bounds->vals[nfound], remainder);
                 if (nscanned != 1) {
-                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                    fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                                     "floating point values from --upper_bounds\n", nfound);
                     exit(EXIT_FAILURE);
                 }
@@ -232,7 +286,7 @@ void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 str = nullptr;
             }
             if (nfound != nfeatures) {
-                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                fprintf(stderr, "ERROR: Expected to sscanf %zu floating point values for parameter "
                                 "'--upper_bounds', but found %zu\n", nfeatures, nfound);
                 exit(EXIT_FAILURE);
             }
