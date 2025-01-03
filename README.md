@@ -12,6 +12,12 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 - `matrix`: Matrix data type and operations on instances of that type
 - `boxmuller`: normally distributed random number generation
 
+## `man` pages
+
+- `boxmuller.3`
+- `matrix.3`
+- `mkdata.1`
+
 ## Data
 
 See [data/README.md](data/README.md).
@@ -39,12 +45,6 @@ weights (1x3):
 ```
 
 ![linear regression result](images/linear-regression-ssr-bgd-artificial-100.png)
-
-## Notes
-
-1. softmax implementations use `log10`, not `ln`, following examples from
-   https://www.youtube.com/watch?v=h7iBpEHGVNc&t=2698s. Not sure it matters
-   since both are monotonic. PyTorch seems to be using `ln` however.
 
 ## Acknowledgements
 
