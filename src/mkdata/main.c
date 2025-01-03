@@ -38,7 +38,7 @@ int main (int argc, char * argv[]) {
     Matrix * true_weights = matrix_create(1, 1 + nfeatures);
     Matrix * upper_bounds = matrix_create(1, nfeatures);
 
-    scan_for_true_weights(argc, argv, nfeatures, features);
+    scan_for_true_weights(argc, argv, nfeatures, true_weights);
     scan_for_lower_bounds(argc, argv, nfeatures, lower_bounds);
     scan_for_upper_bounds(argc, argv, nfeatures, upper_bounds);
 

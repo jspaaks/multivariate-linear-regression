@@ -104,7 +104,6 @@ float scan_for_sigma (int argc, char * argv[]) {
 
 
 void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * lower_bounds) {
-    fprintf(stdout, "TODO - strtok lower_bounds\n");
     for (size_t i = 0; i < lower_bounds->n; i++) {
         lower_bounds->vals[i] = 0.0f;
     }
@@ -118,9 +117,31 @@ void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 exit(EXIT_FAILURE);
             }
 
-            // something with strtok
-            // ...
+            size_t nfound = 0;
+            char * token = nullptr;
+            char * next = nullptr;
+            char * str = argv[j];
 
+            while (true) {
+                token = strtok_r(str, ",", &next);
+                if (token == nullptr) {
+                    break;
+                }
+                char remainder[128] = {};
+                int nscanned = sscanf(token, " %f %127s ", &lower_bounds->vals[nfound], remainder);
+                if (nscanned != 1) {
+                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                                    "floating point values from --lower_bounds\n", nfound);
+                    exit(EXIT_FAILURE);
+                }
+                nfound++;
+                str = nullptr;
+            }
+            if (nfound != nfeatures) {
+                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                                "'--lower_bounds', but found %zu\n", nfeatures, nfound);
+                exit(EXIT_FAILURE);
+            }
             break;
         }
     }
@@ -128,7 +149,6 @@ void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
 
 
 void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * true_weights) {
-    fprintf(stdout, "TODO - strtok true_weights\n");
     bool found = false;
     for (int i = 0; i < argc; i++) {
         bool shrt = strncmp(argv[i], "-w", 3) == 0;
@@ -140,8 +160,31 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
                 exit(EXIT_FAILURE);
             }
 
-            // something with strtok
-            // ...
+            size_t nfound = 0;
+            char * token = nullptr;
+            char * next = nullptr;
+            char * str = argv[j];
+
+            while (true) {
+                token = strtok_r(str, ",", &next);
+                if (token == nullptr) {
+                    break;
+                }
+                char remainder[128] = {};
+                int nscanned = sscanf(token, " %f %127s ", &true_weights->vals[nfound], remainder);
+                if (nscanned != 1) {
+                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                                    "floating point values from --true_weights\n", nfound);
+                    exit(EXIT_FAILURE);
+                }
+                nfound++;
+                str = nullptr;
+            }
+            if (nfound != nfeatures + 1) {
+                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                                "'--true_weights', but found %zu\n", nfeatures + 1, nfound);
+                exit(EXIT_FAILURE);
+            }
 
             found = true;
             break;
@@ -155,7 +198,6 @@ void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * 
 
 
 void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * upper_bounds) {
-    fprintf(stdout, "TODO - strtok upper_bounds\n");
     for (size_t i = 0; i < upper_bounds->n; i++) {
         upper_bounds->vals[i] = 1.0f;
     }
@@ -169,9 +211,31 @@ void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * 
                 exit(EXIT_FAILURE);
             }
 
-            // something with strtok
-            // ...
+            size_t nfound = 0;
+            char * token = nullptr;
+            char * next = nullptr;
+            char * str = argv[j];
 
+            while (true) {
+                token = strtok_r(str, ",", &next);
+                if (token == nullptr) {
+                    break;
+                }
+                char remainder[128] = {};
+                int nscanned = sscanf(token, " %f %127s ", &upper_bounds->vals[nfound], remainder);
+                if (nscanned != 1) {
+                    fprintf(stderr, "Found trailing characters at index %zu when sscanf'ing "
+                                    "floating point values from --upper_bounds\n", nfound);
+                    exit(EXIT_FAILURE);
+                }
+                nfound++;
+                str = nullptr;
+            }
+            if (nfound != nfeatures) {
+                fprintf(stderr, "Expected to sscanf %zu floating point values for parameter "
+                                "'--upper_bounds', but found %zu\n", nfeatures, nfound);
+                exit(EXIT_FAILURE);
+            }
             break;
         }
     }
