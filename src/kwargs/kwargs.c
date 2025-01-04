@@ -75,10 +75,22 @@ void mark_args (int argc, char * argv[], size_t nkeys, const RecognizedKey * rec
                 .argtype = KWARGS_POSITIONAL
             };
         } else {
-            marked_args[iarg] = (struct marked) {
-                .parent = parent,
-                .argtype = parent->isrequired ? KWARGS_REQUIRED : KWARGS_OPTIONAL
-            };
+            if (parent->isrequired && parent->takesvalue) {
+                marked_args[iarg] = (struct marked) {
+                    .parent = parent,
+                    .argtype = KWARGS_REQUIRED
+                };
+            } else  if (!parent->isrequired && parent->takesvalue) {
+                marked_args[iarg] = (struct marked) {
+                    .parent = parent,
+                    .argtype = KWARGS_OPTIONAL
+                };
+            } else if (!parent->isrequired && !parent->takesvalue) {
+                marked_args[iarg] = (struct marked) {
+                    .parent = parent,
+                    .argtype = KWARGS_FLAG
+                };
+            }
         }
     }
 }
@@ -101,6 +113,10 @@ void marked_args_print (int argc, char * argv[], struct marked * marked_args) {
                 char * longname = marked_args[i].parent->longname;
                 char * shortname = marked_args[i].parent->shortname;
                 fprintf(stdout, "%-12s required, instance of \"%s\"\n", argv[i], longname == nullptr ? shortname : longname);
+                break;
+            }
+            case KWARGS_FLAG: {
+                fprintf(stdout, "%-12s flag\n", argv[i]);
                 break;
             }
             case KWARGS_VALUE: {

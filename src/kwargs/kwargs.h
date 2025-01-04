@@ -20,6 +20,7 @@ struct marked {
         KWARGS_EXENAME,
         KWARGS_OPTIONAL,
         KWARGS_REQUIRED,
+        KWARGS_FLAG,
         KWARGS_VALUE,
         KWARGS_POSITIONAL
     } argtype;
