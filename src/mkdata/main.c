@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include "boxmuller/boxmuller.h"
+#include "kwargs/kwargs.h"
 #include "matrix/matrix.h"
 #include "options.h"
 
@@ -12,7 +13,7 @@ void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds
 void populate_labels (const Matrix * true_weights, const Matrix * features, float sigma, Matrix * labels, Matrix * true_residuals);
 
 
-int main (int argc, char * argv[]) {
+int main (int argc, const char * argv[]) {
 
     // =================== INITIALIZE RANDOMIZATION ======================= //
 
@@ -20,21 +21,20 @@ int main (int argc, char * argv[]) {
 
     // =========== COLLECT USER INPUT AND INITIALIZE ARRAYS ================ //
 
-    if (scan_for_unauthorized(argc, argv)) {
-        fprintf(stderr, "ERROR: Unauthorized options found. See -h for help.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (scan_for_help(argc, argv)) {
+    size_t nclasses = get_nclasses();
+    const KwargsClass * classes = get_classes();
+    size_t nclassifieds;
+    KwargsType * classifieds = kwargs_create(argc);
+    kwargs_classify(argc, argv, nclasses, classes, &nclassifieds, classifieds);
+    if (kwargs_has_flag("--help", argc, argv, nclasses, classes, nclassifieds, classifieds) > 0) {
         show_usage(stdout);
+        kwargs_destroy(&classifieds);
         exit(EXIT_SUCCESS);
     }
-
-    char basename[129] = "artificial-data.";
-    size_t nfeatures = scan_for_nfeatures(argc, argv);
-    size_t nsamples = scan_for_nsamples(argc, argv);
-    float sigma = scan_for_sigma(argc, argv);
-    scan_for_basename(argc, argv, basename);
+    size_t nfeatures = get_nfeatures(argc, argv, nclasses, classes, nclassifieds, classifieds);
+    size_t nsamples = get_nsamples(argc, argv, nclasses, classes, nclassifieds, classifieds);
+    float sigma = get_sigma(argc, argv, nclasses, classes, nclassifieds, classifieds);
+    const char * basename = get_basename(argc, argv, nclasses, classes, nclassifieds, classifieds);
 
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * labels = matrix_create(nsamples, 1);
@@ -43,14 +43,16 @@ int main (int argc, char * argv[]) {
     Matrix * true_weights = matrix_create(1, 1 + nfeatures);
     Matrix * upper_bounds = matrix_create(1, nfeatures);
 
-    scan_for_true_weights(argc, argv, nfeatures, true_weights);
-    scan_for_lower_bounds(argc, argv, nfeatures, lower_bounds);
-    scan_for_upper_bounds(argc, argv, nfeatures, upper_bounds);
+    get_true_weights(argc, argv, nclasses, classes, nclassifieds, classifieds, true_weights, nfeatures);
+    get_lower_bounds(argc, argv, nclasses, classes, nclassifieds, classifieds, lower_bounds, nfeatures);
+    get_upper_bounds(argc, argv, nclasses, classes, nclassifieds, classifieds, upper_bounds, nfeatures);
 
     fprintf(stdout, "nfeatures = %zu\n", nfeatures);
     fprintf(stdout, "nsamples = %zu\n", nsamples);
     fprintf(stdout, "sigma = %f\n", sigma);
     fprintf(stdout, "basename = \"%s\"\n", basename);
+
+    kwargs_destroy(&classifieds);
 
     // ===================== MAKE ARTIFICIAL DATA ========================= //
 

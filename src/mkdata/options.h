@@ -1,16 +1,43 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
+#include "kwargs/kwargs.h"
 #include "matrix/matrix.h"
+#include <stddef.h>
 
 
-void scan_for_basename (int argc, char * argv[], char * basename);
-bool scan_for_help (int argc, char * argv[]);
-size_t scan_for_nfeatures (int argc, char * argv[]);
-size_t scan_for_nsamples (int argc, char * argv[]);
-float scan_for_sigma (int argc, char * argv[]);
-void scan_for_lower_bounds (int argc, char * argv[], size_t nfeatures, Matrix * lower_bounds);
-void scan_for_true_weights (int argc, char * argv[], size_t nfeatures, Matrix * features);
-bool scan_for_unauthorized (int argc, char * argv[]);
-void scan_for_upper_bounds (int argc, char * argv[], size_t nfeatures, Matrix * upper_bounds);
+const char * get_basename (int argc, const char * argv[],
+                           size_t nclasses, const KwargsClass * classes,
+                           size_t nclassifieds, const KwargsType * classifieds);
+
+const KwargsClass * get_classes (void);
+
+size_t get_nclasses (void);
+
+size_t get_nfeatures (int argc, const char * argv[],
+                      size_t nclasses, const KwargsClass * classes,
+                      size_t nclassifieds, const KwargsType * classifieds);
+
+void get_lower_bounds (int argc, const char * argv[],
+                       size_t nclasses, const KwargsClass * classes,
+                       size_t nclassifieds, const KwargsType * classifieds,
+                       Matrix * true_weights, size_t nfeatures);
+
+size_t get_nsamples (int argc, const char * argv[],
+                     size_t nclasses, const KwargsClass * classes,
+                     size_t nclassifieds, const KwargsType * classifieds);
+
+float get_sigma (int argc, const char * argv[],
+                 size_t nclasses, const KwargsClass * classes,
+                 size_t nclassifieds, const KwargsType * classifieds);
+
+void get_true_weights (int argc, const char * argv[],
+                       size_t nclasses, const KwargsClass * classes,
+                       size_t nclassifieds, const KwargsType * classifieds,
+                       Matrix * true_weights, size_t nfeatures);
+
+void get_upper_bounds (int argc, const char * argv[],
+                       size_t nclasses, const KwargsClass * classes,
+                       size_t nclassifieds, const KwargsType * classifieds,
+                       Matrix * true_weights, size_t nfeatures);
 
 #endif

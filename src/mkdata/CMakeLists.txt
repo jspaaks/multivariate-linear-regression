@@ -54,6 +54,7 @@ target_link_libraries(
     tgt_exe_mkdata
     PRIVATE
         tgt_lib_boxmuller
+        tgt_lib_kwargs
         tgt_lib_matrix
 )
 
