@@ -62,6 +62,11 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 1. add multistart
 1. consider making the test binaries startable from ctest: https://cmake.org/cmake/help/v3.28/command/add_test.html
 1. unstandardize the weights
+1. `libkwargs`
+   - assert no duplicate names
+   - assert not both longname and shortname nullptrs
+   - assert spelling and length of shortname
+   - assert spelling and length of longname
 
 ## Notes
 
