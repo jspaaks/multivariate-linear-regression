@@ -54,6 +54,7 @@ target_sources(
     tgt_lib_kwargs
     PRIVATE
         ${PROJECT_ROOT}/src/kwargs/kwargs.c
+        ${PROJECT_ROOT}/src/kwargs/protected.c
     PUBLIC
         FILE_SET fset_lib_kwargs_headers
         TYPE HEADERS
