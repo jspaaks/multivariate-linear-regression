@@ -24,7 +24,6 @@ int main (int argc, const char * argv[]) {
     size_t nclasses = get_nclasses();
     const KwargsClass * classes = get_classes();
     Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
-    kwargs_classify(kwargs);
     if (kwargs_has_flag("--help", kwargs) > 0) {
         show_usage(stdout);
         kwargs_destroy(&kwargs);
