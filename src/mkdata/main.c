@@ -23,18 +23,17 @@ int main (int argc, const char * argv[]) {
 
     size_t nclasses = get_nclasses();
     const KwargsClass * classes = get_classes();
-    size_t nclassifieds;
-    KwargsType * classifieds = kwargs_create(argc);
-    kwargs_classify(argc, argv, nclasses, classes, &nclassifieds, classifieds);
-    if (kwargs_has_flag("--help", argc, argv, nclasses, classes, nclassifieds, classifieds) > 0) {
+    Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
+    kwargs_classify(kwargs);
+    if (kwargs_has_flag("--help", kwargs) > 0) {
         show_usage(stdout);
-        kwargs_destroy(&classifieds);
+        kwargs_destroy(&kwargs);
         exit(EXIT_SUCCESS);
     }
-    size_t nfeatures = get_nfeatures(argc, argv, nclasses, classes, nclassifieds, classifieds);
-    size_t nsamples = get_nsamples(argc, argv, nclasses, classes, nclassifieds, classifieds);
-    float sigma = get_sigma(argc, argv, nclasses, classes, nclassifieds, classifieds);
-    const char * basename = get_basename(argc, argv, nclasses, classes, nclassifieds, classifieds);
+    size_t nfeatures = get_nfeatures(kwargs);
+    size_t nsamples = get_nsamples(kwargs);
+    float sigma = get_sigma(kwargs);
+    const char * basename = get_basename(kwargs);
 
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * labels = matrix_create(nsamples, 1);
@@ -43,16 +42,16 @@ int main (int argc, const char * argv[]) {
     Matrix * true_weights = matrix_create(1, 1 + nfeatures);
     Matrix * upper_bounds = matrix_create(1, nfeatures);
 
-    get_true_weights(argc, argv, nclasses, classes, nclassifieds, classifieds, true_weights, nfeatures);
-    get_lower_bounds(argc, argv, nclasses, classes, nclassifieds, classifieds, lower_bounds, nfeatures);
-    get_upper_bounds(argc, argv, nclasses, classes, nclassifieds, classifieds, upper_bounds, nfeatures);
+    get_true_weights(kwargs, true_weights, nfeatures);
+    get_lower_bounds(kwargs, lower_bounds, nfeatures);
+    get_upper_bounds(kwargs, upper_bounds, nfeatures);
 
     fprintf(stdout, "nfeatures = %zu\n", nfeatures);
     fprintf(stdout, "nsamples = %zu\n", nsamples);
     fprintf(stdout, "sigma = %f\n", sigma);
     fprintf(stdout, "basename = \"%s\"\n", basename);
 
-    kwargs_destroy(&classifieds);
+    kwargs_destroy(&kwargs);
 
     // ===================== MAKE ARTIFICIAL DATA ========================= //
 
