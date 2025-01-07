@@ -1,4 +1,4 @@
-# ann
+# bgdfit
 
 For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
@@ -9,12 +9,14 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 
 ## Libraries
 
+- `boxmuller`: Normally distributed random number generation
+- `kwargs`: Handling of command line arguments
 - `matrix`: Matrix data type and operations on instances of that type
-- `boxmuller`: normally distributed random number generation
 
 ## `man` pages
 
 - `boxmuller.3`
+- `kwargs.3`
 - `matrix.3`
 - `mkdata.1`
 

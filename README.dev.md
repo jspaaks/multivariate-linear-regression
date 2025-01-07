@@ -67,6 +67,7 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
    - assert not both longname and shortname nullptrs
    - assert spelling and length of shortname
    - assert spelling and length of longname
+   - finish man pages
 
 ## Notes
 
