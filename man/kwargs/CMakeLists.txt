@@ -1,7 +1,6 @@
 include(GNUInstallDirs)
 install(
     FILES
-        kwargs_classify.3
         kwargs_create.3
         kwargs_destroy.3
         kwargs_get_optional_value.3
