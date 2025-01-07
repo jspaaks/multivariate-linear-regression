@@ -96,9 +96,12 @@ int has_type (const char * name, const Kwargs * kwargs, KwargsType type) {
             if (cond) {
                 // test whether classification is as expected
                 if (cls->type != kwargs->classifieds[iarg]) {
-                    fprintf(stdout, "ERROR: Name \"%s\" seems to have been misclassified. Check\n"
-                                    "the spelling of parameter names and check whether parameter\n"
-                                    "names that require a value did in fact get one.\n", name);
+                    KwargsType itype = kwargs->classifieds[iarg];
+                    fprintf(stdout, "ERROR: Name \"%s\" seems to have been misclassified as a \"%s\"\n"
+                                    "argument. Check the spelling of preceding parameter names, whether\n"
+                                    "preceding parameter names that require a value did in fact get one,\n"
+                                    "and verify that all preceding parameter names are valid shortnames\n"
+                                    "or longnames.\n", kwargs->argv[iarg], typenames[itype]);
                     exit(EXIT_FAILURE);
                 }
                 return iarg;
