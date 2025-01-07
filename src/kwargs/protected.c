@@ -23,6 +23,48 @@ const KwargsClass * get_class (const char * name, Kwargs * kwargs) {
 }
 
 
+void classify (Kwargs * kwargs) {
+
+    // assert no duplicate names
+    // assert not both longname and shortname nullptrs
+    // assert spelling and length of shortname
+    // assert spelling and length of longname
+
+    kwargs->classifieds[0] = KWARGS_EXE;
+
+    for (size_t icurr = 1; icurr < kwargs->nclassifieds; icurr++) {
+        size_t iprev = icurr - 1;
+        // if previous arg was positional, so is this one
+        if (kwargs->classifieds[iprev] == KWARGS_POSITIONAL) {
+            kwargs->classifieds[icurr] = KWARGS_POSITIONAL;
+            continue;
+        }
+        // if previous arg required a value, mark current as KWARGS_VALUE
+        if ((kwargs->classifieds[iprev] == KWARGS_OPTIONAL) || (kwargs->classifieds[iprev] == KWARGS_REQUIRED)) {
+            kwargs->classifieds[icurr] = KWARGS_VALUE;
+            continue;
+        }
+        const KwargsClass * cls = get_class(kwargs->argv[icurr], kwargs);
+        if (cls == nullptr) {
+            kwargs->classifieds[icurr] = KWARGS_POSITIONAL;
+            continue;
+        } else {
+            kwargs->classifieds[icurr] = cls->type;
+        }
+    }
+    // assert required args are present
+    for (size_t i = 0; i < kwargs->nclasses; i++) {
+        if (kwargs->classes[i].type != KWARGS_REQUIRED) continue;
+        int iarg = has_type(kwargs->classes[i].longname, kwargs, KWARGS_REQUIRED);
+        if (iarg == 0) {
+            fprintf(stderr, "ERROR: Required parameter \"%s\" seems to be missing, aborting.\n", kwargs->classes[i].longname);
+            kwargs_destroy(&kwargs);
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
 int has_type (const char * name, Kwargs * kwargs, KwargsType type) {
     const char typenames[][20] = {
         "other",

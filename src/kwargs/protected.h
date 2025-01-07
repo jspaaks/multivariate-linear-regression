@@ -3,6 +3,7 @@
 #include "kwargs/kwargs.h"
 #include <stddef.h>
 
+void classify (Kwargs * kwargs);
 const KwargsClass * get_class (const char * name, Kwargs * kwargs);
 int has_type (const char * name, Kwargs * kwargs, KwargsType type);
 
