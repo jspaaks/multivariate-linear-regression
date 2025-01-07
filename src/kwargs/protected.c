@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-const KwargsClass * get_class (const char * name, Kwargs * kwargs) {
+const KwargsClass * get_class (const char * name, const Kwargs * kwargs) {
     for (size_t i = 0; i < kwargs->nclasses; i++) {
         {
             char * longname = kwargs->classes[i].longname;
@@ -29,6 +29,7 @@ void classify (Kwargs * kwargs) {
     // assert not both longname and shortname nullptrs
     // assert spelling and length of shortname
     // assert spelling and length of longname
+    // assert user supplied types are in [flag, optional, required]
 
     kwargs->classifieds[0] = KWARGS_EXE;
 
@@ -65,7 +66,7 @@ void classify (Kwargs * kwargs) {
 }
 
 
-int has_type (const char * name, Kwargs * kwargs, KwargsType type) {
+int has_type (const char * name, const Kwargs * kwargs, KwargsType type) {
     const char typenames[][20] = {
         "other",
         "exe",

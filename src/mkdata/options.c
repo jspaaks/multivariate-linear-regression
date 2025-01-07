@@ -47,7 +47,7 @@ static const KwargsClass classes[] = {
 };
 
 
-const char * get_basename (Kwargs * kwargs) {
+const char * get_basename (const Kwargs * kwargs) {
     const char * s = kwargs_get_optional_value ("--basename", kwargs);
     if (s == nullptr) {
         return "artificial-data.";
@@ -61,7 +61,7 @@ const KwargsClass * get_classes (void) {
 }
 
 
-void get_lower_bounds (Kwargs * kwargs, Matrix * lower_bounds, size_t nfeatures) {
+void get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfeatures) {
     char * s = (char *) kwargs_get_optional_value ("--lower_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < lower_bounds->n; i++) {
@@ -102,7 +102,7 @@ size_t get_nclasses (void) {
 }
 
 
-size_t get_nfeatures (Kwargs * kwargs) {
+size_t get_nfeatures (const Kwargs * kwargs) {
     const char * s = kwargs_get_required_value ("--nfeatures", kwargs);
     size_t nfeatures;
     sscanf(s, " %zu", &nfeatures);
@@ -110,7 +110,7 @@ size_t get_nfeatures (Kwargs * kwargs) {
 }
 
 
-size_t get_nsamples (Kwargs * kwargs) {
+size_t get_nsamples (const Kwargs * kwargs) {
     const char * s = kwargs_get_required_value ("--nsamples", kwargs);
     size_t nsamples;
     sscanf(s, " %zu", &nsamples);
@@ -118,7 +118,7 @@ size_t get_nsamples (Kwargs * kwargs) {
 }
 
 
-float get_sigma (Kwargs * kwargs) {
+float get_sigma (const Kwargs * kwargs) {
     const char * s = kwargs_get_optional_value ("--sigma", kwargs);
     if (s == nullptr) {
         return (float) 1;
@@ -129,7 +129,7 @@ float get_sigma (Kwargs * kwargs) {
 }
 
 
-void get_true_weights (Kwargs * kwargs, Matrix * true_weights, size_t nfeatures) {
+void get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfeatures) {
     char * s = (char *) kwargs_get_required_value ("--true_weights", kwargs);
 
     size_t nfound = 0;
@@ -156,7 +156,7 @@ void get_true_weights (Kwargs * kwargs, Matrix * true_weights, size_t nfeatures)
     }
 }
 
-void get_upper_bounds (Kwargs * kwargs, Matrix * upper_bounds, size_t nfeatures) {
+void get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfeatures) {
     char * s = (char *) kwargs_get_optional_value ("--upper_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < upper_bounds->n; i++) {

@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-Kwargs * kwargs_create (int argc, const char * argv[], size_t nclasses, const KwargsClass * classes) {
+const Kwargs * kwargs_create (int argc, const char * argv[], size_t nclasses, const KwargsClass * classes) {
     errno = 0;
     Kwargs * kwargs = calloc(1, sizeof(Kwargs));
     if (kwargs == nullptr) {
@@ -21,7 +21,7 @@ Kwargs * kwargs_create (int argc, const char * argv[], size_t nclasses, const Kw
     if (classifieds == nullptr) {
         fprintf(stderr, "%s\nError allocating memory for array of \"KwargsType\", aborting.\n", strerror(errno));
         errno = 0;
-        kwargs_destroy(&kwargs);
+        kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_FAILURE);
     }
     kwargs->argc = argc;
@@ -31,7 +31,7 @@ Kwargs * kwargs_create (int argc, const char * argv[], size_t nclasses, const Kw
     kwargs->nclassifieds = (size_t) argc;
     kwargs->classifieds = classifieds;
     classify(kwargs);
-    return kwargs;
+    return (const Kwargs *) kwargs;
 }
 
 
@@ -43,21 +43,21 @@ void kwargs_destroy (Kwargs ** kwargs) {
 }
 
 
-const char * kwargs_get_optional_value (const char * name, Kwargs * kwargs) {
+const char * kwargs_get_optional_value (const char * name, const Kwargs * kwargs) {
     int iarg = has_type(name, kwargs, KWARGS_OPTIONAL);
     if (iarg == 0) {
         return nullptr;
     }
     if (iarg + 1 >= kwargs->argc) {
         fprintf(stderr, "Value for \"%s\" seems to be missing, aborting.\n", name);
-        kwargs_destroy(&kwargs);
+        kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_FAILURE);
     }
     return kwargs->argv[iarg + 1];
 }
 
 
-const char * kwargs_get_positional_value (size_t ipos, Kwargs * kwargs) {
+const char * kwargs_get_positional_value (size_t ipos, const Kwargs * kwargs) {
     size_t k = 0;
     for (size_t i = 0; i < kwargs->nclassifieds; i++) {
         if (kwargs->classifieds[i] == KWARGS_POSITIONAL) {
@@ -69,36 +69,36 @@ const char * kwargs_get_positional_value (size_t ipos, Kwargs * kwargs) {
         }
     }
     fprintf(stderr, "ERROR: requested positional argument %zu doesn't exist, aborting.\n", ipos);
-    kwargs_destroy(&kwargs);
+    kwargs_destroy((Kwargs **) &kwargs);
     exit(EXIT_FAILURE);
 }
 
 
-const char * kwargs_get_required_value (const char * name, Kwargs * kwargs) {
+const char * kwargs_get_required_value (const char * name, const Kwargs * kwargs) {
     int iarg = has_type(name, kwargs, KWARGS_REQUIRED);
     if (iarg == 0) {
         return nullptr;
     }
     if (iarg + 1 >= kwargs->argc) {
         fprintf(stderr, "Value for \"%s\" seems to be missing, aborting.\n", name);
-        kwargs_destroy(&kwargs);
+        kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_FAILURE);
     }
     return kwargs->argv[iarg + 1];
 }
 
 
-int kwargs_has_flag (const char * name, Kwargs * kwargs) {
+int kwargs_has_flag (const char * name, const Kwargs * kwargs) {
     return has_type(name, kwargs, KWARGS_FLAG);
 }
 
 
-int kwargs_has_optional (const char * name, Kwargs * kwargs) {
+int kwargs_has_optional (const char * name, const Kwargs * kwargs) {
     return has_type(name, kwargs, KWARGS_OPTIONAL);
 }
 
 
-void kwargs_print_classifications (FILE * stream, Kwargs * kwargs) {
+void kwargs_print_classifications (FILE * stream, const Kwargs * kwargs) {
     int ell = 25;
     const char typestrings[][20] = {
         "other",

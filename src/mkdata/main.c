@@ -23,10 +23,10 @@ int main (int argc, const char * argv[]) {
 
     size_t nclasses = get_nclasses();
     const KwargsClass * classes = get_classes();
-    Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
+    const Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
     if (kwargs_has_flag("--help", kwargs) > 0) {
         show_usage(stdout);
-        kwargs_destroy(&kwargs);
+        kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_SUCCESS);
     }
     size_t nfeatures = get_nfeatures(kwargs);
@@ -50,7 +50,7 @@ int main (int argc, const char * argv[]) {
     fprintf(stdout, "sigma = %f\n", sigma);
     fprintf(stdout, "basename = \"%s\"\n", basename);
 
-    kwargs_destroy(&kwargs);
+    kwargs_destroy((Kwargs **) &kwargs);
 
     // ===================== MAKE ARTIFICIAL DATA ========================= //
 
