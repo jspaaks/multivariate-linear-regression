@@ -1,17 +1,18 @@
-# bgdfit
+# gdfit
 
 For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
 ## Executables
 
-- `mkdata`: makes an n-dimensional linear data set with normally distributed noise of a given standard deviation
-- `linear-regression-ssr-bgd-artificial`: 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
+- `gdfit` Command line program for iterative fitting of multivariate linear data sets using steepest descent.
+- `mkdata` Makes an n-dimensional linear data set with normally distributed noise of a given standard deviation.
+- `linear-regression-ssr-bgd-artificial` 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
 
 ## Libraries
 
-- `boxmuller`: Normally distributed random number generation
-- `kwargs`: Handling of command line arguments
-- `matrix`: Matrix data type and operations on instances of that type
+- `boxmuller`: Normally distributed random number generation.
+- `kwargs`: Handling of command line arguments.
+- `matrix`: Matrix data type and operations on instances of that type.
 
 ## `man` pages
 
