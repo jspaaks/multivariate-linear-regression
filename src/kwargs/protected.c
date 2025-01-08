@@ -1,7 +1,82 @@
 #include "protected.h"
 #include <assert.h>
+#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+
+
+void assert_no_duplicate_names () {
+    fprintf(stdout, "TODO");
+}
+
+
+void assert_no_unnameds (Kwargs * kwargs) {
+    for (size_t i = 0; i < kwargs->nclasses; i++) {
+        bool a = kwargs->classes[i].shortname == nullptr;
+        bool b = kwargs->classes[i].longname == nullptr;
+        if (a && b) {
+            fprintf(stderr, "ERROR: Found KwargsClass instance without a shortname and without\n"
+                            "a longname, aborting.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
+void assert_shortnames_are_compliant (Kwargs * kwargs) {
+    for (size_t i = 0; i < kwargs->nclasses; i++) {
+        bool present = kwargs->classes[i].shortname != nullptr;
+        if (!present) continue;
+        if (strnlen(kwargs->classes[i].shortname, 3) != 2) {
+            fprintf(stderr, "ERROR: shortname \"%s\" should be length 2, aborting.\n", kwargs->classes[i].shortname);
+            exit(EXIT_FAILURE);
+        }
+        if (kwargs->classes[i].shortname[0] != '-') {
+            fprintf(stderr, "ERROR: shortname \"%s\" should start with \'-\', aborting.\n", kwargs->classes[i].shortname);
+            exit(EXIT_FAILURE);
+        }
+        if (!isalpha(kwargs->classes[i].shortname[1])) {
+            fprintf(stderr, "ERROR: shortname \"%s\" character at index 1 should\n"
+                            "be [a-zA-Z], aborting.\n", kwargs->classes[i].shortname);
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
+void assert_longnames_are_compliant (Kwargs * kwargs) {
+    for (size_t i = 0; i < kwargs->nclasses; i++) {
+        bool present = kwargs->classes[i].longname != nullptr;
+        if (!present) continue;
+        if (strnlen(kwargs->classes[i].longname, 4) <= 3) {
+            fprintf(stderr, "ERROR: longname \"%s\" should be greater than length 3, aborting.\n", kwargs->classes[i].longname);
+            exit(EXIT_FAILURE);
+        }
+        if (kwargs->classes[i].longname[0] != '-') {
+            fprintf(stderr, "ERROR: longname \"%s\" should start with \"--\", aborting.\n", kwargs->classes[i].longname);
+            exit(EXIT_FAILURE);
+        }
+        if (kwargs->classes[i].longname[1] != '-') {
+            fprintf(stderr, "ERROR: longname \"%s\" should start with \"--\", aborting.\n", kwargs->classes[i].longname);
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
+void assert_types_are_correct_subset (Kwargs * kwargs) {
+    for (size_t i = 0; i < kwargs->nclasses; i++) {
+        bool a = kwargs->classes[i].type == KWARGS_FLAG;
+        bool b = kwargs->classes[i].type == KWARGS_OPTIONAL;
+        bool c = kwargs->classes[i].type == KWARGS_REQUIRED;
+        bool compliant = a || b || c;
+        if (!compliant) {
+            fprintf(stderr, "ERROR: all parameter types should be one of [KWARGS_FLAG,\n"
+                            "KWARGS_OPTIONAL, KWARGS_REQUIRED], aborting.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
 
 
 const KwargsClass * get_class (const char * name, const Kwargs * kwargs) {
@@ -25,11 +100,11 @@ const KwargsClass * get_class (const char * name, const Kwargs * kwargs) {
 
 void classify (Kwargs * kwargs) {
 
-    // assert no duplicate names
-    // assert not both longname and shortname nullptrs
-    // assert spelling and length of shortname
-    // assert spelling and length of longname
-    // assert user supplied types are in [flag, optional, required]
+    assert_no_duplicate_names();
+    assert_no_unnameds(kwargs);
+    assert_shortnames_are_compliant(kwargs);
+    assert_longnames_are_compliant(kwargs);
+    assert_types_are_correct_subset (kwargs);
 
     kwargs->classifieds[0] = KWARGS_EXE;
 
