@@ -5,8 +5,43 @@
 #include <stdlib.h>
 
 
-void assert_no_duplicate_names () {
-    fprintf(stdout, "TODO");
+void assert_no_duplicate_names (Kwargs * kwargs) {
+    fprintf(stdout, "WIP");
+    size_t nclasses = kwargs->nclasses;
+    size_t ncap = nclasses * 2;
+    char ** seen = calloc(ncap, sizeof(char *));
+    if (seen == nullptr) {
+        fprintf(stderr, "ERROR: Problem allocating memory for array \"seen\", aborting.\n");
+        exit(EXIT_FAILURE);
+    }
+    size_t nseen = 0;
+    for (size_t icls = 0; icls < nclasses; icls++) {
+        {
+            char * name = kwargs->classes[icls].shortname;
+            for (size_t iseen = 0; iseen < nseen; iseen++) {
+                bool matches = strncmp(name, seen[iseen], 3) == 0;
+                if (matches) {
+                    fprintf(stderr, "ERROR: duplicate name \"%s\" found, aborting.\n", name);
+                    exit(EXIT_FAILURE);
+                }
+            }
+            seen[nseen] = name;
+            nseen++;
+        }
+        {
+            char * name = kwargs->classes[icls].longname;
+            for (size_t iseen = 0; iseen < nseen; iseen++) {
+                bool matches = strncmp(name, seen[iseen], 65) == 0;
+                if (matches) {
+                    fprintf(stderr, "ERROR: duplicate name \"%s\" found, aborting.\n", name);
+                    exit(EXIT_FAILURE);
+                }
+            }
+            seen[nseen] = name;
+            nseen++;
+        }
+    }
+    assert(nseen == ncap && "Expected number of seen names to be equal to number of allocated items");
 }
 
 
@@ -49,7 +84,11 @@ void assert_longnames_are_compliant (Kwargs * kwargs) {
         bool present = kwargs->classes[i].longname != nullptr;
         if (!present) continue;
         if (strnlen(kwargs->classes[i].longname, 4) <= 3) {
-            fprintf(stderr, "ERROR: longname \"%s\" should be greater than length 3, aborting.\n", kwargs->classes[i].longname);
+            fprintf(stderr, "ERROR: longname \"%s\" should be at least 4 characters, aborting.\n", kwargs->classes[i].longname);
+            exit(EXIT_FAILURE);
+        }
+        if (strnlen(kwargs->classes[i].longname, 65) > 64) {
+            fprintf(stderr, "ERROR: longname \"%s\" should be at most 64 characters, aborting.\n", kwargs->classes[i].longname);
             exit(EXIT_FAILURE);
         }
         if (kwargs->classes[i].longname[0] != '-') {
@@ -100,11 +139,11 @@ const KwargsClass * get_class (const char * name, const Kwargs * kwargs) {
 
 void classify (Kwargs * kwargs) {
 
-    assert_no_duplicate_names();
     assert_no_unnameds(kwargs);
     assert_shortnames_are_compliant(kwargs);
     assert_longnames_are_compliant(kwargs);
     assert_types_are_correct_subset (kwargs);
+    assert_no_duplicate_names(kwargs);
 
     kwargs->classifieds[0] = KWARGS_EXE;
 
