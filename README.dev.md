@@ -7,10 +7,10 @@ configuration for building with CMake:
 
 ```console
 # change into the build directory
-$ cd build/cmake
+$ cd build
 
 # generate the build files
-$ cmake ../..
+$ cmake ..
 
 # build the project
 $ cmake --build .
