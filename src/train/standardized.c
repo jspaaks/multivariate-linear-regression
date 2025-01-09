@@ -36,6 +36,10 @@ void make_related_labels_matrices (Matrix * labels, Matrix * labels_zt, Matrix *
 
 void run_standardized(const size_t nsamples, const size_t nfeatures, const size_t nepochs, const float learning_rate,
                       const char * features_path, const char * labels_path) {
+
+    assert(false && "something is off with the backpropagation");
+
+
     // suffixes z: standardized, t: transposed, 1: padded with ones
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * features_zt1 = matrix_create(1 + nfeatures, nsamples);

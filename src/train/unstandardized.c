@@ -22,6 +22,9 @@ void make_related_features_matrices_unstandardized (Matrix * features, Matrix * 
 
 void run_unstandardized(const size_t nsamples, const size_t nfeatures, const size_t nepochs, const float learning_rate,
                         const char * features_path, const char * labels_path) {
+
+    assert(false && "something is off with the backpropagation");
+
     // matrix suffixes: t transposed, 1 padded with ones
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * features_t1 = matrix_create(1 + nfeatures, nsamples);
