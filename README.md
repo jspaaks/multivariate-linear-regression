@@ -4,8 +4,8 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 
 ## Executables
 
-- `gdfit` Command line program for iterative fitting of multivariate linear data sets using steepest descent.
 - `mkdata` Makes an n-dimensional linear data set with normally distributed noise of a given standard deviation.
+- `train` Command line program for iterative fitting of multivariate linear data sets using steepest descent.
 - `linear-regression-ssr-bgd-artificial` 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
 
 ## Libraries
@@ -20,6 +20,16 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 - `kwargs.3`
 - `matrix.3`
 - `mkdata.1`
+
+## Example
+
+```console
+$ cd build
+$ ./dist/bin/mkdata --nfeatures 2 --nsamples 100 -s 10 --true_weights 98.7,65.4,32.1 -b data/
+$ ./dist/bin/train --nepochs 2500 data/features.txt data/labels.txt
+```
+
+<!-- TODO add image of result -->
 
 ## Data
 
