@@ -53,6 +53,7 @@ target_include_directories(
 target_link_libraries(
     tgt_exe_train
     PRIVATE
+        plplot
         tgt_lib_boxmuller
         tgt_lib_kwargs
         tgt_lib_matrix
@@ -63,6 +64,7 @@ target_sources(
     PRIVATE
         ${PROJECT_ROOT}/src/train/main.c
         ${PROJECT_ROOT}/src/train/options.c
+        ${PROJECT_ROOT}/src/train/plotting.c
         ${PROJECT_ROOT}/src/train/standardized.c
         ${PROJECT_ROOT}/src/train/unstandardized.c
 )
