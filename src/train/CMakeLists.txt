@@ -63,6 +63,8 @@ target_sources(
     PRIVATE
         ${PROJECT_ROOT}/src/train/main.c
         ${PROJECT_ROOT}/src/train/options.c
+        ${PROJECT_ROOT}/src/train/standardized.c
+        ${PROJECT_ROOT}/src/train/unstandardized.c
 )
 
 install(TARGETS tgt_exe_train)
