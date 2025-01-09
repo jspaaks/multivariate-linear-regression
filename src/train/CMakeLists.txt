@@ -17,24 +17,24 @@ elseif(UNIX)
     list(APPEND CMAKE_INSTALL_RPATH $ORIGIN/../lib)
 endif()
 
-add_executable(tgt_exe_gdfit)
+add_executable(tgt_exe_train)
 
-set_property(TARGET tgt_exe_gdfit PROPERTY OUTPUT_NAME gdfit)
+set_property(TARGET tgt_exe_train PROPERTY OUTPUT_NAME train)
 
 target_compile_definitions(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
 target_compile_features(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
         c_std_23
 )
 
 target_compile_options(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
         -Wall
         -Wextra
@@ -45,13 +45,13 @@ target_compile_options(
 )
 
 target_include_directories(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
         ${PROJECT_ROOT}/include
 )
 
 target_link_libraries(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
         tgt_lib_boxmuller
         tgt_lib_kwargs
@@ -59,10 +59,10 @@ target_link_libraries(
 )
 
 target_sources(
-    tgt_exe_gdfit
+    tgt_exe_train
     PRIVATE
-        ${PROJECT_ROOT}/src/gdfit/main.c
-        ${PROJECT_ROOT}/src/gdfit/options.c
+        ${PROJECT_ROOT}/src/train/main.c
+        ${PROJECT_ROOT}/src/train/options.c
 )
 
-install(TARGETS tgt_exe_gdfit)
+install(TARGETS tgt_exe_train)
