@@ -21,7 +21,7 @@ int main (int argc, const char * argv[]) {
 
     // =========== COLLECT USER INPUT AND INITIALIZE ARRAYS ================ //
 
-    size_t nclasses = get_nclasses();
+    const size_t nclasses = get_nclasses();
     const KwargsClass * classes = get_classes();
     const Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
     if (kwargs_has_flag("--help", kwargs) > 0) {
@@ -29,9 +29,9 @@ int main (int argc, const char * argv[]) {
         kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_SUCCESS);
     }
-    size_t nfeatures = get_nfeatures(kwargs);
-    size_t nsamples = get_nsamples(kwargs);
-    float sigma = get_sigma(kwargs);
+    const size_t nfeatures = get_nfeatures(kwargs);
+    const size_t nsamples = get_nsamples(kwargs);
+    const float sigma = get_sigma(kwargs);
     const char * basename = get_basename(kwargs);
 
     Matrix * features = matrix_create(nsamples, nfeatures);
@@ -89,25 +89,25 @@ void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds
     assert(upper_bounds->nr == 1 && "Expected number of rows in upper bounds to be equal to 1");
     assert(lower_bounds->nc == upper_bounds->nc && "Expected number of columns in lower bounds to be equal to number of columns in upper bounds");
     assert(features->nc == upper_bounds->nc && "Expected number of columns in features to be equal to number of columns in upper bounds");
-    for ( size_t ic = 0; ic < lower_bounds->nc; ic++) {
+    for (size_t ic = 0; ic < lower_bounds->nc; ic++) {
         assert(lower_bounds->xs[ic] < upper_bounds->xs[ic] && "Expected lower bounds to be smaller than their corresponding upper bounds");
     }
-    size_t nr = features->nr;
-    size_t nc = features->nc;
+    const size_t nr = features->nr;
+    const size_t nc = features->nc;
     for (size_t ir = 0; ir < nr; ir++) {
         for (size_t ic = 0; ic < nc; ic++) {
-            size_t i = ir * nc + ic;
-            float range = upper_bounds->xs[ic] - lower_bounds->xs[ic];
-            float u = (float) rand() / RAND_MAX;
+            const size_t i = ir * nc + ic;
+            const float range = upper_bounds->xs[ic] - lower_bounds->xs[ic];
+            const float u = (float) rand() / RAND_MAX;
             features->xs[i] = lower_bounds->xs[ic] + u * range;
         }
     }
 }
 
 
-void populate_labels (const Matrix * true_weights, const Matrix * features, float sigma, Matrix * labels, Matrix * true_residuals) {
-    size_t nsamples = features->nr;
-    size_t nfeatures = features->nc;
+void populate_labels (const Matrix * true_weights, const Matrix * features, const float sigma, Matrix * labels, Matrix * true_residuals) {
+    const size_t nsamples = features->nr;
+    const size_t nfeatures = features->nc;
     for (size_t isample = 0; isample < nsamples; isample++) {
         true_residuals->xs[isample] = (float) (sigma * boxmuller_randn());
     }
