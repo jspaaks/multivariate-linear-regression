@@ -36,6 +36,7 @@ void assert_no_duplicate_names (Kwargs * kwargs) {
             nseen++;
         }
     }
+    free(seen);
     assert(nseen == ncap && "Expected number of seen names to be equal to number of allocated items");
 }
 
