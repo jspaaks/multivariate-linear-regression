@@ -48,7 +48,7 @@ void matrix_accrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
-void matrix_addsca (const Matrix * left, float right, Matrix * result) {
+void matrix_addsca (const Matrix * left, const float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->xs[i] = left->xs[i] + right;
     }
@@ -120,7 +120,7 @@ void matrix_bctrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
-Matrix * matrix_create (size_t nr, size_t nc) {
+Matrix * matrix_create (const size_t nr, const size_t nc) {
     errno = 0;
     MatrixResizable * m = calloc(1, sizeof(MatrixResizable));
     if (m == nullptr) {
@@ -145,7 +145,7 @@ Matrix * matrix_create (size_t nr, size_t nc) {
 }
 
 
-void matrix_divsca (const Matrix * matrix, float factor, Matrix * result) {
+void matrix_divsca (const Matrix * matrix, const float factor, Matrix * result) {
     for (size_t i = 0; i < matrix->n; i++) {
         result->xs[i] = matrix->xs[i] / factor;
     }
@@ -466,7 +466,7 @@ void matrix_readxs (const char * filepath, Matrix * results) {
 }
 
 
-void matrix_scapro (const Matrix * left, float right, Matrix * result) {
+void matrix_scapro (const Matrix * left, const float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->xs[i] = left->xs[i] * right;
     }
@@ -548,7 +548,7 @@ void matrix_stzrgt (const Matrix * matrix, Matrix * avgs, Matrix * stddevs, Matr
 }
 
 
-void matrix_subsca (const Matrix * left, float right, Matrix * result) {
+void matrix_subsca (const Matrix * left, const float right, Matrix * result) {
     for (size_t i = 0; i < left->n; i++) {
         result->xs[i] = left->xs[i] - right;
     }
@@ -572,7 +572,7 @@ void matrix_sdvrgt (const Matrix * matrix, Matrix * result) {
 }
 
 
-bool matrix_testeq (const Matrix * a, const Matrix * b, float eps) {
+bool matrix_testeq (const Matrix * a, const Matrix * b, const float eps) {
     assert(a->nr == b->nr && "Number of rows in 'a' should match number of rows in 'b'");
     assert(a->nc == b->nc && "Number of columns in 'a' should match number of columns in 'b'");
     for (size_t i = 0; i < a->n; i++) {
