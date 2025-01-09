@@ -6,7 +6,6 @@
 
 
 void assert_no_duplicate_names (Kwargs * kwargs) {
-    fprintf(stdout, "WIP");
     size_t nclasses = kwargs->nclasses;
     size_t ncap = nclasses * 2;
     char ** seen = calloc(ncap, sizeof(char *));
@@ -16,22 +15,18 @@ void assert_no_duplicate_names (Kwargs * kwargs) {
     }
     size_t nseen = 0;
     for (size_t icls = 0; icls < nclasses; icls++) {
-        {
-            char * name = kwargs->classes[icls].shortname;
-            for (size_t iseen = 0; iseen < nseen; iseen++) {
-                bool matches = strncmp(name, seen[iseen], 3) == 0;
-                if (matches) {
-                    fprintf(stderr, "ERROR: duplicate name \"%s\" found, aborting.\n", name);
-                    exit(EXIT_FAILURE);
-                }
+        for (size_t j = 0; j < 2; j++) {
+            char * name = nullptr;
+            size_t ell = 0;
+            if (j == 0) {
+                name = kwargs->classes[icls].shortname;
+                ell = 3;
+            } else {
+                name = kwargs->classes[icls].longname;
+                ell = 65;
             }
-            seen[nseen] = name;
-            nseen++;
-        }
-        {
-            char * name = kwargs->classes[icls].longname;
             for (size_t iseen = 0; iseen < nseen; iseen++) {
-                bool matches = strncmp(name, seen[iseen], 65) == 0;
+                bool matches = strncmp(name, seen[iseen], ell) == 0;
                 if (matches) {
                     fprintf(stderr, "ERROR: duplicate name \"%s\" found, aborting.\n", name);
                     exit(EXIT_FAILURE);
@@ -123,13 +118,13 @@ const KwargsClass * get_class (const char * name, const Kwargs * kwargs) {
         {
             char * longname = kwargs->classes[i].longname;
             bool matches = longname != nullptr &&
-                           strncmp(longname, name, strlen(longname) + 1) == 0;
+                           strncmp(longname, name, 65) == 0;
             if (matches) return &kwargs->classes[i];
         }
         {
             char * shortname = kwargs->classes[i].shortname;
             bool matches = shortname != nullptr &&
-                           strncmp(shortname, name, strlen(shortname) + 1) == 0;
+                           strncmp(shortname, name, 3) == 0;
             if (matches) return &kwargs->classes[i];
         }
     }
@@ -204,18 +199,18 @@ int has_type (const char * name, const Kwargs * kwargs, KwargsType type) {
     // test where name is used in argv
     char * names[2] = {cls->shortname, cls->longname};
     for (size_t iname = 0; iname < 2; iname++) {
-        size_t ell = strlen(names[iname]) + 1;
         for (int iarg = 1; iarg < kwargs->argc; iarg++) {
-            bool cond = strncmp(names[iname], kwargs->argv[iarg], ell) == 0;
+            bool cond = strncmp(names[iname], kwargs->argv[iarg], 65) == 0;
             if (cond) {
                 // test whether classification is as expected
                 if (cls->type != kwargs->classifieds[iarg]) {
                     KwargsType itype = kwargs->classifieds[iarg];
-                    fprintf(stdout, "ERROR: Name \"%s\" seems to have been misclassified as a \"%s\"\n"
-                                    "argument. Check the spelling of preceding parameter names, whether\n"
-                                    "preceding parameter names that require a value did in fact get one,\n"
-                                    "and verify that all preceding parameter names are valid shortnames\n"
-                                    "or longnames.\n", kwargs->argv[iarg], typenames[itype]);
+                    fprintf(stdout, "ERROR: Name \"%s\" seems to have been misclassified as\n"
+                                    "a \"%s\" argument. Check the spelling of preceding parameter\n"
+                                    "names, whether preceding parameter names that require a value\n"
+                                    "did in fact get one, and verify that all preceding parameter\n"
+                                    "names are valid shortnames or longnames.\n",
+                                    kwargs->argv[iarg], typenames[itype]);
                     exit(EXIT_FAILURE);
                 }
                 return iarg;
