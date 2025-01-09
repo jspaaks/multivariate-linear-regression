@@ -11,12 +11,12 @@ void derive_limits_of_acceptability(float expected, float tolerance, float * low
 
 Test(matrix, accall) {
     Matrix * matrix = matrix_create(3, 2);
-    matrix->vals[0] =   2.0f;
-    matrix->vals[1] =   4.0f;
-    matrix->vals[2] =  12.0f;
-    matrix->vals[3] =  22.0f;
-    matrix->vals[4] = 452.0f;
-    matrix->vals[5] =  -4.0f;
+    matrix->xs[0] =   2.0f;
+    matrix->xs[1] =   4.0f;
+    matrix->xs[2] =  12.0f;
+    matrix->xs[3] =  22.0f;
+    matrix->xs[4] = 452.0f;
+    matrix->xs[5] =  -4.0f;
     float expected  = 488.0f;
     float tolerance =   0.1f;
     float lower;
@@ -34,11 +34,11 @@ Test(matrix, accdwn) {
     Matrix * expected = matrix_create(1, 2);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
-    expected->vals[0] = 2.0f;
-    expected->vals[1] = 4.0f;
+    expected->xs[0] = 2.0f;
+    expected->xs[1] = 4.0f;
 
     matrix_accdwn(matrix, actual);
 
@@ -56,11 +56,11 @@ Test(matrix, accrgt) {
     Matrix * expected = matrix_create(2, 1);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
-    expected->vals[0] = 1.0f;
-    expected->vals[1] = 5.0f;
+    expected->xs[0] = 1.0f;
+    expected->xs[1] = 5.0f;
 
     matrix_accrgt(matrix, actual);
 
@@ -79,8 +79,8 @@ Test(matrix, addsca) {
     Matrix * expected = matrix_create(2, 2);
 
     for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = i;
-        expected->vals[i] = 10 + i;
+        left->xs[i] = i;
+        expected->xs[i] = 10 + i;
     }
     matrix_addsca(left, right, actual);
     bool cond = matrix_testeq (actual, expected, 0.0001f);
@@ -94,7 +94,7 @@ Test(matrix, addsca) {
 Test(matrix, avgall) {
     Matrix * matrix = matrix_create(2, 3);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
     float expected = 2.5f;
     float tolerance = 0.0001f;
@@ -113,11 +113,11 @@ Test(matrix, avgdwn) {
     Matrix * expected = matrix_create(1, 3);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
     for (size_t i = 0; i < expected->n; i++) {
-        expected->vals[i] = i + 1.5f;
+        expected->xs[i] = i + 1.5f;
     }
 
     matrix_avgdwn(matrix, actual);
@@ -136,11 +136,11 @@ Test(matrix, avgrgt) {
     Matrix * expected = matrix_create(3, 1);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
     for (size_t i = 0; i < expected->n; i++) {
-        expected->vals[i] = 2 * i + 0.5f;
+        expected->xs[i] = 2 * i + 0.5f;
     }
 
     matrix_avgrgt(matrix, actual);
@@ -159,13 +159,13 @@ Test(matrix, bctdwn) {
     Matrix * expected = matrix_create(4, 3);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
     for (size_t ir = 0; ir < expected->nr; ir++) {
         for (size_t ic = 0; ic < expected->nc; ic++) {
             size_t i = ir * expected->nc + ic;
-            expected->vals[i] = ic;
+            expected->xs[i] = ic;
         }
     }
 
@@ -185,13 +185,13 @@ Test(matrix, bctrgt) {
     Matrix * expected = matrix_create(3, 4);
 
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
 
     for (size_t ir = 0; ir < expected->nr; ir++) {
         for (size_t ic = 0; ic < expected->nc; ic++) {
             size_t i = ir * expected->nc + ic;
-            expected->vals[i] = ir;
+            expected->xs[i] = ir;
         }
     }
 
@@ -211,8 +211,8 @@ Test(matrix, divsca) {
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
-        expected->vals[i] = i / factor;
+        matrix->xs[i] = i;
+        expected->xs[i] = i / factor;
     }
     matrix_divsca(matrix, factor, actual);
     bool cond = matrix_testeq (actual, expected, 0.0001f);
@@ -228,10 +228,10 @@ Test(matrix, dotpro) {
     Matrix * b = matrix_create(3, 4);
     Matrix * c = matrix_create(2, 4);
     for (size_t i = 0; i < a->n; i++) {
-        a->vals[i] = i;
+        a->xs[i] = i;
     }
     for (size_t i = 0; i < b->n; i++) {
-        b->vals[i] = i + 10;
+        b->xs[i] = i + 10;
     }
     matrix_dotpro(a, b, c);
     const float expected[8] = {  50.0f,  53.0f,  56.0f,  59.0f, 176.0f, 188.0f, 200.0f, 212.0f};
@@ -239,7 +239,7 @@ Test(matrix, dotpro) {
     for (size_t i = 0; i < n; i++) {
         const float lower = expected[i] - 0.01f;
         const float upper = expected[i] + 0.01f;
-        const float actual = c->vals[i];
+        const float actual = c->xs[i];
         cr_assert(lower < actual && actual < upper, "actual was %.6f", actual);
     }
     matrix_destroy(&c);
@@ -255,9 +255,9 @@ Test(matrix, ebeadd) {
     Matrix * expected = matrix_create(2, 2);
 
     for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = i;
-        right->vals[i] = 10;
-        expected->vals[i] = 10 + i;
+        left->xs[i] = i;
+        right->xs[i] = 10;
+        expected->xs[i] = 10 + i;
     }
     matrix_ebeadd(left, right, actual);
     bool cond = matrix_testeq (actual, expected, 0.0001f);
@@ -283,9 +283,9 @@ Test(matrix, ebesub) {
     Matrix * actual = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
     for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = 10 + i;
-        right->vals[i] = i;
-        expected->vals[i] = 10;
+        left->xs[i] = 10 + i;
+        right->xs[i] = i;
+        expected->xs[i] = 10;
     }
     matrix_ebesub(left, right, actual);
     bool cond = matrix_testeq (actual, expected, 0.0001f);
@@ -306,9 +306,9 @@ Test(matrix, hadpro) {
     for (size_t ir = 0; ir < left->nr; ir++) {
         for (size_t ic = 0; ic < left->nc; ic++) {
             size_t i = ir * left->nc + ic;
-            left->vals[i] = ic + 1;
-            right->vals[i] = ir + 1;
-            expected->vals[i] = (ic + 1) * (ir + 1);
+            left->xs[i] = ic + 1;
+            right->xs[i] = ir + 1;
+            expected->xs[i] = (ic + 1) * (ir + 1);
         }
     }
     matrix_hadpro(left, right, actual);
@@ -327,34 +327,34 @@ Test(matrix, hstack) {
     Matrix * actual = matrix_create(2, 6);
     Matrix * expected = matrix_create(2, 6);
 
-    left->vals[0] = 1.0f;
-    left->vals[1] = 2.0f;
-    left->vals[2] = 3.0f;
-    left->vals[3] = 7.0f;
-    left->vals[4] = 8.0f;
-    left->vals[5] = 9.0f;
+    left->xs[0] = 1.0f;
+    left->xs[1] = 2.0f;
+    left->xs[2] = 3.0f;
+    left->xs[3] = 7.0f;
+    left->xs[4] = 8.0f;
+    left->xs[5] = 9.0f;
 
-    right->vals[0] =  4.0f;
-    right->vals[1] =  5.0f;
-    right->vals[2] =  6.0f;
-    right->vals[3] = 10.0f;
-    right->vals[4] = 11.0f;
-    right->vals[5] = 12.0f;
+    right->xs[0] =  4.0f;
+    right->xs[1] =  5.0f;
+    right->xs[2] =  6.0f;
+    right->xs[3] = 10.0f;
+    right->xs[4] = 11.0f;
+    right->xs[5] = 12.0f;
 
     matrix_hstack(left, right, actual);
 
-    expected->vals[0] =   1.0f;
-    expected->vals[1] =   2.0f;
-    expected->vals[2] =   3.0f;
-    expected->vals[3] =   4.0f;
-    expected->vals[4] =   5.0f;
-    expected->vals[5] =   6.0f;
-    expected->vals[6] =   7.0f;
-    expected->vals[7] =   8.0f;
-    expected->vals[8] =   9.0f;
-    expected->vals[9] =  10.0f;
-    expected->vals[10] = 11.0f;
-    expected->vals[11] = 12.0f;
+    expected->xs[0] =   1.0f;
+    expected->xs[1] =   2.0f;
+    expected->xs[2] =   3.0f;
+    expected->xs[3] =   4.0f;
+    expected->xs[4] =   5.0f;
+    expected->xs[5] =   6.0f;
+    expected->xs[6] =   7.0f;
+    expected->xs[7] =   8.0f;
+    expected->xs[8] =   9.0f;
+    expected->xs[9] =  10.0f;
+    expected->xs[10] = 11.0f;
+    expected->xs[11] = 12.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
     cr_assert(cond, "vstack failed");
@@ -372,15 +372,15 @@ Test(matrix, ident) {
 
     matrix_ident(ident);
 
-    expected->vals[0] = 1.0f;
-    expected->vals[1] = 0.0f;
-    expected->vals[2] = 0.0f;
-    expected->vals[3] = 0.0f;
-    expected->vals[4] = 1.0f;
-    expected->vals[5] = 0.0f;
-    expected->vals[6] = 0.0f;
-    expected->vals[7] = 0.0f;
-    expected->vals[8] = 1.0f;
+    expected->xs[0] = 1.0f;
+    expected->xs[1] = 0.0f;
+    expected->xs[2] = 0.0f;
+    expected->xs[3] = 0.0f;
+    expected->xs[4] = 1.0f;
+    expected->xs[5] = 0.0f;
+    expected->xs[6] = 0.0f;
+    expected->xs[7] = 0.0f;
+    expected->xs[8] = 1.0f;
 
     bool cond = matrix_testeq(ident, expected, 0.01f);
     cr_assert(cond, "matrix_ident failed");
@@ -393,7 +393,7 @@ Test(matrix, ident) {
 Test(matrix, maxall) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
     float actual = matrix_maxall(matrix);
     float expected = 5.0f;
@@ -411,10 +411,10 @@ Test(matrix, maxdwn) {
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
-    expected->vals[0] = 4.0f;
-    expected->vals[1] = 5.0f;
+    expected->xs[0] = 4.0f;
+    expected->xs[1] = 5.0f;
     matrix_maxdwn(matrix, actual);
     bool cond = matrix_testeq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -429,10 +429,10 @@ Test(matrix, maxrgt) {
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
-    expected->vals[0] = 2.0f;
-    expected->vals[1] = 5.0f;
+    expected->xs[0] = 2.0f;
+    expected->xs[1] = 5.0f;
     matrix_maxrgt(matrix, actual);
     bool cond = matrix_testeq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -445,7 +445,7 @@ Test(matrix, maxrgt) {
 Test(matrix, minall) {
     Matrix * matrix = matrix_create(3, 2);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
     float actual = matrix_minall(matrix);
     float expected = 0.0f;
@@ -463,10 +463,10 @@ Test(matrix, mindwn) {
     Matrix * actual = matrix_create(1, 2);
     Matrix * expected = matrix_create(1, 2);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
-    expected->vals[0] = 0.0f;
-    expected->vals[1] = 1.0f;
+    expected->xs[0] = 0.0f;
+    expected->xs[1] = 1.0f;
     matrix_mindwn(matrix, actual);
     bool cond = matrix_testeq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -481,10 +481,10 @@ Test(matrix, minrgt) {
     Matrix * actual = matrix_create(2, 1);
     Matrix * expected = matrix_create(2, 1);
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
+        matrix->xs[i] = i;
     }
-    expected->vals[0] = 0.0f;
-    expected->vals[1] = 3.0f;
+    expected->xs[0] = 0.0f;
+    expected->xs[1] = 3.0f;
     matrix_minrgt(matrix, actual);
     bool cond = matrix_testeq(actual, expected, 0.0001f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -497,22 +497,22 @@ Test(matrix, minrgt) {
 
 Test(matrix, ones) {
     Matrix * actual = matrix_create(2, 3);
-    actual->vals[0] = 1.0f;
-    actual->vals[1] = 2.0f;
-    actual->vals[2] = 3.0f;
-    actual->vals[3] = 4.0f;
-    actual->vals[4] = 5.0f;
-    actual->vals[5] = 6.0f;
+    actual->xs[0] = 1.0f;
+    actual->xs[1] = 2.0f;
+    actual->xs[2] = 3.0f;
+    actual->xs[3] = 4.0f;
+    actual->xs[4] = 5.0f;
+    actual->xs[5] = 6.0f;
 
     matrix_ones(actual);
 
     Matrix * expected = matrix_create(2, 3);
-    expected->vals[0] = 1.0f;
-    expected->vals[1] = 1.0f;
-    expected->vals[2] = 1.0f;
-    expected->vals[3] = 1.0f;
-    expected->vals[4] = 1.0f;
-    expected->vals[5] = 1.0f;
+    expected->xs[0] = 1.0f;
+    expected->xs[1] = 1.0f;
+    expected->xs[2] = 1.0f;
+    expected->xs[3] = 1.0f;
+    expected->xs[4] = 1.0f;
+    expected->xs[5] = 1.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
     cr_assert(cond, "ones failed");
@@ -528,8 +528,8 @@ Test(matrix, scapro) {
     Matrix * expected = matrix_create(2, 2);
     float factor = 10.0f;
     for (size_t i = 0; i < matrix->n; i++) {
-        matrix->vals[i] = i;
-        expected->vals[i] = i * factor;
+        matrix->xs[i] = i;
+        expected->xs[i] = i * factor;
     }
     matrix_scapro(matrix, factor, actual);
     bool cond = matrix_testeq (actual, expected, 0.0001f);
@@ -542,14 +542,14 @@ Test(matrix, scapro) {
 
 Test(matrix, sdvall) {
     Matrix * matrix = matrix_create(1, 8);
-    matrix->vals[0] = 2.0f;
-    matrix->vals[1] = 4.0f;
-    matrix->vals[2] = 4.0f;
-    matrix->vals[3] = 4.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 5.0f;
-    matrix->vals[6] = 7.0f;
-    matrix->vals[7] = 9.0f;
+    matrix->xs[0] = 2.0f;
+    matrix->xs[1] = 4.0f;
+    matrix->xs[2] = 4.0f;
+    matrix->xs[3] = 4.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 5.0f;
+    matrix->xs[6] = 7.0f;
+    matrix->xs[7] = 9.0f;
     float actual = matrix_sdvall(matrix);
     float expected = 2.0f;
     float tolerance = 0.001f;
@@ -566,19 +566,19 @@ Test(matrix, sdvdwn) {
     Matrix * actual = matrix_create(1, 3);
     Matrix * expected = matrix_create(1, 3);
 
-    matrix->vals[0] = 0.0f;
-    matrix->vals[1] = 1.0f;
-    matrix->vals[2] = 2.0f;
-    matrix->vals[3] = 3.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 7.0f;
-    matrix->vals[6] = 8.0f;
-    matrix->vals[7] = 11.0f;
-    matrix->vals[8] = 14.0f;
+    matrix->xs[0] = 0.0f;
+    matrix->xs[1] = 1.0f;
+    matrix->xs[2] = 2.0f;
+    matrix->xs[3] = 3.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 7.0f;
+    matrix->xs[6] = 8.0f;
+    matrix->xs[7] = 11.0f;
+    matrix->xs[8] = 14.0f;
 
-    expected->vals[0] = 3.300;
-    expected->vals[1] = 4.110;
-    expected->vals[2] = 4.922;
+    expected->xs[0] = 3.300;
+    expected->xs[1] = 4.110;
+    expected->xs[2] = 4.922;
 
     matrix_sdvdwn(matrix, actual);
 
@@ -595,19 +595,19 @@ Test(matrix, sdvrgt) {
     Matrix * actual = matrix_create(3, 1);
     Matrix * expected = matrix_create(3, 1);
 
-    matrix->vals[0] = 0.0f;
-    matrix->vals[1] = 1.0f;
-    matrix->vals[2] = 2.0f;
-    matrix->vals[3] = 3.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 7.0f;
-    matrix->vals[6] = 8.0f;
-    matrix->vals[7] = 11.0f;
-    matrix->vals[8] = 14.0f;
+    matrix->xs[0] = 0.0f;
+    matrix->xs[1] = 1.0f;
+    matrix->xs[2] = 2.0f;
+    matrix->xs[3] = 3.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 7.0f;
+    matrix->xs[6] = 8.0f;
+    matrix->xs[7] = 11.0f;
+    matrix->xs[8] = 14.0f;
 
-    expected->vals[0] = 0.816;
-    expected->vals[1] = 1.633;
-    expected->vals[2] = 2.449;
+    expected->xs[0] = 0.816;
+    expected->xs[1] = 1.633;
+    expected->xs[2] = 2.449;
 
     matrix_sdvrgt(matrix, actual);
 
@@ -628,25 +628,25 @@ Test(matrix, stzdwn) {
     Matrix * stddevs_actual = matrix_create(1, 2);
     Matrix * stddevs_expected = matrix_create(1, 2);
 
-    matrix->vals[0] =    5.0f;
-    matrix->vals[1] =  -10.0f;
-    matrix->vals[2] =    2.0f;
-    matrix->vals[3] =  -15.0f;
-    matrix->vals[4] =    8.0f;
-    matrix->vals[5] =   -5.0f;
+    matrix->xs[0] =    5.0f;
+    matrix->xs[1] =  -10.0f;
+    matrix->xs[2] =    2.0f;
+    matrix->xs[3] =  -15.0f;
+    matrix->xs[4] =    8.0f;
+    matrix->xs[5] =   -5.0f;
 
-    expected->vals[0] =  0.0f;
-    expected->vals[1] =  0.0f;
-    expected->vals[2] = -1.224f;
-    expected->vals[3] = -1.224f;
-    expected->vals[4] =  1.224f;
-    expected->vals[5] =  1.224f;
+    expected->xs[0] =  0.0f;
+    expected->xs[1] =  0.0f;
+    expected->xs[2] = -1.224f;
+    expected->xs[3] = -1.224f;
+    expected->xs[4] =  1.224f;
+    expected->xs[5] =  1.224f;
 
-    avgs_expected->vals[0] =   5.0f;
-    avgs_expected->vals[1] = -10.0f;
+    avgs_expected->xs[0] =   5.0f;
+    avgs_expected->xs[1] = -10.0f;
 
-    stddevs_expected->vals[0] = 2.449f;
-    stddevs_expected->vals[1] = 4.082f;
+    stddevs_expected->xs[0] = 2.449f;
+    stddevs_expected->xs[1] = 4.082f;
 
     matrix_stzdwn(matrix, avgs_actual, stddevs_actual, actual);
     {
@@ -681,25 +681,25 @@ Test(matrix, stzrgt) {
     Matrix * stddevs_actual = matrix_create(2, 1);
     Matrix * stddevs_expected = matrix_create(2, 1);
 
-    matrix->vals[0] =    5.0f;
-    matrix->vals[1] =    2.0f;
-    matrix->vals[2] =    8.0f;
-    matrix->vals[3] =  -10.0f;
-    matrix->vals[4] =  -15.0f;
-    matrix->vals[5] =   -5.0f;
+    matrix->xs[0] =    5.0f;
+    matrix->xs[1] =    2.0f;
+    matrix->xs[2] =    8.0f;
+    matrix->xs[3] =  -10.0f;
+    matrix->xs[4] =  -15.0f;
+    matrix->xs[5] =   -5.0f;
 
-    expected->vals[0] =  0.0f;
-    expected->vals[1] = -1.224f;
-    expected->vals[2] =  1.224f;
-    expected->vals[3] =  0.0f;
-    expected->vals[4] = -1.224f;
-    expected->vals[5] =  1.224f;
+    expected->xs[0] =  0.0f;
+    expected->xs[1] = -1.224f;
+    expected->xs[2] =  1.224f;
+    expected->xs[3] =  0.0f;
+    expected->xs[4] = -1.224f;
+    expected->xs[5] =  1.224f;
 
-    avgs_expected->vals[0] =   5.0f;
-    avgs_expected->vals[1] = -10.0f;
+    avgs_expected->xs[0] =   5.0f;
+    avgs_expected->xs[1] = -10.0f;
 
-    stddevs_expected->vals[0] = 2.449f;
-    stddevs_expected->vals[1] = 4.082f;
+    stddevs_expected->xs[0] = 2.449f;
+    stddevs_expected->xs[1] = 4.082f;
 
     matrix_stzrgt(matrix, avgs_actual, stddevs_actual, actual);
     {
@@ -730,8 +730,8 @@ Test(matrix, subsca) {
     Matrix * actual = matrix_create(2, 3);
     Matrix * expected = matrix_create(2, 3);
     for (size_t i = 0; i < left->n; i++) {
-        left->vals[i] = 10 + i;
-        expected->vals[i] = i;
+        left->xs[i] = 10 + i;
+        expected->xs[i] = i;
     }
     float right = 10.0f;
     matrix_subsca(left, right, actual);
@@ -748,13 +748,13 @@ Test(matrix, testeq) {
     size_t nca = 3;
     Matrix * a = matrix_create(nra, nca);
     for (size_t ira = 0; ira < nra; ira++) {
-        a->vals[ira] = ira;
+        a->xs[ira] = ira;
     }
     size_t nrb = 2;
     size_t ncb = 3;
     Matrix * b = matrix_create(nrb, ncb);
     for (size_t irb = 0; irb < nrb; irb++) {
-        b->vals[irb] = irb;
+        b->xs[irb] = irb;
     }
     bool cond = matrix_testeq (a, b, 0.01f);
     cr_assert(cond, "expected a and b to be equal within the given tolerance");
@@ -765,24 +765,24 @@ Test(matrix, testeq) {
 
 Test(matrix, transp) {
     Matrix * input = matrix_create(2, 3);
-    input->vals[0] = 1.0f;
-    input->vals[1] = 2.0f;
-    input->vals[2] = 3.0f;
-    input->vals[3] = 4.0f;
-    input->vals[4] = 5.0f;
-    input->vals[5] = 6.0f;
+    input->xs[0] = 1.0f;
+    input->xs[1] = 2.0f;
+    input->xs[2] = 3.0f;
+    input->xs[3] = 4.0f;
+    input->xs[4] = 5.0f;
+    input->xs[5] = 6.0f;
 
     Matrix * actual = matrix_create(3, 2);
 
     matrix_transp(input, actual);
 
     Matrix * expected = matrix_create(3, 2);
-    expected->vals[0] = 1.0f;
-    expected->vals[1] = 4.0f;
-    expected->vals[2] = 2.0f;
-    expected->vals[3] = 5.0f;
-    expected->vals[4] = 3.0f;
-    expected->vals[5] = 6.0f;
+    expected->xs[0] = 1.0f;
+    expected->xs[1] = 4.0f;
+    expected->xs[2] = 2.0f;
+    expected->xs[3] = 5.0f;
+    expected->xs[4] = 3.0f;
+    expected->xs[5] = 6.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
     cr_assert(cond, "transpose failed");
@@ -795,14 +795,14 @@ Test(matrix, transp) {
 
 Test(matrix, varall) {
     Matrix * matrix = matrix_create(1, 8);
-    matrix->vals[0] = 2.0f;
-    matrix->vals[1] = 4.0f;
-    matrix->vals[2] = 4.0f;
-    matrix->vals[3] = 4.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 5.0f;
-    matrix->vals[6] = 7.0f;
-    matrix->vals[7] = 9.0f;
+    matrix->xs[0] = 2.0f;
+    matrix->xs[1] = 4.0f;
+    matrix->xs[2] = 4.0f;
+    matrix->xs[3] = 4.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 5.0f;
+    matrix->xs[6] = 7.0f;
+    matrix->xs[7] = 9.0f;
     float actual = matrix_varall(matrix);
     float expected = 4.0f;
     float tolerance = 0.001f;
@@ -819,19 +819,19 @@ Test(matrix, vardwn) {
     Matrix * actual = matrix_create(1, 3);
     Matrix * expected = matrix_create(1, 3);
 
-    matrix->vals[0] = 0.0f;
-    matrix->vals[1] = 1.0f;
-    matrix->vals[2] = 2.0f;
-    matrix->vals[3] = 3.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 7.0f;
-    matrix->vals[6] = 8.0f;
-    matrix->vals[7] = 11.0f;
-    matrix->vals[8] = 14.0f;
+    matrix->xs[0] = 0.0f;
+    matrix->xs[1] = 1.0f;
+    matrix->xs[2] = 2.0f;
+    matrix->xs[3] = 3.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 7.0f;
+    matrix->xs[6] = 8.0f;
+    matrix->xs[7] = 11.0f;
+    matrix->xs[8] = 14.0f;
 
-    expected->vals[0] = 10.889;
-    expected->vals[1] = 16.889;
-    expected->vals[2] = 24.222;
+    expected->xs[0] = 10.889;
+    expected->xs[1] = 16.889;
+    expected->xs[2] = 24.222;
 
     matrix_vardwn(matrix, actual);
 
@@ -848,19 +848,19 @@ Test(matrix, varrgt) {
     Matrix * actual = matrix_create(3, 1);
     Matrix * expected = matrix_create(3, 1);
 
-    matrix->vals[0] = 0.0f;
-    matrix->vals[1] = 1.0f;
-    matrix->vals[2] = 2.0f;
-    matrix->vals[3] = 3.0f;
-    matrix->vals[4] = 5.0f;
-    matrix->vals[5] = 7.0f;
-    matrix->vals[6] = 8.0f;
-    matrix->vals[7] = 11.0f;
-    matrix->vals[8] = 14.0f;
+    matrix->xs[0] = 0.0f;
+    matrix->xs[1] = 1.0f;
+    matrix->xs[2] = 2.0f;
+    matrix->xs[3] = 3.0f;
+    matrix->xs[4] = 5.0f;
+    matrix->xs[5] = 7.0f;
+    matrix->xs[6] = 8.0f;
+    matrix->xs[7] = 11.0f;
+    matrix->xs[8] = 14.0f;
 
-    expected->vals[0] = 0.667;
-    expected->vals[1] = 2.667;
-    expected->vals[2] = 6.000;
+    expected->xs[0] = 0.667;
+    expected->xs[1] = 2.667;
+    expected->xs[2] = 6.000;
 
     matrix_varrgt(matrix, actual);
 
@@ -878,34 +878,34 @@ Test(matrix, vstack) {
     Matrix * actual = matrix_create(4, 3);
     Matrix * expected = matrix_create(4, 3);
 
-    top->vals[0] = 1.0f;
-    top->vals[1] = 2.0f;
-    top->vals[2] = 3.0f;
-    top->vals[3] = 4.0f;
-    top->vals[4] = 5.0f;
-    top->vals[5] = 6.0f;
+    top->xs[0] = 1.0f;
+    top->xs[1] = 2.0f;
+    top->xs[2] = 3.0f;
+    top->xs[3] = 4.0f;
+    top->xs[4] = 5.0f;
+    top->xs[5] = 6.0f;
 
-    bottom->vals[0] =  7.0f;
-    bottom->vals[1] =  8.0f;
-    bottom->vals[2] =  9.0f;
-    bottom->vals[3] = 10.0f;
-    bottom->vals[4] = 11.0f;
-    bottom->vals[5] = 12.0f;
+    bottom->xs[0] =  7.0f;
+    bottom->xs[1] =  8.0f;
+    bottom->xs[2] =  9.0f;
+    bottom->xs[3] = 10.0f;
+    bottom->xs[4] = 11.0f;
+    bottom->xs[5] = 12.0f;
 
     matrix_vstack(top, bottom, actual);
 
-    expected->vals[0] =   1.0f;
-    expected->vals[1] =   2.0f;
-    expected->vals[2] =   3.0f;
-    expected->vals[3] =   4.0f;
-    expected->vals[4] =   5.0f;
-    expected->vals[5] =   6.0f;
-    expected->vals[6] =   7.0f;
-    expected->vals[7] =   8.0f;
-    expected->vals[8] =   9.0f;
-    expected->vals[9] =  10.0f;
-    expected->vals[10] = 11.0f;
-    expected->vals[11] = 12.0f;
+    expected->xs[0] =   1.0f;
+    expected->xs[1] =   2.0f;
+    expected->xs[2] =   3.0f;
+    expected->xs[3] =   4.0f;
+    expected->xs[4] =   5.0f;
+    expected->xs[5] =   6.0f;
+    expected->xs[6] =   7.0f;
+    expected->xs[7] =   8.0f;
+    expected->xs[8] =   9.0f;
+    expected->xs[9] =  10.0f;
+    expected->xs[10] = 11.0f;
+    expected->xs[11] = 12.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
     cr_assert(cond, "vstack failed");
@@ -919,22 +919,22 @@ Test(matrix, vstack) {
 
 Test(matrix, zeros) {
     Matrix * actual = matrix_create(2, 3);
-    actual->vals[0] = 1.0f;
-    actual->vals[1] = 2.0f;
-    actual->vals[2] = 3.0f;
-    actual->vals[3] = 4.0f;
-    actual->vals[4] = 5.0f;
-    actual->vals[5] = 6.0f;
+    actual->xs[0] = 1.0f;
+    actual->xs[1] = 2.0f;
+    actual->xs[2] = 3.0f;
+    actual->xs[3] = 4.0f;
+    actual->xs[4] = 5.0f;
+    actual->xs[5] = 6.0f;
 
     matrix_zeros(actual);
 
     Matrix * expected = matrix_create(2, 3);
-    expected->vals[0] = 0.0f;
-    expected->vals[1] = 0.0f;
-    expected->vals[2] = 0.0f;
-    expected->vals[3] = 0.0f;
-    expected->vals[4] = 0.0f;
-    expected->vals[5] = 0.0f;
+    expected->xs[0] = 0.0f;
+    expected->xs[1] = 0.0f;
+    expected->xs[2] = 0.0f;
+    expected->xs[3] = 0.0f;
+    expected->xs[4] = 0.0f;
+    expected->xs[5] = 0.0f;
 
     bool cond = matrix_testeq(actual, expected, 0.01f);
     cr_assert(cond, "zeros failed");

@@ -65,7 +65,7 @@ void get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfea
     char * s = (char *) kwargs_get_optional_value ("--lower_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < lower_bounds->n; i++) {
-            lower_bounds->vals[i] = 0.0f;
+            lower_bounds->xs[i] = 0.0f;
         }
         return;
     }
@@ -80,7 +80,7 @@ void get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfea
             break;
         }
         char remainder[128] = {};
-        int nscanned = sscanf(token, " %f %127s ", &lower_bounds->vals[nfound], remainder);
+        int nscanned = sscanf(token, " %f %127s ", &lower_bounds->xs[nfound], remainder);
         if (nscanned != 1) {
             fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                             "floating point values from --lower_bounds\n", nfound);
@@ -140,7 +140,7 @@ void get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfea
         token = strtok_r(s, ",", &next);
         if (token == nullptr) break;
         char remainder[128] = {};
-        int nscanned = sscanf(token, " %f %127s ", &true_weights->vals[nfound], remainder);
+        int nscanned = sscanf(token, " %f %127s ", &true_weights->xs[nfound], remainder);
         if (nscanned != 1) {
             fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                             "floating point values from --true_weights\n", nfound);
@@ -160,7 +160,7 @@ void get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfea
     char * s = (char *) kwargs_get_optional_value ("--upper_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < upper_bounds->n; i++) {
-            upper_bounds->vals[i] = 1.0f;
+            upper_bounds->xs[i] = 1.0f;
         }
         return;
     }
@@ -175,7 +175,7 @@ void get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfea
             break;
         }
         char remainder[128] = {};
-        int nscanned = sscanf(token, " %f %127s ", &upper_bounds->vals[nfound], remainder);
+        int nscanned = sscanf(token, " %f %127s ", &upper_bounds->xs[nfound], remainder);
         if (nscanned != 1) {
             fprintf(stderr, "ERROR: Found trailing characters at index %zu when sscanf'ing "
                             "floating point values from --upper_bounds\n", nfound);

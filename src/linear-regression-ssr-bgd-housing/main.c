@@ -91,8 +91,8 @@ int main (int argc, char * argv[]) {
         matrix_dotpro(weights, features_transp, predicted);
         matrix_ebesub(predicted, labels_transp, residuals);
         {
-            plotting_iterations->vals[i] = i;
-            plotting_sigma->vals[i] = matrix_sdvall(residuals);
+            plotting_iterations->xs[i] = i;
+            plotting_sigma->xs[i] = matrix_sdvall(residuals);
         }
         matrix_bctdwn(residuals, residuals_bctdwn);
         matrix_hadpro(residuals_bctdwn, features_transp, gradients);
@@ -145,10 +145,10 @@ void standardize_dwn(Matrix * features_raw, Matrix * features_raw_avgs, Matrix *
     // undo scaling of the intercept column:
     for (size_t ir = 0; ir < features->nr; ir++) {
         size_t i = ir * features->nc;
-        features->vals[i] = 1.0f;
+        features->xs[i] = 1.0f;
     }
-    features_raw_avgs->vals[0] = 1.0f;
-    features_raw_sdvs->vals[0] = 0.0f;
+    features_raw_avgs->xs[0] = 1.0f;
+    features_raw_sdvs->xs[0] = 0.0f;
 }
 
 

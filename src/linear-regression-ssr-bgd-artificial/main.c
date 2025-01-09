@@ -66,8 +66,8 @@ int main (int argc, char * argv[]) {
         matrix_dotpro(weights, features_transp, predicted);
         matrix_ebesub(predicted, labels_transp, residuals);
         {
-            plotting_iterations->vals[i] = i;
-            plotting_sigma->vals[i] = matrix_sdvall(residuals);
+            plotting_iterations->xs[i] = i;
+            plotting_sigma->xs[i] = matrix_sdvall(residuals);
         }
         matrix_bctdwn(residuals, residuals_bctdwn);
         matrix_hadpro(residuals_bctdwn, features_transp, gradients);

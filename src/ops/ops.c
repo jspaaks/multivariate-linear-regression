@@ -20,7 +20,7 @@ float ops_half_ssr(const Matrix * predicted, const Matrix * labels) {
     size_t n = labels->nc;
     float rv = 0.0f;
     for (size_t i = 0; i < n; i++) {
-        float d = predicted->vals[i] - labels->vals[i];
+        float d = predicted->xs[i] - labels->xs[i];
         rv += pow(d, 2);
     }
     // divide by 2 because that simplifies the derivative without affecting
@@ -37,18 +37,18 @@ void ops_svm(Matrix * scores, Matrix * labels, float * loss) {
     Matrix * losses = matrix_create(1, scores->nc);
     for (size_t ic = 0; ic < scores->nc; ic++) {
         float acc = 0.0;
-        size_t m = (size_t) labels->vals[ic];
+        size_t m = (size_t) labels->xs[ic];
         for (size_t ir = 0; ir < scores->nr; ir++) {
             size_t i = ir * scores->nc + ic;
             size_t j = m * scores->nc + ic;
-            float tmp = scores->vals[i] - scores->vals[j] + 1;
+            float tmp = scores->xs[i] - scores->xs[j] + 1;
             acc += tmp > 0 ? tmp : 0;
         }
-        losses->vals[ic] = acc - 1.0f;
+        losses->xs[ic] = acc - 1.0f;
     }
     *loss = 0.0f;
     for (size_t i = 0; i < losses->nc; i++) {
-        *loss += losses->vals[i] / losses->nc;
+        *loss += losses->xs[i] / losses->nc;
     }
     matrix_destroy(&losses);
 }

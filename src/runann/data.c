@@ -28,7 +28,7 @@ Matrix * data_read_images (const char * path) {
             uint8_t byte;
             fread(&byte, 1, 1, fp);
             size_t i = ir * nc + ic;
-            images->vals[i] = (float) byte;
+            images->xs[i] = (float) byte;
         }
     }
     fclose(fp);
@@ -53,7 +53,7 @@ Matrix * data_read_labels (const char * path) {
     for (size_t i = 0; i < n; i++) {
         uint8_t byte;
         fread(&byte, 1, 1, fp);
-        labels->vals[i] = (float) byte;
+        labels->xs[i] = (float) byte;
     }
     fclose(fp);
     return labels;

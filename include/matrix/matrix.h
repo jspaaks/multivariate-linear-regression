@@ -16,14 +16,14 @@ struct matrix_resizable {
     size_t nr;
     size_t nc;
     size_t n;
-    float * vals;
+    float * xs;
 };
 
 struct matrix {
     const size_t nr;
     const size_t nc;
     const size_t n;
-    float * vals;
+    float * xs;
 };
 
 float matrix_accall (const Matrix * matrix);

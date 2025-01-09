@@ -20,7 +20,7 @@ void destroy_y(PLFLT_VECTOR * y);
 PLFLT_VECTOR create_x(const Matrix * iterations, size_t n) {
     PLFLT * x = calloc(n, sizeof(PLFLT));
     for (size_t i = 0; i < n; i++) {
-        x[i] = (PLFLT) iterations->vals[i];
+        x[i] = (PLFLT) iterations->xs[i];
     }
     return (PLFLT_VECTOR) x;
 }
@@ -29,7 +29,7 @@ PLFLT_VECTOR create_x(const Matrix * iterations, size_t n) {
 PLFLT_VECTOR create_y(const Matrix * mean_squared_residuals, size_t n) {
     PLFLT * y = calloc(n, sizeof(PLFLT));
     for (size_t i = 0; i < n; i++) {
-        y[i] = (PLFLT) mean_squared_residuals->vals[i];
+        y[i] = (PLFLT) mean_squared_residuals->xs[i];
     }
     return (PLFLT_VECTOR) y;
 }

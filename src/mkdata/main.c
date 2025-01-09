@@ -90,16 +90,16 @@ void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds
     assert(lower_bounds->nc == upper_bounds->nc && "Expected number of columns in lower bounds to be equal to number of columns in upper bounds");
     assert(features->nc == upper_bounds->nc && "Expected number of columns in features to be equal to number of columns in upper bounds");
     for ( size_t ic = 0; ic < lower_bounds->nc; ic++) {
-        assert(lower_bounds->vals[ic] < upper_bounds->vals[ic] && "Expected lower bounds to be smaller than their corresponding upper bounds");
+        assert(lower_bounds->xs[ic] < upper_bounds->xs[ic] && "Expected lower bounds to be smaller than their corresponding upper bounds");
     }
     size_t nr = features->nr;
     size_t nc = features->nc;
     for (size_t ir = 0; ir < nr; ir++) {
         for (size_t ic = 0; ic < nc; ic++) {
             size_t i = ir * nc + ic;
-            float range = upper_bounds->vals[ic] - lower_bounds->vals[ic];
+            float range = upper_bounds->xs[ic] - lower_bounds->xs[ic];
             float u = (float) rand() / RAND_MAX;
-            features->vals[i] = lower_bounds->vals[ic] + u * range;
+            features->xs[i] = lower_bounds->xs[ic] + u * range;
         }
     }
 }
@@ -109,7 +109,7 @@ void populate_labels (const Matrix * true_weights, const Matrix * features, floa
     size_t nsamples = features->nr;
     size_t nfeatures = features->nc;
     for (size_t isample = 0; isample < nsamples; isample++) {
-        true_residuals->vals[isample] = (float) (sigma * boxmuller_randn());
+        true_residuals->xs[isample] = (float) (sigma * boxmuller_randn());
     }
     Matrix * features_prime = matrix_create(nsamples, 1 + nfeatures);
     Matrix * features_prime_transp = matrix_create(1 + nfeatures, nsamples);
