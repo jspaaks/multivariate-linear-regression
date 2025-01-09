@@ -29,6 +29,9 @@ install(
         matrix_minrgt.3
         matrix_ones.3
         matrix_print.3
+        matrix_readnc.3
+        matrix_readnr.3
+        matrix_readxs.3
         matrix_scapro.3
         matrix_sdvall.3
         matrix_sdvdwn.3
