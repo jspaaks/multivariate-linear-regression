@@ -125,16 +125,14 @@ Matrix * matrix_create (const size_t nr, const size_t nc) {
     MatrixResizable * m = calloc(1, sizeof(MatrixResizable));
     if (m == nullptr) {
         fprintf(stderr, "%s\nError allocating memory for MatrixResizable instance, aborting.\n", strerror(errno));
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
 
     errno = 0;
     float * xs = calloc(nr * nc, sizeof(float));
     if (xs == nullptr) {
         fprintf(stderr, "%s\nError allocating memory for values of MatrixResizable instance, aborting.\n", strerror(errno));
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
 
     m->nr = nr;
@@ -142,6 +140,13 @@ Matrix * matrix_create (const size_t nr, const size_t nc) {
     m->n = nr * nc;
     m->xs = xs;
     return (Matrix *) m;
+failure:
+    errno = 0;
+    free(m);
+    m = nullptr;
+    free(xs);
+    xs = nullptr;
+    exit(EXIT_FAILURE);
 }
 
 
@@ -382,21 +387,24 @@ size_t matrix_readnc (const char * filepath) {
     FILE * fp = fopen(filepath, "r");
     if (fp == nullptr) {
         fprintf(stderr, "%s\nError opening file '%s', aborting.\n", strerror(errno), filepath);
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
     constexpr size_t cap = 4096;
     char buffer[cap] = {};
     char * status = fgets(buffer, cap, fp);
     if (status == nullptr) {
         fprintf(stderr, "ERROR reading number of columns from file \"%s\", aborting.\n", filepath);
-        exit(EXIT_FAILURE);
+        goto failure;
     }
-    fclose(fp);
     size_t nr = 0;
     size_t nc = 0;
     sscanf(buffer, "%*s (%zux%zu):\n", &nr, &nc);
+    fclose(fp);
     return nc;
+failure:
+    errno = 0;
+    fclose(fp);
+    exit(EXIT_FAILURE);
 }
 
 
@@ -405,21 +413,24 @@ size_t matrix_readnr (const char * filepath) {
     FILE * fp = fopen(filepath, "r");
     if (fp == nullptr) {
         fprintf(stderr, "%s\nError opening file '%s', aborting.\n", strerror(errno), filepath);
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
     constexpr size_t cap = 4096;
     char buffer[cap] = {};
     char * status = fgets(buffer, cap, fp);
     if (status == nullptr) {
         fprintf(stderr, "ERROR reading number of rows from file \"%s\", aborting.\n", filepath);
-        exit(EXIT_FAILURE);
+        goto failure;
     }
-    fclose(fp);
     size_t nr = 0;
     size_t nc = 0;
     sscanf(buffer, "%*s (%zux%zu):\n", &nr, &nc);
+    fclose(fp);
     return nr;
+failure:
+    errno = 0;
+    fclose(fp);
+    exit(EXIT_FAILURE);
 }
 
 
@@ -428,21 +439,20 @@ void matrix_readxs (const char * filepath, Matrix * results) {
     FILE * fp = fopen(filepath, "r");
     if (fp == nullptr) {
         fprintf(stderr, "%s\nError opening file '%s', aborting.\n", strerror(errno), filepath);
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
     constexpr size_t cap = 4096;
     char buffer[cap] = {};
     char * status = fgets(buffer, cap, fp);
     if (status == nullptr) {
         fprintf(stderr, "ERROR reading number of first line from file \"%s\", aborting.\n", filepath);
-        exit(EXIT_FAILURE);
+        goto failure;
     }
     for (size_t ir = 0; ir < results->nr; ir++) {
         char * status = fgets(buffer, cap, fp);
         if (status == nullptr) {
             fprintf(stderr, "ERROR reading line %zu from file \"%s\", aborting.\n", ir, filepath);
-            exit(EXIT_FAILURE);
+            goto failure;
         }
         char * buffer_p = &buffer[0];
         char * next = nullptr;
@@ -451,18 +461,23 @@ void matrix_readxs (const char * filepath, Matrix * results) {
             token = strtok_r(buffer_p, ", \n", &next);
             if (token == nullptr) {
                 fprintf(stderr, "ERROR reading token %zu on line %zu from file \"%s\", aborting.\n", ic, ir, filepath);
-                exit(EXIT_FAILURE);
+                goto failure;
             }
             size_t i = ir * results->nc + ic;
             int nscanned = sscanf(token, " %f", &results->xs[i]);
             if (nscanned != 1) {
                 fprintf(stderr, "ERROR scanning token %zu on line %zu from file \"%s\", aborting.\n", ic, ir, filepath);
-                exit(EXIT_FAILURE);
+                goto failure;
             }
             buffer_p = nullptr;  // (strtok_r magic)
         }
     }
     fclose(fp);
+    return;
+failure:
+    errno = 0;
+    fclose(fp);
+    exit(EXIT_FAILURE);
 }
 
 
@@ -712,11 +727,15 @@ void matrix_write (const char * basename, const char * varname, const Matrix * m
     FILE * fp = fopen(filename, "w+");
     if (fp == nullptr) {
         fprintf(stderr, "%s\nError opening file '%s', aborting.\n", strerror(errno), filename);
-        errno = 0;
-        exit(EXIT_FAILURE);
+        goto failure;
     }
     matrix_print(fp, varname, matrix);
     fclose(fp);
+    return;
+failure:
+    errno = 0;
+    fclose(fp);
+    exit(EXIT_FAILURE);
 }
 
 
