@@ -68,6 +68,7 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
    - assert spelling and length of shortname
    - assert spelling and length of longname
    - finish man pages
+1. turn runann into readidx, remove its libmatrix dependency
 
 ## Notes
 
