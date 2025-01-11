@@ -65,8 +65,7 @@ target_sources(
         ${PROJECT_ROOT}/src/train/main.c
         ${PROJECT_ROOT}/src/train/options.c
         ${PROJECT_ROOT}/src/train/plotting.c
-        ${PROJECT_ROOT}/src/train/standardized.c
-        ${PROJECT_ROOT}/src/train/unstandardized.c
+        ${PROJECT_ROOT}/src/train/run.c
 )
 
 install(TARGETS tgt_exe_train)

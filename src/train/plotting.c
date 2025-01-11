@@ -1,5 +1,6 @@
 #include "plotting.h"
 #include <plplot/plplot.h>
+#include <float.h>
 #include <stdlib.h>
 
 
@@ -75,17 +76,23 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
         .ymax = 0.9
     };
 
+    float ymax = FLT_MIN;
+    for (size_t i = 0; i < mean_squared_residuals->n; i++) {
+        float yi = mean_squared_residuals->xs[i];
+        ymax = yi > ymax ? yi : ymax;
+    }
+
     Limits wlimits = {
         .xmin = 0.0,
         .xmax = nepochs,
         .ymin = 0.0,
-        .ymax = 1
+        .ymax = ymax
     };
 
     // advance the page ...?
     pladv(0);
 
-    // domain coordinates of the edges of the viewport
+    // unit coordinates of the edges of the viewport
     plvpor(ulimits.xmin, ulimits.xmax, ulimits.ymin, ulimits.ymax);
 
     // world coordinates of the edges of the viewport
@@ -104,7 +111,7 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
     {
         char title[100];
         sprintf(title, "n#dsamples#u = %zu", nsamples);
-        pllab("epoch", "#gs#dresiduals#u", title);
+        pllab("epoch", "#[0x00BD] SSR", title);
     }
 
     // pick a plotting color

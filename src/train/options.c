@@ -24,7 +24,11 @@ static const KwargsClass classes[] = {
         .shortname = "-z",
         .type = KWARGS_FLAG
     },
-
+    {
+        .longname = "--verbose",
+        .shortname = "-v",
+        .type = KWARGS_FLAG
+    }
 };
 
 
@@ -70,6 +74,7 @@ void show_usage (FILE * stream) {
                    "   -e, --nepochs EPOCHS               The number of epochs (default 1).\n"
                    "   -h, --help                         Show the help and exit.\n"
                    "   -r, --learning_rate LEARNING_RATE  The learning rate (default 0.01).\n"
+                   "   -v, --verbose                      Log intermediate values to STDOUT.\n"
                    "   -z, --standardize                  The learning rate (default 0.01).\n";
     fprintf(stream, "%s", usage);
 }
