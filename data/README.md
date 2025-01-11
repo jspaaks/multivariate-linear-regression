@@ -19,7 +19,7 @@ Wayback Machine copies of Yann LeCun et al. handwritten numbers data.
 - https://web.archive.org/web/20140214080728/http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
 
 ```console
-$ mkdir data
+$ mkdir lecunn
 $ cd data
 
 # download

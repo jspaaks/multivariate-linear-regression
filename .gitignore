@@ -2,6 +2,6 @@
 /build
 /cachegrind.out.*
 /callgrind.out.*
-/data/*ubyte
-/data/*ubyte.gz
+/data/lecunn/*ubyte
+/data/lecunn/*ubyte.gz
 /src/development
