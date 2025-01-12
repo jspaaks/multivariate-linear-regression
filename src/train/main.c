@@ -28,24 +28,15 @@ int main (int argc, const char * argv[]) {
         show_usage(stdout);
         goto deferred;
     }
-    const float learning_rate = get_learning_rate(kwargs);
-    const size_t nepochs = get_nepochs(kwargs);
-    const bool verbose = kwargs_has_flag("--verbose", kwargs) > 0;
-    const bool standardize = kwargs_has_flag("--standardize", kwargs) > 0;
-    const char * features_path = kwargs_get_positional_value(0, kwargs);
-    const char * labels_path = kwargs_get_positional_value(1, kwargs);
-
-    if (verbose) fprintf(stdout, "learning_rate = %f\n", learning_rate);
-    if (verbose) fprintf(stdout, "nepochs = %zu\n", nepochs);
-    if (verbose) fprintf(stdout, "features = %s\n", features_path);
-    if (verbose) fprintf(stdout, "labels = %s\n", labels_path);
-
-    // ========================== INITIALIZE ARRAYS ========================== //
-
-    size_t nsamples = matrix_readnr(features_path);
-    size_t nfeatures = matrix_readnc(features_path);
-
-    run(nsamples, nfeatures, nepochs, learning_rate, standardize, verbose, features_path, labels_path);
+    const struct inputs inputs = {
+        .nepochs = get_nepochs(kwargs),
+        .learning_rate = get_learning_rate(kwargs),
+        .standardize = kwargs_has_flag("--standardize", kwargs) > 0,
+        .verbose = kwargs_has_flag("--verbose", kwargs) > 0,
+        .features_path = kwargs_get_positional_value(0, kwargs),
+        .labels_path = kwargs_get_positional_value(1, kwargs)
+    };
+    run(inputs);
 
 deferred:
     kwargs_destroy((Kwargs **) &kwargs);
