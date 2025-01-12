@@ -3,6 +3,6 @@
 #include "matrix/matrix.h"
 #include <plplot/plplot.h>
 
-void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matrix * avg_residuals, size_t niters, size_t ni);
+void plot_losses (PLCHAR_VECTOR device, size_t nepochs, const Matrix * epochs, const Matrix * losses, size_t nsamples);
 
 #endif

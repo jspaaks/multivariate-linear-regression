@@ -12,34 +12,33 @@ typedef struct limits {
 } Limits;
 
 
-PLFLT_VECTOR create_x (const Matrix * iterations, size_t n);
-PLFLT_VECTOR create_y (const Matrix * mean_squared_residuals, size_t n);
+PLFLT_VECTOR create_x (size_t n, const Matrix * epochs);
+PLFLT_VECTOR create_y (size_t n, const Matrix * losses);
 void destroy_x (PLFLT_VECTOR * x);
 void destroy_y (PLFLT_VECTOR * y);
 
 
-PLFLT_VECTOR create_x (const Matrix * iterations, const size_t n) {
+PLFLT_VECTOR create_x (const size_t n, const Matrix * epochs) {
     PLFLT * x = calloc(n, sizeof(PLFLT));
     for (size_t i = 0; i < n; i++) {
-        x[i] = (PLFLT) iterations->xs[i];
+        x[i] = (PLFLT) epochs->xs[i];
     }
     return (PLFLT_VECTOR) x;
 }
 
 
-PLFLT_VECTOR create_y (const Matrix * mean_squared_residuals, const size_t n) {
+PLFLT_VECTOR create_y (const size_t n, const Matrix * losses) {
     PLFLT * y = calloc(n, sizeof(PLFLT));
     for (size_t i = 0; i < n; i++) {
-        y[i] = (PLFLT) mean_squared_residuals->xs[i];
+        y[i] = (PLFLT) losses->xs[i];
     }
     return (PLFLT_VECTOR) y;
 }
 
+void plot_losses (PLCHAR_VECTOR device, const size_t nepochs, const Matrix * epochs, const Matrix * losses, const size_t nsamples) {
 
-void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matrix * mean_squared_residuals, const size_t nepochs, const size_t nsamples) {
-
-    PLFLT_VECTOR x = create_x(iterations, 1 + nepochs);
-    PLFLT_VECTOR y = create_y(mean_squared_residuals, 1 + nepochs);
+    PLFLT_VECTOR x = create_x(1 + nepochs, epochs);
+    PLFLT_VECTOR y = create_y(1 + nepochs, losses);
 
     // choose the device
     plsdev(device);
@@ -77,8 +76,8 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
     };
 
     float ymax = FLT_MIN;
-    for (size_t i = 0; i < mean_squared_residuals->n; i++) {
-        float yi = mean_squared_residuals->xs[i];
+    for (size_t i = 0; i < losses->n; i++) {
+        float yi = losses->xs[i];
         ymax = yi > ymax ? yi : ymax;
     }
 
@@ -120,7 +119,7 @@ void plot_residuals (PLCHAR_VECTOR device, const Matrix * iterations, const Matr
     // set line width
     plwidth(2.0);
 
-    // plot the epoch v mean_squared_residuals data
+    // plot the epoch v losses data
     plline(nepochs + 1, x, y);
 
     // clean up memory resources and end the session
