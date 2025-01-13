@@ -244,8 +244,7 @@ int has_type (const char * name, const Kwargs * kwargs, KwargsType type) {
                                     "Here are some hints to resolve this problem:\n"
                                     "  1. Check the spelling of preceding parameter names\n"
                                     "  2. Check whether preceding parameter names that require a value did in fact get one\n"
-                                    "  3. Check that all preceding parameter names are valid shortnames or longnames.\n"
-                                    "  4. Check that there isn't a stray -h / --help\n",
+                                    "  3. Check that preceding parameter names are valid shortnames or longnames.\n",
                                     kwargs->argv[iarg], typenames[itype]);
                     exit(EXIT_FAILURE);
                 }
