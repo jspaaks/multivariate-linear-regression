@@ -8,6 +8,7 @@ typedef struct kwargs Kwargs;
 typedef enum {
     KWARGS_UNKNOWN = 0,
     KWARGS_EXE,
+    KWARGS_HELP,
     KWARGS_FLAG,
     KWARGS_OPTIONAL,
     KWARGS_POSITIONAL,
@@ -31,5 +32,6 @@ const char * kwargs_get_required_value (const char * name, const Kwargs * kwargs
 int kwargs_has_flag (const char * name, const Kwargs * kwargs);
 int kwargs_has_optional (const char * name, const Kwargs * kwargs);
 void kwargs_print_classifications (FILE * stream, const Kwargs * kwargs);
+bool kwargs_requires_help (const Kwargs * kwargs);
 
 #endif

@@ -13,7 +13,6 @@ struct kwargs {
 };
 
 void classify (Kwargs * kwargs);
-const KwargsClass * get_class (const char * name, const Kwargs * kwargs);
 int has_type (const char * name, const Kwargs * kwargs, KwargsType type);
 
 #endif

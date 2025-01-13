@@ -102,6 +102,7 @@ void kwargs_print_classifications (FILE * stream, const Kwargs * kwargs) {
     int ell = 25;
     const char typestrings[][20] = {
         "other",
+        "help",
         "exe",
         "flag",
         "optional",
@@ -113,4 +114,9 @@ void kwargs_print_classifications (FILE * stream, const Kwargs * kwargs) {
         int itype = kwargs->classifieds[i];
         fprintf(stream, "%-*s %s\n", ell, kwargs->argv[i], typestrings[itype]);
     }
+}
+
+
+bool kwargs_requires_help (const Kwargs * kwargs) {
+    return kwargs->classifieds[1] == KWARGS_HELP;
 }
