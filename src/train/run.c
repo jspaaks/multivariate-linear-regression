@@ -17,8 +17,8 @@
 float calc_halfssr (Matrix * residuals_tr);
 void make_standardized_related_features_matrices (const Matrix * features_raw, Matrix * features_z, Matrix * features_ztr1, Matrix * features_mu, Matrix * features_sigma);
 void make_standardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels_z, Matrix * labels_ztr, Matrix * labels_mu, Matrix * labels_sigma);
-void make_unstandardized_related_features_matrices (const Matrix * features_raw, Matrix * features_rawtr1);
-void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels_rawtr);
+void make_unstandardized_related_features_matrices (const Matrix * features_raw, Matrix * features, Matrix * features_rawtr1);
+void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels, Matrix * labels_rawtr);
 
 
 float calc_halfssr (Matrix * residuals_tr) {
@@ -51,7 +51,8 @@ void make_standardized_related_labels_matrices (const Matrix * labels_raw, Matri
 }
 
 
-void make_unstandardized_related_features_matrices (const Matrix * features_raw, Matrix * features_rawtr1) {
+void make_unstandardized_related_features_matrices (const Matrix * features_raw, Matrix * features, Matrix * features_rawtr1) {
+    matrix_addsca(features_raw, 0.0f, features);  // generate a copy
     size_t nsamples = features_raw->nr;
     size_t nfeatures = features_raw->nc;
     Matrix * ones = matrix_create(1, nsamples);
@@ -64,14 +65,13 @@ void make_unstandardized_related_features_matrices (const Matrix * features_raw,
 }
 
 
-void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels_rawtr) {
+void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels, Matrix * labels_rawtr) {
+    matrix_addsca(labels_raw, 0.0f, labels);  // generate a copy
     matrix_transp(labels_raw, labels_rawtr);
 }
 
 
 void run (const struct inputs inputs) {
-
-    fprintf(stderr, "Note: something is off with the backpropagation\n");
 
     const size_t nepochs = inputs.nepochs;
     const float learning_rate = inputs.learning_rate;
@@ -141,8 +141,8 @@ void run (const struct inputs inputs) {
         make_standardized_related_features_matrices(features_raw, features, features_tr1, features_mu, features_sigma);
         make_standardized_related_labels_matrices(labels_raw, labels, labels_tr, labels_mu, labels_sigma);
     } else {
-        make_unstandardized_related_features_matrices(features_raw, features_tr1);
-        make_unstandardized_related_labels_matrices(labels_raw, labels_tr);
+        make_unstandardized_related_features_matrices(features_raw, features, features_tr1);
+        make_unstandardized_related_labels_matrices(labels_raw, labels, labels_tr);
     }
     if (verbose) matrix_print(stdout, "features_raw", features_raw);
     if (verbose) matrix_print(stdout, "features", features);
@@ -186,7 +186,7 @@ void run (const struct inputs inputs) {
         matrix_ebesub(weights, step, weights);
     }
 
-    plot_residuals("qtwidget", nepochs, epochs, losses, nsamples);
+    plot_losses("qtwidget", nepochs, epochs, losses, nsamples);
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 
