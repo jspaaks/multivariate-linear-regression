@@ -14,5 +14,6 @@ size_t get_nsamples (const Kwargs * kwargs);
 float get_sigma (const Kwargs * kwargs);
 void get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfeatures);
 void get_upper_bounds (const Kwargs * kwargs, Matrix * true_weights, size_t nfeatures);
+void show_usage (FILE * stream);
 
 #endif
