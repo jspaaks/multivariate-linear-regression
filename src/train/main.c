@@ -24,7 +24,7 @@ int main (int argc, const char * argv[]) {
     const KwargsClass * classes = get_classes();
     const size_t nclasses = get_nclasses();
     const Kwargs * kwargs = kwargs_create(argc, argv, nclasses, &classes[0]);
-    if (kwargs_has_flag("--help", kwargs) > 0) {
+    if (kwargs_requires_help(kwargs)) {
         show_usage(stdout);
         goto deferred;
     }

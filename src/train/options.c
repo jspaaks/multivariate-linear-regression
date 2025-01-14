@@ -5,11 +5,6 @@
 
 static const KwargsClass classes[] = {
     {
-        .longname = "--help",
-        .shortname = "-h",
-        .type = KWARGS_FLAG
-    },
-    {
         .longname = "--learning_rate",
         .shortname = "-r",
         .type = KWARGS_OPTIONAL
