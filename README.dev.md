@@ -21,11 +21,11 @@ $ cmake --install .
 # run programs to see what they do, e.g.
 $ ./dist/bin/linear-regression-ssr-bgd-artificial
 
-# matrix library also installs documentation as man pages
-$ man -l ./dist/share/man/man3/matrix.3
+# checkout man pages, e.g.
+$ man -l ./dist/share/man/man1/mkdata.1
 ```
 
-
+<!--
 ## Testing
 
 Building and running the tests require that [Criterion](https://github.com/Snaipe/Criterion) is installed on the system, e.g. with
@@ -40,6 +40,7 @@ Run the tests with
 $ ./dist/bin/test_boxmuller -j1 --verbose
 $ ./dist/bin/test_matrix -j1 --verbose
 ```
+-->
 
 ## `clang-format`
 
