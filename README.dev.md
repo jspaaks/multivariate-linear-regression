@@ -69,6 +69,14 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 1. add errplot2, an executable for plotting a 1-d feature array against its true labels and its predictions
 1. add errplot3, an executable for plotting a 2-d feature array against its true labels and its predictions
 1. see if `linear-regression-ssr-bgd*` has been superseded by `train`
+1. Possible problem (with mkdata) maybe?
+
+   ```console
+   # compare
+   ./dist/bin/train -e 10 -r 0.1 -v ../data/artificial/d2/n9/s0/features.txt ../data/artificial/d2/n9/s0/labels.txt`
+   # with
+   mkdir test && ./dist/bin/mkdata -d 2 -n 9 -w 0,1,2 -s 0 -b test/ && ./dist/bin/train -e 10 -r 0.1 -v ./test/features.txt ./test/labels.txt
+   ```
 
 ## Notes
 
