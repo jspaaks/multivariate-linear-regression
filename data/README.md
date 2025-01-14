@@ -2,7 +2,7 @@
 
 ## Artificial
 
-Some executables use artificial data, where data is generated on the fly using known parameterizations and known linear model, which is subsequently corrupted using random normal residuals of known magnitude.
+Data generated using known parameterizations and known linear model, which was then corrupted using random normal residuals of known magnitude.
 
 ## Housing
 
