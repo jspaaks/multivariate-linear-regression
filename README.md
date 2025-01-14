@@ -8,13 +8,14 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 - `train` Command line program for iterative fitting of multivariate linear data sets using steepest descent.
 - `linear-regression-ssr-bgd-artificial` 2-D linear regression of artificially generated data using batch gradient descent with sum of squared residuals as loss function.
 
-## Libraries
+## Dependencies
 
-- `kwargs`: Handling of command line arguments.
+- `libboxmuller`: Normally distributed random number generation
+- `libkwargs`: Handling of command line arguments
+- `libmatrix`:  Matrix data type and operations on instances of that type
 
 ## `man` pages
 
-- `kwargs.3`
 - `mkdata.1`
 
 ## Example

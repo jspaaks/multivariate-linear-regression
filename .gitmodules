@@ -4,3 +4,6 @@
 [submodule "third_party/libmatrix"]
 	path = third_party/libmatrix
 	url = https://github.com/jspaaks/libmatrix.git
+[submodule "third_party/libkwargs"]
+	path = third_party/libkwargs
+	url = https://github.com/jspaaks/libkwargs.git
