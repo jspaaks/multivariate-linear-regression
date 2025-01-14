@@ -21,8 +21,13 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 
 ```console
 $ cd build
-$ ./dist/bin/mkdata --nfeatures 2 --nsamples 100 -s 10 --true_weights 98.7,65.4,32.1 -b data/
-$ ./dist/bin/train --nepochs 2500 data/features.txt data/labels.txt
+$ ./dist/bin/mkdata --nfeatures 2 \
+    --nsamples 100 \
+    -s 10 \
+    --true_weights 98.7,65.4,32.1 \
+    -b data/
+$ ./dist/bin/train --nepochs 2500 \
+        data/features.txt data/labels.txt
 ```
 
 ## Data
