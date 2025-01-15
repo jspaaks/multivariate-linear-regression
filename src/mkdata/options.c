@@ -38,11 +38,16 @@ static const KwargsClass classes[] = {
         .longname = "--upper_bounds",
         .shortname = "-u",
         .type = KWARGS_OPTIONAL
+    },
+    {
+        .longname = "--verbose",
+        .shortname = "-v",
+        .type = KWARGS_FLAG
     }
 };
 
 
-const char * get_basename (const Kwargs * kwargs) {
+const char * options_get_basename (const Kwargs * kwargs) {
     const char * s = kwargs_get_optional_value ("--basename", kwargs);
     if (s == nullptr) {
         return "artificial-data.";
@@ -51,12 +56,12 @@ const char * get_basename (const Kwargs * kwargs) {
 }
 
 
-const KwargsClass * get_classes (void) {
+const KwargsClass * options_get_classes (void) {
     return &classes[0];
 }
 
 
-void get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfeatures) {
+void options_get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfeatures) {
     char * s = (char *) kwargs_get_optional_value ("--lower_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < lower_bounds->n; i++) {
@@ -92,12 +97,12 @@ void get_lower_bounds (const Kwargs * kwargs, Matrix * lower_bounds, size_t nfea
 }
 
 
-size_t get_nclasses (void) {
+size_t options_get_nclasses (void) {
     return sizeof (classes) / sizeof (classes[0]);
 }
 
 
-size_t get_nfeatures (const Kwargs * kwargs) {
+size_t options_get_nfeatures (const Kwargs * kwargs) {
     const char * s = kwargs_get_required_value ("--nfeatures", kwargs);
     size_t nfeatures;
     sscanf(s, " %zu", &nfeatures);
@@ -105,7 +110,7 @@ size_t get_nfeatures (const Kwargs * kwargs) {
 }
 
 
-size_t get_nsamples (const Kwargs * kwargs) {
+size_t options_get_nsamples (const Kwargs * kwargs) {
     const char * s = kwargs_get_required_value ("--nsamples", kwargs);
     size_t nsamples;
     sscanf(s, " %zu", &nsamples);
@@ -113,7 +118,7 @@ size_t get_nsamples (const Kwargs * kwargs) {
 }
 
 
-float get_sigma (const Kwargs * kwargs) {
+float options_get_sigma (const Kwargs * kwargs) {
     const char * s = kwargs_get_optional_value ("--sigma", kwargs);
     if (s == nullptr) {
         return (float) 1;
@@ -124,7 +129,7 @@ float get_sigma (const Kwargs * kwargs) {
 }
 
 
-void get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfeatures) {
+void options_get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfeatures) {
     char * s = (char *) kwargs_get_required_value ("--true_weights", kwargs);
 
     size_t nfound = 0;
@@ -151,7 +156,7 @@ void get_true_weights (const Kwargs * kwargs, Matrix * true_weights, size_t nfea
     }
 }
 
-void get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfeatures) {
+void options_get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfeatures) {
     char * s = (char *) kwargs_get_optional_value ("--upper_bounds", kwargs);
     if (s == nullptr) {
         for (size_t i = 0; i < upper_bounds->n; i++) {
@@ -187,7 +192,7 @@ void get_upper_bounds (const Kwargs * kwargs, Matrix * upper_bounds, size_t nfea
 }
 
 
-void show_usage (FILE * stream) {
+void options_show_usage (FILE * stream) {
     char usage[] = ""
         "NAME\n"
         "       mkdata - Generate multivariate linear artificial data\n"
@@ -235,7 +240,7 @@ void show_usage (FILE * stream) {
         "            ing  value  LOWER_BOUNDS should be a comma-separated, dou‐\n"
         "            ble-quoted string,  containing  NFEATURES  floating  point\n"
         "            numbers.  If  this  option  is  omitted,  each  element of\n"
-        "            LOWER_BOUNDS is set to 0.0f;\n"
+        "            LOWER_BOUNDS is set to 0.0f.\n"
         "\n"
         "       -s SIGMA, --sigma SIGMA\n"
         "            Standard deviation of  the  residuals.  Its  corresponding\n"
@@ -247,7 +252,9 @@ void show_usage (FILE * stream) {
         "            ing  value  UPPER_BOUNDS should be a comma-separated, dou‐\n"
         "            ble-quoted string,  containing  NFEATURES  floating  point\n"
         "            numbers.  If  this  option is omitted, each element of UP‐\n"
-        "            PER_BOUNDS is set to 1.0f;\n"
+        "            PER_BOUNDS is set to 1.0f.\n"
+        "       -v, --verbose\n"
+        "            Verbose output.\n"
         "\n"
         "EXAMPLES\n"
         "       Generate 7 samples in a 3-dimensional space, using the  default\n"
@@ -266,4 +273,9 @@ void show_usage (FILE * stream) {
         "                                   --sigma 12.1 \\\n"
         "                                   --basename \"data/\"\n";
     fprintf(stream, "%s", usage);
+}
+
+
+bool options_get_verbose (const Kwargs * kwargs) {
+    return kwargs_has_flag("--verbose", kwargs) > 0;
 }
