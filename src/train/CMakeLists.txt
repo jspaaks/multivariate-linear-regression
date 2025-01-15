@@ -54,7 +54,6 @@ target_link_libraries(
     tgt_exe_train
     PRIVATE
         plplot
-        tgt_lib_boxmuller
         tgt_lib_kwargs
         tgt_lib_matrix
 )
