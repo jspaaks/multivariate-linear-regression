@@ -147,46 +147,42 @@ void run (const Kwargs * kwargs) {
         make_unstandardized_related_features_matrices(features_raw, features, features_tr1);
         make_unstandardized_related_labels_matrices(labels_raw, labels, labels_tr);
     }
-    if (verbose) matrix_print(stdout, "features_raw", features_raw);
-    if (verbose) matrix_print(stdout, "features", features);
-    if (verbose) matrix_print(stdout, "features_tr1", features_tr1);
-    if (verbose) matrix_print(stdout, "labels_raw", labels_raw);
-    if (verbose) matrix_print(stdout, "labels", labels);
-    if (verbose) matrix_print(stdout, "labels_tr", labels_tr);
+    if (verbose) {
+        matrix_print(stdout, "features_raw", features_raw);
+        matrix_print(stdout, "features", features);
+        matrix_print(stdout, "features_tr1", features_tr1);
+        matrix_print(stdout, "labels_raw", labels_raw);
+        matrix_print(stdout, "labels", labels);
+        matrix_print(stdout, "labels_tr", labels_tr);
+    }
 
     // ========================== ITERATION ============================== //
 
     if (verbose) matrix_print(stdout, "weights", weights);
 
     for (size_t i = 0; i <= nepochs; i++) {
-        if (verbose) fprintf(stdout, "+++++++++++++++++++++++++      epoch = %-5zu +++++++++++++++++++++++++\n", i);
-        matrix_dotpro(weights, features_tr1, predicted_tr);
-        if (verbose) matrix_print(stdout, "weights", weights);
-        if (verbose) matrix_print(stdout, "features_tr1", features_tr1);
-        if (verbose) matrix_print(stdout, "predicted_tr", predicted_tr);
-
-        matrix_ebesub(predicted_tr, labels_tr, residuals_tr);
-        if (verbose) matrix_print(stdout, "residuals_tr", residuals_tr);
-
-        epochs->xs[i] = (float) i;
-        losses->xs[i] = calc_halfssr(residuals_tr);
-
-        matrix_bctdwn(residuals_tr, residuals_trb);
-        if (verbose) matrix_print(stdout, "residuals_trb", residuals_trb);
-
-        matrix_hadpro(residuals_trb, features_tr1, gradients_tr);
-        if (verbose) matrix_print(stdout, "gradients_tr", gradients_tr);
-
-        matrix_accrgt(gradients_tr, gradient_tr);
-        if (verbose) matrix_print(stdout, "gradient_tr", gradient_tr);
-
-        matrix_scapro(gradient_tr, learning_rate, step_tr);
-        if (verbose) matrix_print(stdout, "step_tr", step_tr);
-
-        matrix_transp(step_tr, step);
-        if (verbose) matrix_print(stdout, "step", step);
-
-        matrix_ebesub(weights, step, weights);
+        { // ==================== forward ==================== //
+            matrix_dotpro(weights, features_tr1, predicted_tr);
+        }
+        { // ================ backpropagation ================ //
+            matrix_ebesub(predicted_tr, labels_tr, residuals_tr);
+            matrix_bctdwn(residuals_tr, residuals_trb);
+            matrix_hadpro(residuals_trb, features_tr1, gradients_tr);
+            matrix_accrgt(gradients_tr, gradient_tr);
+            matrix_scapro(gradient_tr, learning_rate, step_tr);
+            matrix_transp(step_tr, step);
+            epochs->xs[i] = (float) i;
+            losses->xs[i] = calc_halfssr(residuals_tr);
+            if (verbose) {
+                fprintf(stdout, "+++++++++++++++++++++++++      epoch = %-5zu +++++++++++++++++++++++++\n", i);
+                matrix_print(stdout, "weights", weights);
+                matrix_print(stdout, "predicted_tr", predicted_tr);
+                matrix_print(stdout, "residuals_tr", residuals_tr);
+                matrix_print(stdout, "gradients_tr", gradients_tr);
+                matrix_print(stdout, "step", step);
+            }
+            matrix_ebesub(weights, step, weights);
+        }
     }
 
     plot_losses("qtwidget", nepochs, epochs, losses, nsamples);
