@@ -1,3 +1,4 @@
+#include "options.h"
 #include "run.h"
 #include "plotting.h"
 #include <matrix/matrix.h>
@@ -71,14 +72,14 @@ void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Mat
 }
 
 
-void run (const struct inputs inputs) {
+void run (const Kwargs * kwargs) {
 
-    const size_t nepochs = inputs.nepochs;
-    const float learning_rate = inputs.learning_rate;
-    const bool standardize = inputs.standardize;
-    const bool verbose = inputs.verbose;
-    const char * features_path = inputs.features_path;
-    const char * labels_path = inputs.labels_path;
+    const size_t nepochs = options_get_nepochs(kwargs);
+    const float learning_rate = options_get_learning_rate(kwargs);
+    const bool standardize = options_get_standardize(kwargs);
+    const bool verbose = options_get_verbose(kwargs);
+    const char * features_path = options_get_features_path(kwargs);
+    const char * labels_path = options_get_labels_path(kwargs);
     const size_t nsamples = matrix_readnr(features_path);
     const size_t nfeatures = matrix_readnc(features_path);
 
@@ -126,6 +127,8 @@ void run (const struct inputs inputs) {
     Matrix * losses = matrix_create(1 + nepochs, 1);
 
     // =====================  POPULATE DATA  ========================= //
+
+    options_get_initial_weights(kwargs, weights);
 
     matrix_readxs(features_path, features_raw);
     {
