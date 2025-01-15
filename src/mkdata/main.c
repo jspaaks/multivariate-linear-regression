@@ -1,14 +1,14 @@
+#include "options.h"
+#include "boxmuller/boxmuller.h"
+#include "kwargs/kwargs.h"
+#include "matrix/matrix.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "boxmuller/boxmuller.h"
-#include "kwargs/kwargs.h"
-#include "matrix/matrix.h"
-#include "options.h"
 
-void show_usage (FILE * stream);
+
 void populate_features (const Matrix * lower_bounds, const Matrix * upper_bounds, Matrix * features);
 void populate_labels (const Matrix * true_weights, const Matrix * features, float sigma, Matrix * labels, Matrix * true_residuals);
 
@@ -21,18 +21,19 @@ int main (int argc, const char * argv[]) {
 
     // =========== COLLECT USER INPUT AND INITIALIZE ARRAYS ================ //
 
-    const size_t nclasses = get_nclasses();
-    const KwargsClass * classes = get_classes();
+    const size_t nclasses = options_get_nclasses();
+    const KwargsClass * classes = options_get_classes();
     const Kwargs * kwargs = kwargs_create(argc, argv, nclasses, classes);
     if (kwargs_requires_help(kwargs)) {
-        show_usage(stdout);
+        options_show_usage(stdout);
         kwargs_destroy((Kwargs **) &kwargs);
         exit(EXIT_SUCCESS);
     }
-    const size_t nfeatures = get_nfeatures(kwargs);
-    const size_t nsamples = get_nsamples(kwargs);
-    const float sigma = get_sigma(kwargs);
-    const char * basename = get_basename(kwargs);
+    const size_t nfeatures = options_get_nfeatures(kwargs);
+    const size_t nsamples = options_get_nsamples(kwargs);
+    const float sigma = options_get_sigma(kwargs);
+    const char * basename = options_get_basename(kwargs);
+    const bool verbose = options_get_verbose(kwargs);
 
     Matrix * features = matrix_create(nsamples, nfeatures);
     Matrix * labels = matrix_create(nsamples, 1);
@@ -41,14 +42,16 @@ int main (int argc, const char * argv[]) {
     Matrix * true_weights = matrix_create(1, 1 + nfeatures);
     Matrix * upper_bounds = matrix_create(1, nfeatures);
 
-    get_true_weights(kwargs, true_weights, nfeatures);
-    get_lower_bounds(kwargs, lower_bounds, nfeatures);
-    get_upper_bounds(kwargs, upper_bounds, nfeatures);
+    options_get_true_weights(kwargs, true_weights, nfeatures);
+    options_get_lower_bounds(kwargs, lower_bounds, nfeatures);
+    options_get_upper_bounds(kwargs, upper_bounds, nfeatures);
 
-    fprintf(stdout, "nfeatures = %zu\n", nfeatures);
-    fprintf(stdout, "nsamples = %zu\n", nsamples);
-    fprintf(stdout, "sigma = %f\n", sigma);
-    fprintf(stdout, "basename = \"%s\"\n", basename);
+    if (verbose) {
+        fprintf(stdout, "nfeatures = %zu\n", nfeatures);
+        fprintf(stdout, "nsamples = %zu\n", nsamples);
+        fprintf(stdout, "sigma = %f\n", sigma);
+        fprintf(stdout, "basename = \"%s\"\n", basename);
+    }
 
     kwargs_destroy((Kwargs **) &kwargs);
 
@@ -59,12 +62,14 @@ int main (int argc, const char * argv[]) {
 
     // ============================== IO ================================== //
 
-    matrix_print(stdout, "lower_bounds", lower_bounds);
-    matrix_print(stdout, "upper_bounds", upper_bounds);
-    matrix_print(stdout, "true_weights", true_weights);
-    matrix_print(stdout, "features", features);
-    matrix_print(stdout, "labels", labels);
-    matrix_print(stdout, "true_residuals", true_residuals);
+    if (verbose) {
+        matrix_print(stdout, "lower_bounds", lower_bounds);
+        matrix_print(stdout, "upper_bounds", upper_bounds);
+        matrix_print(stdout, "true_weights", true_weights);
+        matrix_print(stdout, "features", features);
+        matrix_print(stdout, "labels", labels);
+        matrix_print(stdout, "true_residuals", true_residuals);
+    }
 
     matrix_write(basename, "true_weights", true_weights);
     matrix_write(basename, "features", features);
