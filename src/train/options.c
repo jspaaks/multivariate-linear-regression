@@ -5,6 +5,11 @@
 
 static const KwargsClass classes[] = {
     {
+        .longname = "--device",
+        .shortname = "-d",
+        .type = KWARGS_OPTIONAL
+    },
+    {
         .longname = "--learning_rate",
         .shortname = "-r",
         .type = KWARGS_OPTIONAL
@@ -34,6 +39,15 @@ static const KwargsClass classes[] = {
 
 const KwargsClass * options_get_classes (void) {
     return &classes[0];
+}
+
+
+const char * options_get_device (const Kwargs * kwargs) {
+    const char * s = kwargs_get_optional_value ("--device", kwargs);
+    if (s == nullptr) {
+        return "?";
+    }
+    return s;
 }
 
 
@@ -99,7 +113,7 @@ size_t options_get_nclasses (void) {
 size_t options_get_nepochs (const Kwargs * kwargs) {
     const char * s = kwargs_get_optional_value("--nepochs", kwargs);
     if (s == nullptr) {
-        return (size_t) 1;
+        return (size_t) 10;
     }
     size_t nepochs;
     sscanf(s, " %zu", &nepochs);
@@ -124,11 +138,15 @@ void options_show_usage (FILE * stream) {
                    "   from filepath LABELS.\n"
                    "\n"
                    "   Options\n"
-                   "   -e, --nepochs EPOCHS               The number of epochs (default 1).\n"
+                   "   -d, --device DEVICE                The output device for plotting (defaults to interactive\n"
+                   "                                      device selection, including overview of available device\n"
+                   "                                      names).\n"
+                   "   -e, --nepochs EPOCHS               The number of epochs (default 10).\n"
                    "   -h, --help                         Show the help and exit.\n"
                    "   -r, --learning_rate LEARNING_RATE  The learning rate (default 0.01).\n"
                    "   -v, --verbose                      Log intermediate values to STDOUT.\n"
                    "   -w, --initial_weights              Initial values of the weights (default all 0.0).\n"
-                   "   -z, --standardize                  The learning rate (default 0.01).\n";
+                   "   -z, --standardize                  Whether to standardize the features and labels values\n"
+                   "                                      before training.\n";
     fprintf(stream, "%s", usage);
 }

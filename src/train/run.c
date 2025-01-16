@@ -74,16 +74,19 @@ void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Mat
 
 void run (const Kwargs * kwargs) {
 
-    const size_t nepochs = options_get_nepochs(kwargs);
-    const float learning_rate = options_get_learning_rate(kwargs);
-    const bool standardize = options_get_standardize(kwargs);
-    const bool verbose = options_get_verbose(kwargs);
+    const char * device = options_get_device(kwargs);
     const char * features_path = options_get_features_path(kwargs);
     const char * labels_path = options_get_labels_path(kwargs);
+    const float learning_rate = options_get_learning_rate(kwargs);
+    const size_t nepochs = options_get_nepochs(kwargs);
+    const bool standardize = options_get_standardize(kwargs);
+    const bool verbose = options_get_verbose(kwargs);
+
     const size_t nsamples = matrix_readnr(features_path);
     const size_t nfeatures = matrix_readnc(features_path);
 
     if (verbose) {
+        fprintf(stdout, "device = %s\n", device);
         fprintf(stdout, "features_path = %s\n", features_path);
         fprintf(stdout, "labels_path = %s\n", labels_path);
         fprintf(stdout, "learning_rate = %f\n", learning_rate);
@@ -185,7 +188,7 @@ void run (const Kwargs * kwargs) {
         }
     }
 
-    plot_losses("qtwidget", nepochs, epochs, losses, nsamples);
+    plot_losses(device, nepochs, epochs, losses, nsamples);
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
 

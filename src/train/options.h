@@ -7,6 +7,7 @@
 
 
 const KwargsClass * options_get_classes (void);
+const char * options_get_device (const Kwargs * kwargs);
 const char * options_get_features_path (const Kwargs * kwargs);
 void options_get_initial_weights (const Kwargs * kwargs, Matrix * weights);
 const char * options_get_labels_path (const Kwargs * kwargs);
