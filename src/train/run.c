@@ -176,7 +176,7 @@ void run (const Kwargs * kwargs) {
             matrix_transp(step_tr, step);
             epochs->xs[i] = (float) i;
             losses->xs[i] = calc_halfssr(residuals_tr);
-            if (verbose) {
+            if (verbose || i == nepochs) {
                 fprintf(stdout, "+++++++++++++++++++++++++      epoch = %-5zu +++++++++++++++++++++++++\n", i);
                 matrix_print(stdout, "weights", weights);
                 matrix_print(stdout, "predicted_tr", predicted_tr);
