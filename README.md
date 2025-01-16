@@ -1,4 +1,4 @@
-# gdfit
+# multivariate linear regression with steepest descent
 
 For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
