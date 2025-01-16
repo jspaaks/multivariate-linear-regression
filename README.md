@@ -314,7 +314,7 @@ $ ./dist/bin/mkdata -d 2 -n 10 -l -1,-1 -u 1,1 -s 0.5 -w 0,1,2 -b data4/
 
 Expected: steepest descent should be able to identify the parameters with some bias, but the residuals
 at the optimal weights should be less than 0.5 sigma, because the model is partly fitting the error (overtraining).
-Expected halfssr would be 0.5 * 10 * 0.5^2 = 1.25. Let's see:
+Expected halfssr would be less than 0.5 * 10 * 0.5^2 = 1.25. Let's see:
 
 ```
 $ ./dist/bin/train -e 500 -r 0.01 data4/features.txt data4/labels.txt
