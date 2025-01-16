@@ -4,6 +4,6 @@
 #include <stddef.h>
 
 
-void run (const Kwargs * kwargs);
+int run (const Kwargs * kwargs);
 
 #endif

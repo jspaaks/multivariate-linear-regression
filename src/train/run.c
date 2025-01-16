@@ -3,6 +3,7 @@
 #include "plotting.h"
 #include <matrix/matrix.h>
 #include <assert.h>
+#include <math.h>
 
 
 /*
@@ -15,11 +16,26 @@
  */
 
 
+bool weights_have_nans (const Matrix * weights, size_t iepoch);
 float calc_halfssr (Matrix * residuals_tr);
 void make_standardized_related_features_matrices (const Matrix * features_raw, Matrix * features_z, Matrix * features_ztr1, Matrix * features_mu, Matrix * features_sigma);
 void make_standardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels_z, Matrix * labels_ztr, Matrix * labels_mu, Matrix * labels_sigma);
 void make_unstandardized_related_features_matrices (const Matrix * features_raw, Matrix * features, Matrix * features_rawtr1);
 void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Matrix * labels, Matrix * labels_rawtr);
+
+
+static int exitcode = EXIT_SUCCESS;
+
+
+bool weights_have_nans (const Matrix * weights, const size_t iepoch) {
+    for (size_t i = 0; i < weights->n; i++) {
+        if (isnan(weights->xs[i])) {
+            fprintf(stderr, "Weights contain NaNs after epoch %zu, aborting.\n", iepoch);
+            return true;
+        }
+    }
+    return false;
+}
 
 
 float calc_halfssr (Matrix * residuals_tr) {
@@ -72,7 +88,7 @@ void make_unstandardized_related_labels_matrices (const Matrix * labels_raw, Mat
 }
 
 
-void run (const Kwargs * kwargs) {
+int run (const Kwargs * kwargs) {
 
     const char * device = options_get_device(kwargs);
     const char * features_path = options_get_features_path(kwargs);
@@ -164,7 +180,12 @@ void run (const Kwargs * kwargs) {
     if (verbose) matrix_print(stdout, "weights", weights);
 
     for (size_t i = 0; i <= nepochs; i++) {
+
         { // ==================== forward ==================== //
+            if (weights_have_nans(weights, i)) {
+                exitcode = EXIT_FAILURE;
+                goto cleanup;
+            }
             matrix_dotpro(weights, features_tr1, predicted_tr);
         }
         { // ================ backpropagation ================ //
@@ -191,7 +212,7 @@ void run (const Kwargs * kwargs) {
     plot_losses(device, nepochs, epochs, losses, nsamples);
 
     // =================== DEALLOCATE DYNAMIC MEMORY ====================== //
-
+cleanup:
     matrix_destroy(&features_raw);
     matrix_destroy(&features);
     matrix_destroy(&features_tr1);
@@ -219,4 +240,5 @@ void run (const Kwargs * kwargs) {
 
     matrix_destroy(&epochs);
     matrix_destroy(&losses);
+    return exitcode;
 }

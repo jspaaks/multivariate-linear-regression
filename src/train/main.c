@@ -26,8 +26,9 @@ int main (int argc, const char * argv[]) {
         options_show_usage(stdout);
         goto deferred;
     }
-    run(kwargs);
+    int code = run(kwargs);
 deferred:
     kwargs_destroy((Kwargs **) &kwargs);
-    return EXIT_SUCCESS;
+    if (code == 0) return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
