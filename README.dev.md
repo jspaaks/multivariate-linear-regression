@@ -45,6 +45,7 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 1. add errplot2, an executable for plotting a 1-d feature array against its true labels and its predictions
 1. add errplot3, an executable for plotting a 2-d feature array against its true labels and its predictions
 1. consider migrating to MSE as a loss function
+1. `train.1` man page
 
 ## Notes
 
