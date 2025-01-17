@@ -1,4 +1,4 @@
-# multivariate linear regression with steepest descent
+# steepest descent multivariate linear regression
 
 For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
@@ -16,19 +16,6 @@ For instructions on building, formatting, testing, etc, see [`README.dev.md`](RE
 ## `man` pages
 
 - `mkdata.1`
-
-## Example
-
-```console
-$ cd build
-$ ./dist/bin/mkdata --nfeatures 2 \
-    --nsamples 100 \
-    -s 10 \
-    --true_weights 98.7,65.4,32.1 \
-    -b data/
-$ ./dist/bin/train --nepochs 2500 \
-        data/features.txt data/labels.txt
-```
 
 ## Results
 
@@ -113,22 +100,76 @@ EXAMPLES
                                    --sigma 12.1 \
                                    --basename "data/"
 $ ./dist/bin/train -h
-train [OPTIONS...] FEATURES LABELS
-   Use gradient descent to train a multivariate linear model based
-   on the features from filepath FEATURES and corresponding labels
-   from filepath LABELS.
+NAME
+       train - Use batch gradient descent to train a multivariate linear model
 
-   Options
-   -d, --device DEVICE                The output device for plotting (defaults to interactive
-                                      device selection, including overview of available device
-                                      names).
-   -e, --nepochs EPOCHS               The number of epochs (default 10).
-   -h, --help                         Show the help and exit.
-   -r, --learning_rate LEARNING_RATE  The learning rate (default 0.01).
-   -v, --verbose                      Log intermediate values to STDOUT.
-   -w, --initial_weights              Initial values of the weights (default all 0.0).
-   -z, --standardize                  Whether to standardize the features and labels values
-                                      before training.
+SYNOPSIS
+       train -h
+       train --help
+       train [OPTIONAL]... FEATURES_PATH LABELS_PATH
+
+DESCRIPTION
+       Use batch gradient descent to train a multivariate linear model.
+
+       Optionals
+
+       -d DEVICE, --device DEVICE
+            The output device used for plotting. Use "?" for interactively
+            selecting a device, "null" for no output. Defaults to interactive
+            device selection, including overview of available device names.
+
+       -e NEPOCHS, --nepochs NEPOCHS
+            Number of epochs. An epoch is equivalent to one pass through the
+            entire data set.
+
+       -h, --help
+            Show the help.
+
+       -r LEARNING_RATE, --learning_rate LEARNING_RATE
+            The learning rate of the steepest descent analysis. Simply a
+            scaling factor that is applied to the calculated gradient of the
+            loss with respect to the weights.
+
+       -v, --verbose
+            Verbose output.
+
+       -w INITIAL_WEIGHTS, --initial_weights INITIAL_WEIGHTS
+            The point in the parameter space from where to start the iterative
+            procedure of updating the weights.
+
+       -z, --standardize
+            Whether to standardize the features and labels values before
+            training.
+
+       Positionals
+
+       FEATURES_PATH
+            The path to the file containing the features used for training.
+            Paths can be relative or absolute. The file format should be that
+            outputted by sibling program "mkdata".
+
+       LABELS_PATH
+            The path to the file containing the labels used for training.
+            Paths can be relative or absolute. The file format should be that
+            outputted by sibling program "mkdata".
+
+EXAMPLES
+       Train a linear model based on the features from "features.txt" and the
+       labels from "labels.txt" using default options:
+
+            $ ./train features.txt labels.txt
+
+       Train a linear model based on the features from "data/features.txt" and
+       the labels from "data/labels.txt" using 100 epochs, a learning rate of
+       0.001, and initialize the weights at (10.2, 34.7, 0.1); afterwards, use
+       the interactive "qtwidget" device to make a plot of the loss as a
+       function of epoch:
+
+            $ ./train --device qtwidget \
+                      --nepochs 100 \
+                      --learning_rate 0.001 \
+                      --initial_weights 10.2,34.7,0.1 \
+                      data/features.txt data/labels.txt
 ```
 
 ### experiment 1
@@ -336,7 +377,6 @@ step (1x3):
 ![result4.png](images/losses4.svg)
 
 Looks OK.
-
 
 ## Data
 
