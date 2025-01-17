@@ -1,0 +1,95 @@
+.TH train 1
+.SH NAME
+train \- Use batch gradient descent to train a multivariate linear model
+
+.SH SYNOPSIS
+train -h
+.br
+train --help
+.br
+train [\fIOPTIONAL\fR]... FEATURES_PATH LABELS_PATH
+.SH DESCRIPTION
+
+Use batch gradient descent to train a multivariate linear model.
+
+Optionals
+
+\fB-d\fR \fIDEVICE\fR, \fB--device\fR \fIDEVICE\fR
+.in +0.5i
+The output device used for plotting. Use \[dq]?\[dq] for interactively selecting a device,
+\[dq]null\[dq] for no output. Defaults to interactive device selection, including overview of
+available device names.
+.in
+
+\fB-e\fR \fINEPOCHS\fR, \fB--nepochs\fR \fINEPOCHS\fR
+.in +0.5i
+Number of epochs. An epoch is equivalent to one pass through the entire data set.
+.in
+
+\fB-h\fR, \fB--help\fR
+.in +0.5i
+Show the help.
+.in
+
+\fB-r\fR \fILEARNING_RATE\fR, \fB--learning_rate\fR \fILEARNING_RATE\fR
+.in +0.5i
+The learning rate of the steepest descent analysis. Simply a scaling factor that is applied to the
+calculated gradient of the loss with respect to the weights.
+.in
+
+\fB-v\fR, \fB--verbose\fR
+.in +0.5i
+Verbose output.
+.in
+
+\fB-w\fR \fIINITIAL_WEIGHTS\fR, \fB--initial_weights\fR \fIINITIAL_WEIGHTS\fR
+.in +0.5i
+The point in the parameter space from where to start the iterative procedure of updating the
+weights.
+.in
+
+\fB-z\fR, \fB--standardize\fR
+.in +0.5i
+Whether to standardize the features and labels values before training.
+.in
+Positionals
+
+\fBFEATURES_PATH\fR
+.in +0.5i
+The path to the file containing the features used for training. Paths can be relative or absolute.
+The file format should be that outputted by sibling program \fBmkdata\fR(1).
+.in
+
+\fBLABELS_PATH\fR
+.in +0.5i
+The path to the file containing the labels used for training. Paths can be relative or absolute.
+The file format should be that outputted by sibling program \fBmkdata\fR(1).
+.in
+
+.SH EXAMPLES
+
+Train a linear model based on the features from \[dq]features.txt\[dq] and the labels from
+\[dq]labels.txt\[dq] using default options:
+
+.in +0.5i
+$ ./train features.txt labels.txt
+.in
+
+Train a linear model based on the features from \[dq]data/features.txt\[dq] and the labels from
+\[dq]data/labels.txt\[dq] using 100 epochs, a learning rate of 0.001, and initialize the weights at
+(10.2, 34.7, 0.1); afterwards, use the interactive \[dq]qtwidget\[dq] device to make a plot of the
+loss as a function of epoch:
+
+.in +0.5i
+$ ./train --device qtwidget \\
+.br
+          --nepochs 100 \\
+.br
+          --learning_rate 0.001 \\
+.br
+          --initial_weights 10.2,34.7,0.1 \\
+.br
+          data/features.txt data/labels.txt
+.in
+.SH SEE ALSO
+\fBmkdata\fR(1)

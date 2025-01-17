@@ -13,6 +13,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 add_subdirectory(${PROJECT_ROOT}/man/mkdata)
+add_subdirectory(${PROJECT_ROOT}/man/train)
 add_subdirectory(${PROJECT_ROOT}/src/mkdata)
 add_subdirectory(${PROJECT_ROOT}/src/train)
 add_subdirectory(${PROJECT_ROOT}/third_party/libboxmuller)
