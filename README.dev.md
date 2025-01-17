@@ -41,14 +41,4 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 1. add multistart
 1. consider making the test binaries startable from ctest: https://cmake.org/cmake/help/v3.28/command/add_test.html
 1. unstandardize the weights
-1. turn runann into readidx, remove its libmatrix dependency
-1. add errplot2, an executable for plotting a 1-d feature array against its true labels and its predictions
-1. add errplot3, an executable for plotting a 2-d feature array against its true labels and its predictions
 1. consider migrating to MSE as a loss function
-1. `train.1` man page
-
-## Notes
-
-1. softmax implementations use `log10`, not `ln`, following examples from
-   https://www.youtube.com/watch?v=h7iBpEHGVNc&t=2698s. Not sure it matters
-   since both are monotonic. PyTorch seems to be using `ln` however.
