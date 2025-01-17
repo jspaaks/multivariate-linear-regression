@@ -159,7 +159,7 @@ void options_show_usage (FILE * stream) {
         "            Show the help.\n"
         "\n"
         "       -r LEARNING_RATE, --learning_rate LEARNING_RATE\n"
-        "            The learning rate of the steepest descent analysis. Simply a\n"
+        "            The learning rate of the gradient descent analysis. Simply a\n"
         "            scaling factor that is applied to the calculated gradient of the\n"
         "            loss with respect to the weights.\n"
         "\n"
