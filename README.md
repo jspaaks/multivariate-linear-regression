@@ -1,21 +1,29 @@
-# steepest descent multivariate linear regression
+# multivariate linear regression
 
 For instructions on building, formatting, testing, etc, see [`README.dev.md`](README.dev.md).
 
 ## Executables
 
 - `mkdata` Makes an n-dimensional linear data set with normally distributed noise of a given standard deviation.
-- `train` Command line program for iterative fitting of multivariate linear data sets using steepest descent.
+- `train` Command line program for iterative fitting of multivariate linear data sets using batch gradient descent.
 
 ## Dependencies
 
-- `libboxmuller`: Normally distributed random number generation
-- `libkwargs`: Handling of command line arguments
-- `libmatrix`:  Matrix data type and operations on instances of that type
+Bundled, see directory `third_party`:
+
+- [`libboxmuller`](https://github.com/jspaaks/libboxmuller): Normally distributed random number generation
+- [`libkwargs`](https://github.com/jspaaks/libkwargs): Handling of command line arguments
+- [`libmatrix`](https://github.com/jspaaks/libmatrix):  Matrix data type and operations on instances of that type
+
+Assumed installed:
+
+- [Criterion](https://github.com/Snaipe/Criterion): Testing
+- PLplot: Interactive plotting or saving figure to file
 
 ## `man` pages
 
 - `mkdata.1`
+- `train.1`
 
 ## Results
 
@@ -126,7 +134,7 @@ DESCRIPTION
             Show the help.
 
        -r LEARNING_RATE, --learning_rate LEARNING_RATE
-            The learning rate of the steepest descent analysis. Simply a
+            The learning rate of the gradient descent analysis. Simply a
             scaling factor that is applied to the calculated gradient of the
             loss with respect to the weights.
 
@@ -202,7 +210,7 @@ true_residuals (3x1):
          0
 ```
 
-Expected: steepest descent should be able to identify the parameters without bias, and the residuals
+Expected: gradient descent should be able to identify the parameters without bias, and the residuals
 at the optimal weights should be basically 0. Let's see:
 
 ```console
@@ -276,7 +284,7 @@ true_residuals (3x1):
  -0.729117
 ```
 
-Expected: steepest descent should be able to identify the parameters, but with bias, and the residuals
+Expected: gradient descent should be able to identify the parameters, but with bias, and the residuals
 at the optimal weights should be basically 0. Let's see:
 
 ```
@@ -328,7 +336,7 @@ $ mkdir data3
 $ ./dist/bin/mkdata -d 2 -n 10000 -l -1,-1 -u 1,1 -s 0.5 -w 0,1,2 -b data3/
 ```
 
-Expected: steepest descent should be able to identify the parameters without much bias, but the residuals
+Expected: gradient descent should be able to identify the parameters without much bias, but the residuals
 at the optimal weights should be about 0.5 sigma. Expected halfssr would be 0.5 * 10000 * 0.5^2 = 1250.
 Let's see (learning rate much smaller to account for more samples):
 
@@ -353,7 +361,7 @@ $ mkdir data4
 $ ./dist/bin/mkdata -d 2 -n 10 -l -1,-1 -u 1,1 -s 0.5 -w 0,1,2 -b data4/
 ```
 
-Expected: steepest descent should be able to identify the parameters with some bias, but the residuals
+Expected: gradient descent should be able to identify the parameters with some bias, but the residuals
 at the optimal weights should be less than 0.5 sigma, because the model is partly fitting the error (overtraining).
 Expected halfssr would be less than 0.5 * 10 * 0.5^2 = 1.25. Let's see:
 
