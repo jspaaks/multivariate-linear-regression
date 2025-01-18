@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.23...3.28)
 
-project(project LANGUAGES C)
+project(project_multivariate_linear_regression LANGUAGES C)
+include(CTest)
 
 set(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
