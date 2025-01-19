@@ -17,7 +17,8 @@ Bundled, see directory `third_party`:
 
 Assumed installed:
 
-- [Criterion](https://github.com/Snaipe/Criterion): Testing
+- [Criterion](https://github.com/Snaipe/Criterion): Testing. Only required when building the tests of the
+  dependencies (`-DBOXMULLER_BUILD_TESTING=ON`, `-DMATRIX_BUILD_TESTING=ON`).
 - PLplot: Interactive plotting or saving figure to file
 
 ## `man` pages
