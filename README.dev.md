@@ -39,6 +39,5 @@ $ clang-format -i `find ./src -type f -name '*.[c|h]'`
 1. add gradient check https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3503s as a unit test
 1. add minibatching https://www.youtube.com/watch?v=h7iBpEHGVNc&t=3776s
 1. add multistart
-1. consider making the test binaries startable from ctest: https://cmake.org/cmake/help/v3.28/command/add_test.html
 1. unstandardize the weights
 1. consider migrating to MSE as a loss function
